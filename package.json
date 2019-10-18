@@ -2,7 +2,7 @@
   "name": "final-project",
   "version": "0.0.1",
   "description": "CS 529 - Project",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
     "start": "parcel index.html"
   },
@@ -24,7 +24,8 @@
   "devDependencies": {
     "babel-core": "^6.26.3",
     "babel-preset-env": "^1.7.0",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "sass": "^1.23.0"
   },
   "dependencies": {
     "d3": "^5.12.0"
