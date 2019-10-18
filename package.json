@@ -1,0 +1,32 @@
+{
+  "name": "final-project",
+  "version": "0.0.1",
+  "description": "CS 529 - Project",
+  "main": "index.js",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/nkprince007/cs529-project.git"
+  },
+  "keywords": [
+    "project",
+    "d3",
+    "threejs"
+  ],
+  "author": "Naveen Kumar Sangi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/nkprince007/cs529-project/issues"
+  },
+  "homepage": "https://github.com/nkprince007/cs529-project#readme",
+  "devDependencies": {
+    "babel-core": "^6.26.3",
+    "babel-preset-env": "^1.7.0",
+    "parcel-bundler": "^1.12.4"
+  },
+  "dependencies": {
+    "d3": "^5.12.0"
+  }
+}
