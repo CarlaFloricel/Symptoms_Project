@@ -2,6 +2,8 @@
 
 This project uses [ES6](http://es6-features.org/) syntax with [Babel](https://babeljs.io/docs/en/) and is bundled by [parcel](https://parceljs.org/). It also supports use of SCSS if preferred.
 
+[![Netlify Status](https://api.netlify.com/api/v1/badges/2d6015af-a3c3-4a46-9c52-347e3e4b411a/deploy-status)](https://app.netlify.com/sites/cs529-project-nkprince007/deploys)
+
 ## Getting Started
 
 - Install Node.js on your machine
