@@ -3,7 +3,7 @@
   command = "npm run build"
 
 [[redirects]]
-  from = "/search"
-  to = "https://api.mysearch.com"
+  from = "/workbook"
+  to = "https://docs.google.com/document/d/1oMFNZPteX2edoMdUM5I7j0-qN0Ayx7Bc4Q0KFvuhJJ4/edit?usp=sharing"
   status = 200
   force = true
