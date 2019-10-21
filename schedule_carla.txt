@@ -1,0 +1,5 @@
+Schedule for the next 2 weeks until the checkpoint demo:
+* After discussing with my teammates, write at least one functional requirement for our project.
+* Meeting with my teammates to create the first of the 5 sheets for prototypes, then come up with one sheet with my idea of a prototype, after which discuss all our prototypes and combine them to create the best proposal for the project.
+* Contact our client, tell her that we are going to continue with this project and send her all the prototypes so that she can review them and tell us what she would like us to change/improve.
+* Set the environment for the project.
