@@ -47,3 +47,36 @@ Ans: A typical node.js project doesn't work that way. You need to use the tools 
 Q2: Why is there just one script tag?
 
 Ans: This project uses ES6 modules. i.e. It uses imports to fetch other dependencies installed in `node_modules`. This is analogous to compilation in other languages.
+
+Q3: How do I submit my code?
+
+Ans: Please follow the steps below.
+
+1. Always create a new branch for whatever changes you intend to make.
+
+```bash
+git checkout -b <your new branch name>
+```
+
+2. Make your changes.
+
+3. Add your files to the staging area.
+
+```bash
+git add .
+```
+
+4. Commit your changes.
+
+```bash
+git commit -m "Your commit message goes here"
+```
+
+5. Push your changes to remote branch.
+
+```bash
+git push -u origin <your branch name>
+```
+
+6. Follow the link in your terminal and create a new pull request and wait for
+approvals before merging it.
