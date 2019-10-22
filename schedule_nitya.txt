@@ -1,0 +1,6 @@
+Schedule
+
+- Comeup with the atleast two scenarios (functional requirements) for the system
+- Plan with teammates about the upcoming work
+- Create 2 sample FDS sheets
+- Verifying if the requirements are met
