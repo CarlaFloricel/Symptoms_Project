@@ -6,7 +6,7 @@ This project uses [ES6](http://es6-features.org/) syntax with [Babel](https://ba
 
 ## Project Resources
 
-- [Website](https://cs529.naveen.cloud)
+- [Website](https://cs529.naveen.cloud) (Password: `VDSProject@123`)
 - [Workbook](https://cs529.naveen.cloud/workbook/)
 
 ## Getting Started
