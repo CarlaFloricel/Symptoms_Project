@@ -1,5 +1,9 @@
 import * as d3 from "d3";
+import $ from 'jquery';
+window.$ = window.jQuery = $;
+require('semantic-ui-css/semantic');
+require('semantic-ui-css/semantic.min.css');
 
 window.addEventListener('DOMContentLoaded', () => {
-    d3.select('#text').text('Hello World! Bye now!');
+  $('.ui.dropdown').dropdown({maxSelections: 3});
 });
