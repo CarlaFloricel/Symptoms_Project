@@ -1,0 +1,17 @@
+#scatter_plot{
+    display: flex;
+}
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+#legend{
+    display: flex;
+}
