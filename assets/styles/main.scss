@@ -1,10 +1,22 @@
 body {
-    img {
-        display: block;
-        margin: 0 auto;
-    }
+  img {
+    display: block;
+    margin: 0 auto;
+  }
 }
 
-#text {
-    text-align: center;
+.ui.dropdown, #time-slider {
+  margin: 24px;
+};
+
+#time-slider ul li:last-child {
+  white-space: nowrap;
+}
+
+#time-slider {
+  width: 25%;
+  min-width: 200px;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
