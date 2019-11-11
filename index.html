@@ -15,71 +15,39 @@
   </select>
   <div id="time-slider" class="ui labeled ticked slider"></div>
   <div class="flex-container-row">
-        <div class="flex-container-column">
-          <div class="flex-item">1</div>
-          <div class="flex-item">
-            <img src="./assets/imgs/star-plot.svg" alt="star plot" style="width:85%;height:85%;margin-top: 20px;">
-          </div>
+    <div class="flex-container-column">
+      <div class="flex-item">1</div>
+      <div class="flex-item star-plot">
+        <img src="./assets/imgs/star-plot.svg" alt="star plot">
+      </div>
+    </div>
+    <div class="flex-container-column">
+      <div class="flex-item">
+        <div class="tab">
+          <button class="tablinks1 active" id="timeline-btn">Timeline</button>
+          <button class="tablinks1" id="correlation-btn">Correlation Matrix</button>
         </div>
-        <div class="flex-container-column">
-          <div class="flex-item">
-              <div class="tab">
-                  <button class="tablinks1" onclick="openSecondView(event, 'timeline')">Timeline</button>
-                  <button class="tablinks1" onclick="openSecondView(event, 'matrix')">Correlation Matrix</button>
-                </div>
-                <div id="timeline" class="tabcontent1" style="display:block;">
-                   <img src="./assets/imgs/patient-timeline.svg" alt="patient timeline" style="width:70%;margin-top: 10px;">
-                </div>
-
-                <div id="matrix" class="tabcontent1">
-                  <img src="./assets/imgs/correlation.svg" alt="correlation matrix" style="width:84%;height:84%;">
-                </div>
-          </div>
-          <div class="flex-item">
-            <div class="tab">
-                  <button class="tablinks2" onclick="openForthView(event, 'stack')">Multiple symptoms</button>
-                  <button class="tablinks2" onclick="openForthView(event, 'tendril')">Multiple patients</button>
-                </div>
-                <div id="stack" class="tabcontent2" style="display:block;">
-                   <img src="./assets/imgs/symptoms-timeline.svg" alt="correlation matrix" style="width:85%;height:85%; margin-top: -20px;">
-                </div>
-
-                <div id="tendril" class="tabcontent2">
-                  <img src="./assets/imgs/tendril-plot.svg" alt="correlation matrix" style="width:84%;height:84%; margin-top: 40px;">
-                </div>
-            
-          </div>
+        <div id="timeline" class="tabcontent1 show">
+          <img src="./assets/imgs/patient-timeline.svg" alt="patient timeline">
         </div>
+        <div id="matrix" class="tabcontent1">
+          <img src="./assets/imgs/correlation.svg" alt="correlation matrix">
+        </div>
+      </div>
+      <div class="flex-item">
+        <div class="tab">
+          <button class="tablinks2 active" id="mult-symptoms-btn">Multiple symptoms</button>
+          <button class="tablinks2" id="mult-patients-btn">Multiple patients</button>
+        </div>
+        <div id="stack" class="tabcontent2 show">
+          <img src="./assets/imgs/symptoms-timeline.svg" alt="correlation matrix">
+        </div>
+        <div id="tendril" class="tabcontent2">
+          <img src="./assets/imgs/tendril-plot.svg" alt="correlation matrix">
+        </div>
+      </div>
+    </div>
   </div>
-  <script>
-    function openSecondView(evt, view) {
-      var i, tabcontent1, tablinks1;
-      tabcontent1 = document.getElementsByClassName("tabcontent1");
-      for (i = 0; i < tabcontent1.length; i++) {
-        tabcontent1[i].style.display = "none";
-      }
-      tablinks1 = document.getElementsByClassName("tablinks1");
-      for (i = 0; i < tablinks1.length; i++) {
-        tablinks1[i].className = tablinks1[i].className.replace(" active", "");
-      }
-      document.getElementById(view).style.display = "block";
-      evt.currentTarget.className += " active";
-    }
-     function openForthView(evt, view) {
-      var i, tabcontent2, tablinks2;
-      tabcontent2 = document.getElementsByClassName("tabcontent2");
-      for (i = 0; i < tabcontent2.length; i++) {
-        tabcontent2[i].style.display = "none";
-      }
-      tablinks2 = document.getElementsByClassName("tablinks2");
-      for (i = 0; i < tablinks2.length; i++) {
-        tablinks2[i].className = tablinks2[i].className.replace(" active", "");
-      }
-      document.getElementById(view).style.display = "block";
-      evt.currentTarget.className += " active";
-    
-    }
-  </script>
   <script src="./src/index.js"></script>
 </body>
 

@@ -33,18 +33,30 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   $('#patient-list').dropdown({ maxSelections: 3 });
-});
 
-// $('.tablinks').click((evt, view)=> {
-//   var i, tabcontent, tablinks;
-//   tabcontent = document.getElementsByClassName("tabcontent");
-//   for (i = 0; i < tabcontent.length; i++) {
-//     tabcontent[i].style.display = "none";
-//   }
-//   tablinks = document.getElementsByClassName("tablinks");
-//   for (i = 0; i < tablinks.length; i++) {
-//     tablinks[i].className = tablinks[i].className.replace(" active", "");
-//   }
-//   document.getElementById(view).style.display = "block";
-//   evt.currentTarget.className += " active";
-// });
+  // Connecting tab event listeners
+  $('#timeline-btn').on('click', function () {
+    $('#timeline-btn').toggleClass('active');
+    $('#correlation-btn').toggleClass('active');
+    $('#timeline').show();
+    $('#matrix').hide();
+  });
+  $('#correlation-btn').on('click', function () {
+    $('#timeline-btn').toggleClass('active');
+    $('#correlation-btn').toggleClass('active');
+    $('#timeline').hide();
+    $('#matrix').show();
+  });
+  $('#mult-symptoms-btn').on('click', function () {
+    $('#mult-symptoms-btn').toggleClass('active');
+    $('#mult-patients-btn').toggleClass('active');
+    $('#tendril').hide();
+    $('#stack').show();
+  });
+  $('#mult-patients-btn').on('click', function () {
+    $('#mult-symptoms-btn').toggleClass('active');
+    $('#mult-patients-btn').toggleClass('active');
+    $('#tendril').show();
+    $('#stack').hide();
+  });
+});
