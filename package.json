@@ -38,6 +38,10 @@
   "staticFiles": {
     "staticPath": [
       {
+        "staticPath": "assets",
+        "staticOutDir": "assets"
+      },
+      {
         "staticPath": "data",
         "staticOutDir": "data"
       }

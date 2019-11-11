@@ -1,31 +1,29 @@
 import $ from 'jquery';
 
 class TimeSlider {
-  constructor(selector, timePeriods, labels, stepSize = 6) {
+  constructor(selector, timePeriods, labels) {
     this.selector = selector;
     this.timePeriods = timePeriods;
-    this.labels = labels;
-    this.stepSize = stepSize;
+    this.labels = labels || [...timePeriods];
+    this.labels[0] = 'Baseline';
+    this.labels[this.labels.length - 1] = '> 2 years';
   }
 
   init() {
-    const min = Math.min(...this.timePeriods);
-    const max = this.stepSize * (
-      Math.floor(Math.max(...this.timePeriods) / this.stepSize) + 1);
     $(this.selector).slider({
-      max,
-      min,
-      step: this.stepSize,
+      max: this.labels.length,
+      min: 1,
       onChange: this.onChange.bind(this),
     });
-    $(`${this.selector} ul li:last-child`)
-      .text('> 2 years');
-    $(`${this.selector} ul li:first-child`)
-      .text('Baseline');
+    const { labels } = this;
+    $(`${this.selector} ul li`).each(function (i) {
+      $(this).text(labels[i]);
+    })
   }
 
   onChange(value) {
-    console.log(value);
+    window.currentPeriod = this.timePeriods[value - 1];
+    $('#matrix > img').attr('src', `/assets/imgs/correlation/${window.currentPeriod}.svg`);
   }
 }
 
