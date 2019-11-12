@@ -1,12 +1,13 @@
 import $ from 'jquery';
 
 class TimeSlider {
-  constructor(selector, timePeriods, labels) {
+  constructor(selector, timePeriods, afterChange, labels) {
     this.selector = selector;
     this.timePeriods = timePeriods;
     this.labels = labels || [...timePeriods];
     this.labels[0] = 'Baseline';
     this.labels[this.labels.length - 1] = '> 2 years';
+    this.afterChange = afterChange;
   }
 
   init() {
@@ -24,6 +25,7 @@ class TimeSlider {
   onChange(value) {
     window.currentPeriod = this.timePeriods[value - 1];
     $('#matrix > img').attr('src', `/assets/imgs/correlation/${window.currentPeriod}.svg`);
+    this.afterChange(window.currentPeriod);
   }
 }
 
