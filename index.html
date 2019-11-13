@@ -17,42 +17,40 @@
   <div class="flex-container-row">
     <div class="flex-container-column">
       <div class="flex-item">
-        <div class="container">
-          <div id="legend">
-            <div><svg id="legend_color"></svg></div>
-            <div><svg id="legend_size"></svg></div>
-          </div>
-          <div id="scatterplot">
-          </div>
-        </div>
-      </div>
-      <div class="flex-item star-plot">
-        <img src="./assets/imgs/star-plot.svg" alt="star plot">
-      </div>
-    </div>
-    <div class="flex-container-column">
-      <div class="flex-item">
         <div class="tab">
-          <button class="tablinks1 active" id="timeline-btn">Timeline</button>
+          <button class="tablinks1 active" id="scatterplot-btn">Symptom Clusters</button>
           <button class="tablinks1" id="correlation-btn">Correlation Matrix</button>
         </div>
-        <div id="timeline" class="tabcontent1 show">
-          <img src="./assets/imgs/patient-timeline.svg" alt="patient timeline">
+        <div class="tabcontent1 show">
+          <div class="container">
+            <div id="legend">
+              <div><svg id="legend_color"></svg></div>
+              <div><svg id="legend_size"></svg></div>
+            </div>
+            <div id="scatterplot">
+            </div>
+          </div>
         </div>
         <div id="matrix" class="tabcontent1">
           <img src="" alt="correlation matrix">
         </div>
       </div>
+    </div>
+    <div class="flex-container-column">
       <div class="flex-item">
         <div class="tab">
           <button class="tablinks2 active" id="mult-symptoms-btn">Multiple symptoms</button>
           <button class="tablinks2" id="mult-patients-btn">Multiple patients</button>
+          <button class="tablinks2" id="mult-timestamps-btn">Multiple time</button>
         </div>
         <div id="stack" class="tabcontent2 show">
-          <img src="./assets/imgs/symptoms-timeline.svg" alt="correlation matrix">
+          <img src="./assets/imgs/symptoms-timeline.svg" alt="stacked symptoms">
         </div>
         <div id="tendril" class="tabcontent2">
-          <img src="./assets/imgs/tendril-plot.svg" alt="correlation matrix">
+          <img src="./assets/imgs/tendril-plot.svg" alt="tendril plot">
+        </div>
+        <div id="star-plot" class="tabcontent2 star-plot">
+          <img src="./assets/imgs/star-plot.svg" alt="star plot">
         </div>
       </div>
     </div>
