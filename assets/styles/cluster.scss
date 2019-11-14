@@ -1,0 +1,109 @@
+#scatterplot {
+  display: grid;
+  grid-template-areas:
+    "A B"
+    "C C";
+  grid-gap: 1em;
+}
+
+.axis path,
+.axis line {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
+}
+
+#scatterplot text {
+  font-family: sans-serif;
+  font-size: 12px;
+}
+
+.tick text {
+  color: black;
+  font-weight: lighter;
+}
+
+.container {
+  position: relative;
+}
+
+.tumor-scale, .color-scale {
+  p {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+  .color-circle {
+    border-radius: 20px;
+    display: inline-block;
+    height: 20px;
+    width: 20px;
+    margin-right: 8px;
+    background-color: black;
+  }
+}
+
+.tumor-scale {
+  color: black;
+  font-size: 1rem;
+  border: 1px solid black;
+  padding: 16px;
+  width: fit-content;
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+
+  .t1 {
+    width: 4px;
+    height: 4px;
+  }
+
+  .t2 {
+    width: 8px;
+    height: 8px;
+  }
+
+  .t3 {
+    width: 12px;
+    height: 12px;
+  }
+
+  .t4 {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+.color-scale {
+  color: black;
+  font-size: 1rem;
+  border: 1px solid black;
+  padding: 16px;
+  width: fit-content;
+  position: absolute;
+  bottom: 16px;
+  left: 16px;
+
+  .color-circle.male {
+    background-color: rgba(33, 127, 242, 0.52);
+  }
+
+  .color-circle.female {
+    background-color: rgba(242, 33, 166, 0.52);
+  }
+}
+
+#Mild {
+  grid-area: A;
+}
+
+#Average {
+  grid-area: C;
+  max-width: 50%;
+  margin: 0 auto;
+}
+
+#Severe {
+  grid-area: B;
+}
