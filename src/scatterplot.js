@@ -25,6 +25,10 @@ class ScatterPlot {
 
     const leftStart = this.margin.left + 45;
 
+    g.append('text')
+      .attr('class', 'plot-title')
+      .text(this.label);
+
     this.xScale = d3.scaleLinear()
       .domain(this.domain.x)
       .range([leftStart, this.width - this.margin.right]);
