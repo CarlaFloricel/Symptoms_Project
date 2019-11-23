@@ -18,12 +18,14 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   $('#patient-list').dropdown({ maxSelections: 3 });
+  $('#scatterplot-legend').hide();
 
   // Connecting tab event listeners
   $('#scatterplot-btn').on('click', function () {
     $('#scatterplot-btn').toggleClass('active');
     $('#correlation-btn').toggleClass('active');
     $('#scatterplot').show();
+    $('#scatterplot-legend').show();
     $('#star-plot').hide();
     $('#matrix').hide();
   });
@@ -31,6 +33,7 @@ window.addEventListener('DOMContentLoaded', () => {
     $('#scatterplot-btn').toggleClass('active');
     $('#correlation-btn').toggleClass('active');
     $('#scatterplot').hide();
+    $('#scatterplot-legend').hide();
     $('#matrix').show();
   });
   $('#mult-symptoms-btn').on('click', function () {
@@ -60,13 +63,13 @@ const scatterPlotLevels = ['Mild', 'Average', 'Severe'];
 const scatterPlots = { 0: null, 1: null, 2: null };
 
 async function drawScatterPlots(period) {
-  const patients = await d3.csv('/data/datasets/patients.csv');
+  const patients = await d3.csv('/data/datasets/patients_complete.csv');
   const clusters = await d3.csv(`/data/output/raw_result-time-${period}.csv`);
   window.patients = patients;
   window.clusters = clusters;
-  const merged = innerJoin(clusters, (x) => x['patientId'], patients, (x) => x['ID']);
-  const x = d3.extent(merged.map(m => parseInt(m['Age.at.Diagnosis'])));
-  const y = d3.extent(merged.map(m => parseFloat(m['Total.dose'])));
+  const merged = innerJoin(clusters, (x) => x['patientId'], patients, (x) => x['patientId']);
+  const x = d3.extent(merged.map(m => parseInt(m['age'])));
+  const y = d3.extent(merged.map(m => parseFloat(m['total_dose'])));
   const domain = {
     x: [x[0] - 10, x[1] + 10],
     y: [y[0] - 1, y[1] + 1],
@@ -80,10 +83,10 @@ async function drawScatterPlots(period) {
     const data = merged.filter((r) => parseInt(r.cluster) === clusterId)
       .map((row) => {
         return {
-          age: parseInt(row['Age.at.Diagnosis']),
-          dosage: parseFloat(row['Total.dose']),
-          gender: row['Gender'],
-          tumorCategory: row['T.category'],
+          age: parseInt(row['age']),
+          dosage: parseFloat(row['total_dose']),
+          gender: row['gender'],
+          tumorCategory: row['t_category'],
         };
       })
       .filter(d => d);
@@ -107,6 +110,7 @@ async function drawScatterPlots(period) {
     scatterPlots[clusterId] = plot;
   });
 
+  $('#scatterplot-legend').show();
   updatePatientIds(new Set(patientIds));
 }
 
