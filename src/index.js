@@ -7,6 +7,7 @@ require('fomantic-ui-css/semantic.min.css');
 
 import TimeSlider from './timeslider';
 import ScatterPlot from './scatterplot';
+import StackedLinePlot from './stackedLinePlot';
 
 class App {
   constructor() {
@@ -118,7 +119,17 @@ class App {
     } else if (this.scatterPlot) {
       this.scatterPlot.clear();
       this.scatterPlot.update(data);
+
     }
+
+    const dummyDomain = {
+      x: [0, 6],
+      y: [0, 10],
+    };
+
+    let stackedPlot = new StackedLinePlot(
+      dummySymptoms);
+    stackedPlot.init();
 
     // if ($('#scatterplot').is(":visible"))
     //   $('#scatterplot-legend').show();
