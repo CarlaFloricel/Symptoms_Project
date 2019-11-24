@@ -12,6 +12,7 @@ class App {
   constructor() {
     this.scatterPlot = null;
     this.drawClusters = this.drawClusters.bind(this);
+    this.onPatientSelect = this.onPatientSelect.bind(this);
   }
 
   async initTimeSlider() {
@@ -27,11 +28,10 @@ class App {
 
     $('#patient-list').dropdown({
       maxSelections: 3,
-      action: 'hide',
-      onChange: (value, text, $selectedItem) => {
-        console.log(value, text, $selectedItem);
-      }
+      action: 'activate',
+      onChange: this.onPatientSelect,
     });
+
     $('#scatterplot-legend').hide();
 
     // Connecting tab event listeners
@@ -77,6 +77,10 @@ class App {
     });
   }
 
+  async onPatientSelect(value) {
+    this.highlightPatients(value);
+  }
+
   async loadDataset(period) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
     const clusters = await d3.csv(`/data/output/raw_result-time-${period}.csv`);
@@ -120,6 +124,11 @@ class App {
     //   $('#scatterplot-legend').show();
 
     this.updatePatientIds(new Set(patientIds));
+  }
+
+  async highlightPatients(patientIds) {
+    if (!this.scatterPlot) return;
+    this.scatterPlot.highlight(patientIds);
   }
 }
 

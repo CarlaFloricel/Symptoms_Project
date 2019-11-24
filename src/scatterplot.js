@@ -48,7 +48,8 @@ class ScatterPlot {
       .data(leaves)
       .join("g")
       .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
-      .classed("leaf", true);
+      .classed("leaf", true)
+      .attr("id", d => (d.leafUid = `leaf-container-${d.data.patientId}`));
 
     leaf.append("path")
       .attr("d", d => {
@@ -85,6 +86,17 @@ class ScatterPlot {
 
     leaf.append("title")
       .text(d => d.data.patientId);
+  }
+
+  highlight(ids) {
+    // lower opacity of all leaves
+    const leaves = this.svg.selectAll('.leaf');
+    leaves.style('opacity', 0.15);
+
+    // increase opacity of selected leaves
+    ids.forEach((id) => {
+      this.svg.select(`#leaf-container-${id}`).style('opacity', 1);
+    });
   }
 
   clear() {
