@@ -1,38 +1,18 @@
 #scatterplot {
-  display: grid;
-  grid-template-areas:
-    "A B"
-    "C C";
-  grid-gap: 1em;
+  height: 100%;
+  width: auto;
 
-  .plot-title {
-    font-size: 18px;
-    text-anchor: middle;
-    transform: translate(50%);
+  svg {
+    height: 100%;
+    width: auto;
   }
 }
 
-.axis path,
-.axis line {
-  fill: none;
-  stroke: black;
-  shape-rendering: crispEdges;
-}
-
 #scatterplot text {
-  font-weight: bolder;
-  font-family: Roboto, Arial, Helvetica, sans-serif;
-  font-size: 12px;
-  text-transform: uppercase;
-}
-
-.tick text {
-  color: black;
   font-weight: lighter;
-}
-
-.container {
-  position: relative;
+  font-family: Roboto, Arial, Helvetica, sans-serif;
+  font-size: 0.5rem;
+  text-transform: uppercase;
 }
 
 .tumor-scale, .color-scale {
@@ -99,31 +79,5 @@
 
   .color-circle.female {
     background-color: rgba(242, 33, 166, 0.52);
-  }
-}
-
-#Mild {
-  grid-area: A;
-
-  .plot-title {
-    fill: #57A773;
-  }
-}
-
-#Average {
-  grid-area: C;
-  max-width: 50%;
-  margin: 0 auto;
-
-  .plot-title {
-    fill: #6A8EAE;
-  }
-}
-
-#Severe {
-  grid-area: B;
-
-  .plot-title {
-    fill: #7D2A2A;
   }
 }
