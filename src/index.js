@@ -25,7 +25,13 @@ class App {
   init() {
     this.initTimeSlider();
 
-    $('#patient-list').dropdown({ maxSelections: 3 });
+    $('#patient-list').dropdown({
+      maxSelections: 3,
+      action: 'hide',
+      onChange: (value, text, $selectedItem) => {
+        console.log(value, text, $selectedItem);
+      }
+    });
     $('#scatterplot-legend').hide();
 
     // Connecting tab event listeners
