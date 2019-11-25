@@ -24,6 +24,9 @@ class StackedLinePlot {
       .append('svg')
       .attr('class', 'plot')
       .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
+      .attr('font-size', 10)
+      .attr("font-family", "sans-serif")
+      .attr('preserveAspectRatio', "xMidYMid meet");
 
     const g = svg.append('g')
       .attr('transform', `translate(0,40)`);
@@ -49,12 +52,11 @@ class StackedLinePlot {
       .attr('transform', `translate(${0},${height - margin.top})`)
       .call(d3.axisBottom(xScale));
 
-    const yScales = periods.map(period => 
+    const yScales = periods.map(period =>
       d3.scaleLinear()
       .range([height - margin.bottom, margin.top])
       .domain(d3.extent(periods.map(d => d[period])))
     )
-
 
     periods.forEach((period,i) => {
       g.append('g')
@@ -63,6 +65,7 @@ class StackedLinePlot {
         .attr('transform', `translate(${xScale(period)},0)`)
         .call(d3.axisLeft(yScales[i]))
     })
+
     g.append('g')
       .attr('class', 'axis')
       .attr('color','black')
@@ -100,48 +103,47 @@ class StackedLinePlot {
 
     for(i=0;i<groupsNo;i++){
       g.append('text')
-        .attr('x',290)
+        .attr('x',285)
         .attr('y',height-40-28*i)
-        .attr('font-size','8')
         .text(symptoms[i])
     }
-    
+
 
 
      groupPlots[0]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
-              .y(function(d) { return yScale((parseInt(d.pain)+10*i)/10); }); 
+              .y(function(d) { return yScale((parseInt(d.pain)+10*i)/10); });
 
 
      groupPlots[1]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
-              .y(function(d) { return yScale((parseInt(d.nausea)+10*i)/10); }); 
+              .y(function(d) { return yScale((parseInt(d.nausea)+10*i)/10); });
 
      groupPlots[2]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
-              .y(function(d) { return yScale((parseInt(d.fatigue)+10*i)/10); }); 
+              .y(function(d) { return yScale((parseInt(d.fatigue)+10*i)/10); });
 
      groupPlots[3]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
-              .y(function(d) { return yScale((parseInt(d.teethProblem)+10*i)/10); }); 
+              .y(function(d) { return yScale((parseInt(d.teethProblem)+10*i)/10); });
 
      groupPlots[4]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
-              .y(function(d) { return yScale((parseInt(d.distress)+10*i)/10); }); 
+              .y(function(d) { return yScale((parseInt(d.distress)+10*i)/10); });
 
-              
+
     for(i=0;i<groupsNo;i++){
       g.append("path")
       .datum(patient)
       .attr("d", groupPlots[i])
       .attr('fill','none')
       .attr('stroke',colors[i])
-      .attr('stroke-width','1px') 
+      .attr('stroke-width','1px')
     }
 
     g.append('text')

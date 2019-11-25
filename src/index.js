@@ -108,7 +108,7 @@ class App {
   }
 
   async updatePatientIds(ids) {
-    $('.ui.dropdown .default.text').text(`Select Patient ID(s) - Total Count: ${ids.size}`)
+    $('.ui.dropdown:has(#patient-list) .default.text').text(`Select Patient ID(s) - Total Count: ${ids.size}`)
     const selectEl = $('#patient-list');
     selectEl.empty();
     ids.forEach((id) => {
@@ -120,7 +120,7 @@ class App {
 
 
   async updateSymptoms() {
-    $('.ui.dropdown .default.text').text(`Select Symptom(s)`)
+    $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Symptom(s)`)
     const symptoms=['pain','fatigue','nausea','disturbedSleep','distress','shortnessOfBreath','memory','lackOfAppetite','drowsiness','dryMouth','sadness',
     'vomit','numbness','mucusInMouthAndThroat','difficultyInSwallowing','choking','speech','skinPain','constipation','taste','sores','teethProblem',
     'generalActivity','mood','work','relations','walking','enjoymentOfLife','period'];
@@ -147,18 +147,6 @@ class App {
 
     }
 
-    const dummyDomain = {
-      x: [0, 6],
-      y: [0, 10],
-    };
-
-    let stackedPlot = new StackedLinePlot(
-      dummySymptoms);
-    stackedPlot.init();
-
-    // if ($('#scatterplot').is(":visible"))
-    //   $('#scatterplot-legend').show();
-
     this.updatePatientIds(new Set(patientIds));
   }
 
@@ -167,7 +155,6 @@ class App {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
     let plot = new StackedLinePlot(patientInfo, patientId);
     plot.init();
-
    }
 
   async highlightPatients(patientIds) {
