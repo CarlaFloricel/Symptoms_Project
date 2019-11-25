@@ -1,8 +1,9 @@
 import * as d3 from 'd3';
 
 class StackedLinePlot {
-  constructor(data) {
+  constructor(data, patientId) {
     this.data = data;
+    this.patientId=patientId;
   }
 
   init() {
@@ -10,13 +11,14 @@ class StackedLinePlot {
     const margin = { left: 10, right: 20, top: 30, bottom: 30 };
     const width = 300;
     const height = 200;
-    const { data } = this;
+    const { data, patientId } = this;
+    var patient = data.filter(p => p.patientId == patientId);
     var i=0;
     var groupsNo=5;
     var groupPlots=[];
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
-    var groups = [];
+    var symptoms = ['pain','nausea','fatigue','teethProblem','distress'];
 
     const svg = d3.select("#stackedLinePlot")
       .append('svg')
@@ -24,14 +26,13 @@ class StackedLinePlot {
       .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
 
     const g = svg.append('g')
-      .attr('transform', `translate(${margin.left},${margin.top})`);
+      .attr('transform', `translate(0,40)`);
 
     g.append('text')
       .attr('class', 'stackTitle')
       .attr('font-size','10px')
       .attr('transform', `translate(${width/2-margin.left},${margin.top/2})`)
-      .text("Patient " +data[0].patientId)
-
+      .text("Patient " + this.patientId)
 
 
     const xScale = d3.scalePoint()
@@ -44,6 +45,7 @@ class StackedLinePlot {
 
     g.append('g')
       .attr('class', 'axis')
+      .attr('color','black')
       .attr('transform', `translate(${0},${height - margin.top})`)
       .call(d3.axisBottom(xScale));
 
@@ -57,11 +59,13 @@ class StackedLinePlot {
     periods.forEach((period,i) => {
       g.append('g')
         .attr('class', 'axis')
+        .attr('color','black')
         .attr('transform', `translate(${xScale(period)},0)`)
         .call(d3.axisLeft(yScales[i]))
     })
     g.append('g')
       .attr('class', 'axis')
+      .attr('color','black')
       .attr('transform', `translate(${margin.left + 45},0)`)
       .call(d3.axisLeft(yScale))
 
@@ -84,35 +88,61 @@ class StackedLinePlot {
         .attr('opacity', '0.2');
     }
 
+    // for(i=0;i<groupsNo;i++){
+    //   g.append('rect')
+    //     .attr('x',margin.left + 290)
+    //     .attr('y',height-58-28*i)
+    //     .attr('height',28)
+    //     .attr('width',10)
+    //     .attr('fill',colors[i])
+    //     .attr('opacity', '0.2');
+    // }
+
     for(i=0;i<groupsNo;i++){
-      g.append('rect')
-        .attr('x',margin.left + 290)
-        .attr('y',height-58-28*i)
-        .attr('height',28)
-        .attr('width',10)
-        .attr('fill',colors[i])
-        .attr('opacity', '0.2');
+      g.append('text')
+        .attr('x',290)
+        .attr('y',height-40-28*i)
+        .attr('font-size','8')
+        .text(symptoms[i])
     }
     
-    for(i=0;i<groupsNo;i++){
-      groupPlots[i]=d3.line()
+
+
+     groupPlots[0]=d3.line()
               .defined(function(d) { return parseInt(d.period) >= 0; })
               .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
               .y(function(d) { return yScale((parseInt(d.pain)+10*i)/10); }); 
-    }
 
+
+     groupPlots[1]=d3.line()
+              .defined(function(d) { return parseInt(d.period) >= 0; })
+              .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
+              .y(function(d) { return yScale((parseInt(d.nausea)+10*i)/10); }); 
+
+     groupPlots[2]=d3.line()
+              .defined(function(d) { return parseInt(d.period) >= 0; })
+              .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
+              .y(function(d) { return yScale((parseInt(d.fatigue)+10*i)/10); }); 
+
+     groupPlots[3]=d3.line()
+              .defined(function(d) { return parseInt(d.period) >= 0; })
+              .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
+              .y(function(d) { return yScale((parseInt(d.teethProblem)+10*i)/10); }); 
+
+     groupPlots[4]=d3.line()
+              .defined(function(d) { return parseInt(d.period) >= 0; })
+              .x(function(d) { return xScale(transformPeriod(parseInt(d.period))); })
+              .y(function(d) { return yScale((parseInt(d.distress)+10*i)/10); }); 
+
+              
     for(i=0;i<groupsNo;i++){
       g.append("path")
-      .datum(data)
+      .datum(patient)
       .attr("d", groupPlots[i])
       .attr('fill','none')
       .attr('stroke',colors[i])
       .attr('stroke-width','1px') 
     }
-
-
-
- 
 
     g.append('text')
       .attr('transform', `translate(${width / 2},${height})`)

@@ -14,6 +14,7 @@ class App {
     this.scatterPlot = null;
     this.drawClusters = this.drawClusters.bind(this);
     this.onPatientSelect = this.onPatientSelect.bind(this);
+    this.stackPlot = this.stackPlot.bind(this);
   }
 
   async initTimeSlider() {
@@ -26,12 +27,18 @@ class App {
 
   init() {
     this.initTimeSlider();
+    this.stackPlot(102);
 
     $('#patient-list').dropdown({
       maxSelections: 3,
       action: 'activate',
       onChange: this.onPatientSelect,
     });
+
+    $('#symptoms-list').dropdown({
+      maxSelections: 3,
+      action: 'activate',
+      });
 
     $('#scatterplot-legend').hide();
 
@@ -76,6 +83,8 @@ class App {
       $('#tendril').hide();
       $('#stack').hide();
     });
+
+    this.updateSymptoms();
   }
 
   async onPatientSelect(value) {
@@ -109,6 +118,22 @@ class App {
     })
   }
 
+
+  async updateSymptoms() {
+    $('.ui.dropdown .default.text').text(`Select Symptom(s)`)
+    const symptoms=['pain','fatigue','nausea','disturbedSleep','distress','shortnessOfBreath','memory','lackOfAppetite','drowsiness','dryMouth','sadness',
+    'vomit','numbness','mucusInMouthAndThroat','difficultyInSwallowing','choking','speech','skinPain','constipation','taste','sores','teethProblem',
+    'generalActivity','mood','work','relations','walking','enjoymentOfLife','period'];
+    const selectEl = $('#symptoms-list');
+    selectEl.empty();
+    symptoms.forEach((i) => {
+      const optionEl = $('<option></option>', { value: i });
+      console.log(optionEl);
+      optionEl.text(i);
+      selectEl.append(optionEl);
+    })
+  }
+
   async drawClusters(period) {
     const data = await this.loadDataset(period);
     const patientIds = data.map(({ patientId }) => parseInt(patientId));
@@ -136,6 +161,14 @@ class App {
 
     this.updatePatientIds(new Set(patientIds));
   }
+
+
+   async stackPlot( patientId) {
+    const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
+    let plot = new StackedLinePlot(patientInfo, patientId);
+    plot.init();
+
+   }
 
   async highlightPatients(patientIds) {
     if (!this.scatterPlot) return;

@@ -148,3 +148,12 @@ body {
 .axis{
   font-size:10px;
 }
+
+.rightViewTabs{
+  display : flex;
+  justify-content: space-between;
+}
+
+#symptoms-list {
+  margin-right:0;
+}
