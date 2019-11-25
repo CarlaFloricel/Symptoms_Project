@@ -12,9 +12,10 @@ import StackedLinePlot from './stackedLinePlot';
 class App {
   constructor() {
     this.scatterPlot = null;
+    this.stackPlot = null;
     this.drawClusters = this.drawClusters.bind(this);
     this.onPatientSelect = this.onPatientSelect.bind(this);
-    this.stackPlot = this.stackPlot.bind(this);
+    this.showStackPlot = this.showStackPlot.bind(this);
   }
 
   async initTimeSlider() {
@@ -27,7 +28,7 @@ class App {
 
   init() {
     this.initTimeSlider();
-    this.stackPlot(102);
+    this.showStackPlot(0);
 
     $('#patient-list').dropdown({
       maxSelections: 3,
@@ -88,7 +89,10 @@ class App {
   }
 
   async onPatientSelect(value) {
+    console.log(this.stackPlot.svg);
     this.highlightPatients(value);
+    this.stackPlot.clear();
+    this.stackPlot.update(value[value.length-1])
   }
 
   async loadDataset(period) {
@@ -128,7 +132,6 @@ class App {
     selectEl.empty();
     symptoms.forEach((i) => {
       const optionEl = $('<option></option>', { value: i });
-      console.log(optionEl);
       optionEl.text(i);
       selectEl.append(optionEl);
     })
@@ -151,10 +154,10 @@ class App {
   }
 
 
-   async stackPlot( patientId) {
+   async showStackPlot( patientId) {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
-    let plot = new StackedLinePlot(patientInfo, patientId);
-    plot.init();
+    this.stackPlot = new StackedLinePlot(patientInfo, patientId);
+    this.stackPlot.init();
    }
 
   async highlightPatients(patientIds) {
