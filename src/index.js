@@ -74,21 +74,21 @@ class App {
       $('#star-plot').hide();
     });
 
-    $('#mult-patients-btn').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#tendril').hide();
-      $('#star-plot').hide();
-      $('#stack').hide();
-    });
+    // $('#mult-patients-btn').on('click', function () {
+    //   $('#mult-symptoms-btn').toggleClass('active');
+    //   $('#mult-patients-btn').toggleClass('active');
+    //   $('#tendril').hide();
+    //   $('#star-plot').hide();
+    //   $('#stack').hide();
+    // });
 
-    $('#mult-timestamps-btn').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#star-plot').show();
-      $('#tendril').hide();
-      $('#stack').hide();
-    });
+    // $('#mult-timestamps-btn').on('click', function () {
+    //   $('#mult-symptoms-btn').toggleClass('active');
+    //   $('#mult-patients-btn').toggleClass('active');
+    //   $('#star-plot').show();
+    //   $('#tendril').hide();
+    //   $('#stack').hide();
+    // });
 
     this.updateSymptoms();
   }
