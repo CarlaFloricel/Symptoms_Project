@@ -63,7 +63,7 @@ class StackedLinePlot {
       .attr('class', 'axis')
       .attr('color', 'black')
       .attr('transform', `translate(${margin.left + 45},0)`)
-      .call(d3.axisLeft(this.yScale))
+      .call(d3.axisLeft(this.yScale).ticks(20).tickFormat((d, i) => (i % 5) * 2));
 
     for (i = 0; i < 5; i++) {
       this.g.append('rect')
