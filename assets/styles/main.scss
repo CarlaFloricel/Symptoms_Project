@@ -36,7 +36,7 @@ body {
 #time-slider {
   width: 25%;
   min-width: 200px;
-  margin-left: 73%;
+  margin-left: 2%;
   // position: absolute;
   // right: 0;
   // top: 0;
@@ -172,7 +172,9 @@ body {
 }
 
 #scatterplot-legend {
+  height: 100%;
   width: 100%;
   position: absolute;
   bottom: 32px;
+  pointer-events: none;
 }

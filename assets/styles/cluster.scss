@@ -19,7 +19,7 @@
   text-transform: uppercase;
 }
 
-.shape-scale, .color-scale {
+.size-scale, .shape-scale, .color-scale {
   --margin: 8px;
   color: black;
   font-size: 1rem;
@@ -46,6 +46,32 @@
     width: 20px;
     margin-right: 8px;
     background-color: black;
+  }
+}
+
+.size-scale {
+  top: 34px;
+  right: 4px;
+  bottom: unset;
+
+  .color-circle.t1 {
+    width: 6px;
+    height: 6px;
+  }
+
+  .color-circle.t2 {
+    width: 8px;
+    height: 8px;
+  }
+  
+  .color-circle.t3 {
+    width: 12px;
+    height: 12px;
+  }
+  
+  .color-circle.t4 {
+    width: 16px;
+    height: 16px;
   }
 }
 

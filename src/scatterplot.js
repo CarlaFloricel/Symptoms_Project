@@ -5,7 +5,7 @@ class ScatterPlot {
     return d3.line()
       .x(function (d) { return d.x; })
       .y(function (d) { return d.y; })
-      .curve(d3.curveCardinalClosed.tension(0.5))(data);
+      .curve(d3.curveCardinalClosed.tension(0.65))(data);
   }
 
   constructor(selector, width, height, data, onPatientSelected) {

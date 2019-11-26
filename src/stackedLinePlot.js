@@ -4,7 +4,8 @@ class StackedLinePlot {
   constructor(data, patientId) {
     this.data = data;
     this.patientId = patientId;
-    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
+    // this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
+    this.symptoms = [];
   }
 
   init() {
