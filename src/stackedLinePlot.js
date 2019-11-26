@@ -4,16 +4,18 @@ class StackedLinePlot {
   constructor(data, patientId) {
     this.data = data;
     this.patientId=patientId;
+    this.symptoms=['pain','fatigue','nausea','disturbedSleep','distress'];
   }
 
   init() {
+
     var i=0;
     const { data, patientId } = this;
-    const margin = { left: 10, right: 20, top: 30, bottom: 30 };
+    const margin = { left: 10, right: 20, top: 10, bottom: 10 };
     const width = 300;
     const height = 200;
 
-    var symptoms = ['pain','nausea','fatigue','teethProblem','distress'];
+    // var symptoms = ['pain','nausea','fatigue','teethProblem','distress'];
      const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years']; 
 
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
@@ -26,7 +28,7 @@ class StackedLinePlot {
       .attr('preserveAspectRatio', "xMidYMid meet");
 
     this.g = this.svg.append('g')
-      .attr('transform', `translate(0,40)`);
+      .attr('transform', `translate(0,0)`);
 
 
 
@@ -36,17 +38,17 @@ class StackedLinePlot {
 
     this.yScale = d3.scaleLinear()
       .domain([0,5])
-      .range([height - margin.bottom, margin.top]);
+      .range([height - margin.bottom-20, margin.top+20]);
 
     this.g.append('g')
       .attr('class', 'axis')
       .attr('color','black')
-      .attr('transform', `translate(${0},${height - margin.top})`)
+      .attr('transform', `translate(${0},${height - margin.top-20})`)
       .call(d3.axisBottom(this.xScale));
 
     this.yScales = periods.map(period =>
       d3.scaleLinear()
-      .range([height - margin.bottom, margin.top])
+      .range([height - margin.bottom-20, margin.top+20])
       .domain(d3.extent(periods.map(d => d[period])))
     )
 
@@ -86,13 +88,6 @@ class StackedLinePlot {
     //     .attr('opacity', '0.2');
     // }
 
-    for(i=0;i<5;i++){
-      this.g.append('text')
-        .attr('x',285)
-        .attr('y',height-40-28*i)
-        .text(symptoms[i])
-    }
-
     this.g.append('text')
       .attr('transform', `translate(${width / 2},${height})`)
       .style('text-anchor', 'middle')
@@ -101,22 +96,30 @@ class StackedLinePlot {
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 - margin.left + 16)
+      .attr('y', 0 - margin.left +30)
       .attr('x', 0 - (height / 2))
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
       .text('Symptoms Group no.')
       .attr('font-size','10px');
 
+    for(i=0;i<5;i++){
+      this.g.append('text')
+        .attr('class', 'symptomText')
+        .attr('x',285)
+        .attr('y',height-40-28*i)
+        .text(this.symptoms[i])
+    }
 
    
-    this.drawStackPlot(patientId);
+    this.drawStackPlot(patientId, this.symptoms);
    
   }
 
 
 
-  drawStackPlot(patientId){
+  drawStackPlot(patientId, symptoms){
+    
 
     const margin = { left: 10, right: 20, top: 30, bottom: 30 };
     const width = 300;
@@ -141,34 +144,17 @@ class StackedLinePlot {
               '> 2 years';
   }
 
-     groupPlots[0]=d3.line()
+
+    for(i=0; i<5; i++){
+     groupPlots[i]=d3.line()
               .defined(d =>  { return parseInt(d.period) >= 0; })
               .x(d => { return this.xScale(transformPeriod(parseInt(d.period))); })
-              .y(d => { return this.yScale((parseInt(d.pain) + 10 * i) / 10); });
+              .y(d => { return this.yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10); });
+
+    }
 
 
-     groupPlots[1]=d3.line()
-              .defined(d =>  { return parseInt(d.period) >= 0; })
-              .x(d =>  { return this.xScale(transformPeriod(parseInt(d.period))); })
-              .y(d =>  { return this.yScale((parseInt(d.nausea)+ 10 * i) / 10); });
-
-     groupPlots[2]=d3.line()
-              .defined(d =>  { return parseInt(d.period) >= 0; })
-              .x(d =>  { return this.xScale(transformPeriod(parseInt(d.period))); })
-              .y(d =>  { return this.yScale((parseInt(d.fatigue) + 10 * i) / 10); });
-
-     groupPlots[3]=d3.line()
-              .defined(d =>  { return parseInt(d.period) >= 0; })
-              .x(d =>  { return this.xScale(transformPeriod(parseInt(d.period))); })
-              .y(d =>  { return this.yScale((parseInt(d.teethProblem) + 10 * i) / 10); });
-
-     groupPlots[4]=d3.line()
-              .defined(d =>   { return parseInt(d.period) >= 0; })
-              .x(d =>   { return this.xScale(transformPeriod(parseInt(d.period))); })
-              .y(d =>  { return this.yScale((parseInt(d.distress) + 10 * i) / 10); });
-
-
-    for(i=0;i<5;i++){
+    for(i=0;i<symptoms.length;i++){
       this.g.append("path")
       .datum(patient)
       .attr("d", groupPlots[i])
@@ -185,18 +171,28 @@ class StackedLinePlot {
       .attr('transform', `translate(${width/2 - margin.left},${margin.top/2})`)
       .text("Patient " + this.patientId)
 
-   
+
+
+    for(i=0;i<5;i++){
+      this.g.append('text')
+        .attr('class', 'symptomText')
+        .attr('x',285)
+        .attr('y',height-40-28*i)
+        .text(this.symptoms[i])
+    }
  }
 
    clear() {
     this.svg.selectAll('.linePlots').remove();
     this.svg.selectAll('.stackTitle').remove();
+    this.svg.selectAll('.symptomText').remove();
   
   }
 
-  update(patientId) {
+  update(patientId,symptoms) {
+    this.symptoms=symptoms;
     this.patientId = patientId;
-    this.drawStackPlot(patientId);
+    this.drawStackPlot(patientId, symptoms);
   }
 
 }

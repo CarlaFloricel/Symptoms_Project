@@ -16,6 +16,8 @@ class App {
     this.drawClusters = this.drawClusters.bind(this);
     this.onPatientSelect = this.onPatientSelect.bind(this);
     this.showStackPlot = this.showStackPlot.bind(this);
+    this.onSymptomsSelect = this.onSymptomsSelect.bind(this);
+    this.patients=[];
   }
 
   async initTimeSlider() {
@@ -37,8 +39,9 @@ class App {
     });
 
     $('#symptoms-list').dropdown({
-      maxSelections: 3,
+      maxSelections: 5,
       action: 'activate',
+      onChange : this.onSymptomsSelect,
       });
 
     $('#scatterplot-legend').hide();
@@ -89,11 +92,20 @@ class App {
   }
 
   async onPatientSelect(value) {
-    console.log(this.stackPlot.svg);
+    
     this.highlightPatients(value);
+    this.patients=value;
     this.stackPlot.clear();
-    this.stackPlot.update(value[value.length-1])
+    this.stackPlot.update(value[value.length-1], ['pain','fatigue','nausea','disturbedSleep','distress']);
   }
+
+    async onSymptomsSelect(value) {    
+    this.stackPlot.clear();
+    console.log("symotoameeee");
+    console.log(value);
+    this.stackPlot.update(this.patients[this.patients.length-1],value);
+  }
+
 
   async loadDataset(period) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
@@ -135,6 +147,7 @@ class App {
       optionEl.text(i);
       selectEl.append(optionEl);
     })
+
   }
 
   async drawClusters(period) {

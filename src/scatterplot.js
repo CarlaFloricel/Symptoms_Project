@@ -27,7 +27,7 @@ class ScatterPlot {
 
     this.colorScale = d3.scaleOrdinal()
       .domain(d3.extent(data.map(d => d.cluster)))
-      .range(['red', 'orange', 'green'])
+      .range(['#de2d26', '#fc9272', '#fee0d2'])
 
     this.svg = d3.select(this.selector)
       .append('svg')
