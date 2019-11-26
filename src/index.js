@@ -8,6 +8,7 @@ require('fomantic-ui-css/semantic.min.css');
 import TimeSlider from './timeslider';
 import ScatterPlot from './scatterplot';
 import StackedLinePlot from './stackedLinePlot';
+import TendrilPlot from "./tendrilplot";
 
 class App {
   constructor() {
@@ -17,7 +18,8 @@ class App {
     this.onPatientSelect = this.onPatientSelect.bind(this);
     this.showStackPlot = this.showStackPlot.bind(this);
     this.onSymptomsSelect = this.onSymptomsSelect.bind(this);
-    this.patients=[];
+    this.patients = [];
+    this.selectPatient = this.selectPatient.bind(this);
   }
 
   async initTimeSlider() {
@@ -31,6 +33,7 @@ class App {
   init() {
     this.initTimeSlider();
     this.showStackPlot(0);
+    this.drawTendrilPlot();
 
     $('#patient-list').dropdown({
       maxSelections: 3,
@@ -41,8 +44,8 @@ class App {
     $('#symptoms-list').dropdown({
       maxSelections: 5,
       action: 'activate',
-      onChange : this.onSymptomsSelect,
-      });
+      onChange: this.onSymptomsSelect,
+    });
 
     $('#scatterplot-legend').hide();
 
@@ -92,18 +95,18 @@ class App {
   }
 
   async onPatientSelect(value) {
-    
+
     this.highlightPatients(value);
-    this.patients=value;
+    this.patients = value;
     this.stackPlot.clear();
-    this.stackPlot.update(value[value.length-1], ['pain','fatigue','nausea','disturbedSleep','distress']);
+    this.stackPlot.update(value[value.length - 1], ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
   }
 
-    async onSymptomsSelect(value) {    
+  async onSymptomsSelect(value) {
     this.stackPlot.clear();
     console.log("symotoameeee");
     console.log(value);
-    this.stackPlot.update(this.patients[this.patients.length-1],value);
+    this.stackPlot.update(this.patients[this.patients.length - 1], value);
   }
 
 
@@ -134,12 +137,11 @@ class App {
     })
   }
 
-
   async updateSymptoms() {
     $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Symptom(s)`)
-    const symptoms=['pain','fatigue','nausea','disturbedSleep','distress','shortnessOfBreath','memory','lackOfAppetite','drowsiness','dryMouth','sadness',
-    'vomit','numbness','mucusInMouthAndThroat','difficultyInSwallowing','choking','speech','skinPain','constipation','taste','sores','teethProblem',
-    'generalActivity','mood','work','relations','walking','enjoymentOfLife','period'];
+    const symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
+      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
+      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
     const selectEl = $('#symptoms-list');
     selectEl.empty();
     symptoms.forEach((i) => {
@@ -155,23 +157,57 @@ class App {
     const patientIds = data.map(({ patientId }) => parseInt(patientId));
 
     if (!this.scatterPlot && data.length > 0) {
-      this.scatterPlot = new ScatterPlot('#scatterplot', 512, 512, data);
+      this.scatterPlot = new ScatterPlot('#scatterplot', 512, 512, data, this.selectPatient);
       this.scatterPlot.init();
     } else if (this.scatterPlot) {
       this.scatterPlot.clear();
       this.scatterPlot.update(data);
-
     }
-
     this.updatePatientIds(new Set(patientIds));
   }
 
+  async selectPatient(value) {
+    this.patientId = value;
+    this.drawTendrilPlot(this.patientId, this.symptoms);
+  }
 
-   async showStackPlot( patientId) {
+  async drawTendrilPlot(patientId, symptoms) {
+    $('#tendril-note').remove();
+
+    if (!patientId) {
+      d3.select('#tendril')
+        .append('p')
+        .attr('id', 'tendril-note')
+        .style('color', 'black')
+        .text('Click on a patient in the clusters to show info.');
+      return;
+    }
+
+    if (!symptoms || symptoms.length === 0) {
+      d3.select('#tendril')
+        .append('p')
+        .attr('id', 'tendril-note')
+        .style('color', 'black')
+        .text('Select symptoms from dropdown to show tendril plot.');
+      return;
+    }
+
+    $('#tendril-note').remove();
+
+    const data = await d3.csv('/data/datasets/symptoms_period.csv');
+    const patient = data.filter(d => d.patientId === patientId);
+    const patientData = { patient, symptoms };
+    if (!this.tendrilPlot) {
+      this.tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
+      this.tendrilPlot.init();
+    }
+  }
+
+  async showStackPlot(patientId) {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
     this.stackPlot = new StackedLinePlot(patientInfo, patientId);
     this.stackPlot.init();
-   }
+  }
 
   async highlightPatients(patientIds) {
     if (!this.scatterPlot) return;

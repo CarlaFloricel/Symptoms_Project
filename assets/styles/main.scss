@@ -71,7 +71,6 @@ body {
 }
 
 .tab {
-  overflow: hidden;
   background-color: ghostwhite;
 }
 
@@ -112,6 +111,7 @@ body {
   display: none;
   padding: 0px;
   border-top: none;
+  flex: 1 1 auto;
 }
 
 .show {
@@ -124,26 +124,8 @@ body {
   margin-top: 30px;
 }
 
-#scatterplot > img {
-  width: 70%;
-  margin-top: 10px;
-}
-
 #matrix > img {
   width: 90%;
-
-}
-
-#stack > img {
-  width: 100%;
-  height: 100%;
-  margin-top:40px;
-}
-
-#tendril > img {
-  width: 100%;
-  height: 100%;
-  margin-top: 40px;
 }
 
 .axis{
@@ -157,4 +139,32 @@ body {
 
 #symptoms-list {
   margin-right:0;
+}
+
+#stack {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+
+  #stackedLinePlot {
+    flex: 1 0 auto;
+    width: 100%;
+
+    svg {
+      width: auto;
+      height: 100%;
+    }
+  }
+
+  #tendril {
+    flex: 1 0 auto;
+    width: 100%;
+
+    svg {
+      padding: 24px;
+      width: auto;
+      height: 100%;
+    }
+  }
 }

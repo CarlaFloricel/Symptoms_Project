@@ -8,11 +8,12 @@ class ScatterPlot {
       .curve(d3.curveCardinalClosed.tension(0.5))(data);
   }
 
-  constructor(selector, width, height, data) {
+  constructor(selector, width, height, data, onPatientSelected) {
     this.selector = selector;
     this.width = width;
     this.height = height;
     this.data = data;
+    this.onPatientSelected = onPatientSelected;
   }
 
   pack(data) {
@@ -43,13 +44,17 @@ class ScatterPlot {
   }
 
   drawLeaves(leaves) {
-    const { svg } = this;
+    const { svg, onPatientSelected } = this;
     const leaf = svg.selectAll("g")
       .data(leaves)
       .join("g")
       .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
       .classed("leaf", true)
-      .attr("id", d => (d.leafUid = `leaf-container-${d.data.patientId}`));
+      .attr("id", d => (d.leafUid = `leaf-container-${d.data.patientId}`))
+      .on('click', function () {
+        const parts = d3.select(this).attr('id').split('-');
+        onPatientSelected(parts[parts.length - 1]);
+      });
 
     leaf.append("path")
       .attr("d", d => {
