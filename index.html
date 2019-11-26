@@ -20,12 +20,6 @@
         <div class="tab">
           <button class="tablinks1 active" id="scatterplot-btn">Symptom Clusters</button>
           <button class="tablinks1" id="correlation-btn">Correlation Matrix</button>
-          <div id="legend">
-            <div id="labels">
-              <div id="gender_legend"><p>⚫ Male      ⬢ Female </p></div>
-              <div id="severity_legend"> 🔴 Severe 🟡 Average 🟢 Mild</div>
-            </div>
-          </div>
         </div>
         <div class="tabcontent1 show">
           <div id="scatterplot">
@@ -33,15 +27,14 @@
           <div id="scatterplot-legend">
             <div class="color-scale">
               <p>Color Legend</p>
-              <p><span class="color-circle female"></span> Female</p>
-              <p><span class="color-circle male"></span> Male</p>
+              <p><span class="color-circle mild"></span> Mild</p>
+              <p><span class="color-circle average"></span> Average</p>
+              <p><span class="color-circle severe"></span> Severe</p>
             </div>
-            <div class="tumor-scale">
-              <p>Tumor size legend</p>
-              <p><span class="color-circle t1"></span> T1</p>
-              <p><span class="color-circle t2"></span> T2</p>
-              <p><span class="color-circle t3"></span> T3</p>
-              <p><span class="color-circle t4"></span> T4</p>
+            <div class="shape-scale">
+              <p>Shape legend</p>
+              <p><span class="color-circle male"></span> Male</p>
+              <p><span class="color-circle female"></span> Female</p>
             </div>
           </div>
         </div>

@@ -48,8 +48,6 @@ class App {
       onChange: this.onSymptomsSelect,
     });
 
-    $('#scatterplot-legend').hide();
-
     // Connecting tab event listeners
     $('#scatterplot-btn').on('click', function () {
       $('#scatterplot-btn').toggleClass('active');
@@ -96,7 +94,6 @@ class App {
   }
 
   async onPatientSelect(value) {
-
     this.highlightPatients(value);
     this.patients = value;
     this.stackPlot.clear();
@@ -116,7 +113,7 @@ class App {
     const data = clusters
       .filter(cluster => patients.find(patient => patient.patientId === cluster.patientId))
       .map(cluster => ({ ...cluster, ...patients.find(patient => patient.patientId === cluster.patientId) }))
-      .sort((a, b) => b.cluster - a.cluster)
+      .sort((a, b) => a.cluster - b.cluster)
       .map(({ cluster, gender, patientId, t_category }) => ({
         cluster: parseInt(cluster),
         patientId,

@@ -19,15 +19,28 @@
   text-transform: uppercase;
 }
 
-.tumor-scale, .color-scale {
+.shape-scale, .color-scale {
+  --margin: 8px;
+  color: black;
+  font-size: 1rem;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 6px;
+  width: fit-content;
+  position: absolute;
+  bottom: var(--margin);
+  right: var(--margin);
+
   p {
     display: flex;
     justify-content: start;
     align-items: center;
+    margin: 6px;
   }
 
   .color-circle {
     border-radius: 20px;
+    border: 1px solid black;
     display: inline-block;
     height: 20px;
     width: 20px;
@@ -36,52 +49,38 @@
   }
 }
 
-.tumor-scale {
-  color: black;
-  font-size: 1rem;
-  border: 1px solid black;
-  padding: 16px;
-  width: fit-content;
-  position: absolute;
-  bottom: 16px;
-  right: 16px;
-
-  .t1 {
-    width: 4px;
-    height: 4px;
-  }
-
-  .t2 {
-    width: 8px;
-    height: 8px;
-  }
-
-  .t3 {
-    width: 12px;
-    height: 12px;
-  }
-
-  .t4 {
+.shape-scale {
+  .color-circle.male {
     width: 16px;
     height: 16px;
+  }
+
+  .color-circle.female {
+    border: none;
+    background: url(/assets/imgs/hex.png);
+    -webkit-background-size: contain;
+    -moz-background-size: contain;
+    -o-background-size: contain;
+    background-size: contain;
   }
 }
 
 .color-scale {
-  color: black;
-  font-size: 1rem;
-  border: 1px solid black;
-  padding: 16px;
-  width: fit-content;
-  position: absolute;
-  bottom: 16px;
-  left: 16px;
+  left: var(--margin);
 
-  .color-circle.male {
-    background-color: rgba(33, 127, 242, 0.52);
+  .color-circle {
+    opacity: 0.65;
   }
 
-  .color-circle.female {
-    background-color: rgba(242, 33, 166, 0.52);
+  .color-circle.severe {
+    background-color: #de2d26;
+  }
+
+  .color-circle.average {
+    background-color: #fc9272;
+  }
+
+  .color-circle.mild {
+    background-color: #fee0d2;
   }
 }
