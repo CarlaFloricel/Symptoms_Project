@@ -19,6 +19,7 @@ class App {
     this.showStackPlot = this.showStackPlot.bind(this);
     this.onSymptomsSelect = this.onSymptomsSelect.bind(this);
     this.patients = [];
+    this.symptoms = [];
     this.selectPatient = this.selectPatient.bind(this);
   }
 
@@ -104,11 +105,10 @@ class App {
 
   async onSymptomsSelect(value) {
     this.stackPlot.clear();
-    console.log("symotoameeee");
-    console.log(value);
-    this.stackPlot.update(this.patients[this.patients.length - 1], value);
+    this.stackPlot.update(this.patientId, value);
+    this.symptoms = value;
+    this.drawTendrilPlot(this.patientId, value);
   }
-
 
   async loadDataset(period) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
@@ -127,7 +127,9 @@ class App {
   }
 
   async updatePatientIds(ids) {
-    $('.ui.dropdown:has(#patient-list) .default.text').text(`Select Patient ID(s) - Total Count: ${ids.size}`)
+    $('.ui.dropdown:has(#patient-list)').hide();
+    $('.ui.dropdown:has(#patient-list) .default.text')
+      .text(`Select Patient ID(s) - Total Count: ${ids.size}`);
     const selectEl = $('#patient-list');
     selectEl.empty();
     ids.forEach((id) => {
@@ -168,6 +170,8 @@ class App {
 
   async selectPatient(value) {
     this.patientId = value;
+    this.stackPlot.clear();
+    this.stackPlot.update(value, this.symptoms);
     this.drawTendrilPlot(this.patientId, this.symptoms);
   }
 
@@ -200,6 +204,9 @@ class App {
     if (!this.tendrilPlot) {
       this.tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
       this.tendrilPlot.init();
+    } else {
+      this.tendrilPlot.clear();
+      this.tendrilPlot.drawTendrils(patientData);
     }
   }
 

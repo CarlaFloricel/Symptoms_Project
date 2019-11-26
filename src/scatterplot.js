@@ -51,8 +51,12 @@ class ScatterPlot {
       .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
       .classed("leaf", true)
       .attr("id", d => (d.leafUid = `leaf-container-${d.data.patientId}`))
+      .style('cursor', 'pointer')
       .on('click', function () {
-        const parts = d3.select(this).attr('id').split('-');
+        d3.selectAll('.leaf').style('stroke-width', 1);
+        const el = d3.select(this);
+        el.style('stroke-width', 2);
+        const parts = el.attr('id').split('-');
         onPatientSelected(parts[parts.length - 1]);
       });
 

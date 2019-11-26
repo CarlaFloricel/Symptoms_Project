@@ -20,7 +20,16 @@ class TendrilPlot {
       .attr("text-anchor", "middle")
       .attr('preserveAspectRatio', "xMidYMid meet");
 
+    this.patientIdEl = this.svg
+      .append('text')
+      .classed('patientTitle', true)
+      .attr('font-size', 5)
+      .attr('transform', `translate(${width / 2},12)`);
     this.drawTendrils(data);
+  }
+
+  clear() {
+    this.svg.select('.tendrils').remove();
   }
 
   drawTendrils(data) {
@@ -33,11 +42,16 @@ class TendrilPlot {
     const angleScale = d3.scaleLinear()
       .domain([0, 10])
       .range([0, 2 * Math.PI]);
-    const colorScale = d3.scaleOrdinal(d3.schemeCategory10);
+    const colors = ['green', 'red', 'blue', 'orange', 'purple'];
+    const colorScale = d3.scaleOrdinal(colors);
 
     const line = d3.lineRadial()
       .curve(d3.curveCardinal);
+
+    this.patientIdEl.text(`Patient ${patient[0].patientId}`);
+
     const g = svg.append('g')
+      .classed('tendrils', true)
       .attr('transform', `translate(${width / 2},${height / 2})`);
 
     symptoms.forEach((symptom, i) => {
@@ -59,16 +73,17 @@ class TendrilPlot {
         .attr('stroke-width', 0.5)
         .classed(symptom, true);
 
-      radialData.forEach(([angle, r]) => {
-        const x = r * Math.sin(angle);
-        const y = r * -Math.cos(angle);
-        g.append('circle')
-          .attr('cx', x)
-          .attr('cy', y)
-          .attr('r', 2)
-          .attr('fill-opacity', 0.45)
-          .attr('fill', colorScale(i));
-      });
+      radialData.slice(1, radialData.length)
+        .forEach(([angle, r]) => {
+          const x = r * Math.sin(angle);
+          const y = r * -Math.cos(angle);
+          g.append('circle')
+            .attr('cx', x)
+            .attr('cy', y)
+            .attr('r', 2)
+            .attr('fill-opacity', 0.45)
+            .attr('fill', colorScale(i));
+        });
     });
   }
 }
