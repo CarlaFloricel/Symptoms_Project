@@ -36,10 +36,10 @@ body {
 #time-slider {
   width: 25%;
   min-width: 200px;
-  margin-left: 2%;
-  // position: absolute;
-  // right: 0;
-  // top: 0;
+ 
+   position: absolute;
+   right: 0;
+   top: 0;
 }
 
 .flex-container-column {
@@ -177,4 +177,38 @@ body {
   position: absolute;
   bottom: 32px;
   pointer-events: none;
+}
+
+#infoButton {
+    color: grey;
+    border-radius: 50px;
+    padding-top: 10px;
+    margin-top: 5px;
+    padding-bottom: 10px;
+  
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 220px;
+  background-color: #e8eef3;
+  color: black;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px 0;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
 }

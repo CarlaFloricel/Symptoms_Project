@@ -4,7 +4,7 @@ class StackedLinePlot {
   constructor(data, patientId) {
     this.data = data;
     this.patientId = patientId;
-    // this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
+    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
     this.symptoms = [];
   }
 
@@ -15,7 +15,6 @@ class StackedLinePlot {
     const width = 300;
     const height = 200;
 
-    // var symptoms = ['pain','nausea','fatigue','teethProblem','distress'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
@@ -113,14 +112,22 @@ class StackedLinePlot {
   }
 
   drawStackPlot(patientId, symptoms) {
+    console.log("pacienti selectati");
+    console.log(patientId);
+    console.log(this.patientId);
     const margin = { left: 10, right: 20, top: 30, bottom: 30 };
     const width = 300;
     const height = 200;
     var i = 0;
+    var j = 0;
     var groupsNo = 5;
     var groupPlots = [];
-
-    var patient = this.data.filter(p => p.patientId == patientId);
+    var patients=[];
+    for(i = 0; i < patientId.length; i++){
+      patients[i] = this.data.filter(p => p.patientId == patientId[i]);
+    }
+    console.log("filtrati");
+    console.log(patients);
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
@@ -146,14 +153,37 @@ class StackedLinePlot {
     }
 
     for (i = 0; i < symptoms.length; i++) {
-      this.g.append("path")
-        .datum(patient)
-        .attr("d", groupPlots[i])
-        .attr('class', 'linePlots')
-        .attr('fill', 'none')
-        .attr('stroke', colors[i])
-        .attr('stroke-width', '1px')
+        for(j = 0; j<patients.length; j++ ){
+          if(j == 1){
+            this.g.append("path")
+              .datum(patients[j])
+              .attr("d", groupPlots[i])
+              .attr('class', 'linePlots')
+              .attr('fill', 'none')
+              .attr('stroke', colors[i])
+              .attr('stroke-width', '1px')
+               .style("stroke-dasharray", ("5, 5"))
+          }
+          if(j == 2){
+            this.g.append("path")
+              .datum(patients[j])
+              .attr("d", groupPlots[i])
+              .attr('class', 'linePlots')
+              .attr('fill', 'none')
+              .attr('stroke', colors[i])
+              .attr('stroke-width', '1px')
+               .style("stroke-dasharray", ("3, 3"))
+          }
+          this.g.append("path")
+              .datum(patients[j])
+              .attr("d", groupPlots[i])
+              .attr('class', 'linePlots')
+              .attr('fill', 'none')
+              .attr('stroke', colors[i])
+              .attr('stroke-width', '1px')
     }
+        }
+
 
     this.g.append('text')
       .attr('class', 'stackTitle')

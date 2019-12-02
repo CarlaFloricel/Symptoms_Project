@@ -57,6 +57,7 @@ class App {
       $('#scatterplot-legend').show();
       $('#star-plot').hide();
       $('#matrix').hide();
+      $('#infoButton').show();
     });
 
     $('#correlation-btn').on('click', function () {
@@ -65,6 +66,7 @@ class App {
       $('#scatterplot').hide();
       $('#scatterplot-legend').hide();
       $('#matrix').show();
+      $('#infoButton').hide();
     });
 
     $('#mult-symptoms-btn').on('click', function () {
@@ -83,13 +85,13 @@ class App {
       $('#stack').hide();
     });
 
-    // $('#mult-timestamps-btn').on('click', function () {
-    //   $('#mult-symptoms-btn').toggleClass('active');
-    //   $('#mult-patients-btn').toggleClass('active');
-    //   $('#star-plot').show();
-    //   $('#tendril').hide();
-    //   $('#stack').hide();
-    // });
+    $('#mult-timestamps-btn').on('click', function () {
+      $('#mult-symptoms-btn').toggleClass('active');
+      $('#mult-patients-btn').toggleClass('active');
+      $('#star-plot').show();
+      $('#tendril').hide();
+      $('#stack').hide();
+    });
 
     this.updateSymptoms();
   }
@@ -98,14 +100,14 @@ class App {
     this.highlightPatients(value);
     this.patients = value;
     this.stackPlot.clear();
-    this.stackPlot.update(value[value.length - 1], ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
+    this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
   }
 
   async onSymptomsSelect(value) {
     this.stackPlot.clear();
-    this.stackPlot.update(this.patientId, value);
+    this.stackPlot.update(this.patients, value);
     this.symptoms = value;
-    this.drawTendrilPlot(this.patientId, value);
+    this.drawTendrilPlot(this.patients, value);
   }
 
   async loadDataset(period) {
@@ -125,7 +127,7 @@ class App {
   }
 
   async updatePatientIds(ids) {
-    $('.ui.dropdown:has(#patient-list)').hide();
+    // $('.ui.dropdown:has(#patient-list)').hide();
     $('.ui.dropdown:has(#patient-list) .default.text')
       .text(`Select Patient ID(s) - Total Count: ${ids.size}`);
     const selectEl = $('#patient-list');
@@ -139,8 +141,10 @@ class App {
 
   async updateSymptoms() {
     $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Symptom(s)`)
-    const symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
-      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
+    const symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 
+    'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
+      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 
+      'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
       'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
     const selectEl = $('#symptoms-list');
     selectEl.empty();
@@ -179,9 +183,10 @@ class App {
 
   async selectPatient(value) {
     this.patientId = value;
+    this.patients = value;
     this.stackPlot.clear();
     this.stackPlot.update(value, this.symptoms);
-    this.drawTendrilPlot(this.patientId, this.symptoms);
+    this.drawTendrilPlot(value, this.symptoms);
   }
 
   async drawTendrilPlot(patientId, symptoms) {
