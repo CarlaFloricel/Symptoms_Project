@@ -8,20 +8,28 @@ require('fomantic-ui-css/semantic.min.css');
 import TimeSlider from './timeslider';
 import ScatterPlot from './scatterplot';
 import StackedLinePlot from './stackedLinePlot';
-import TendrilPlot from "./tendrilplot";
-import CorrelationMatrix from "./correlationmatrix";
+import TendrilPlot from './tendrilplot';
+import CorrelationMatrix from './correlationmatrix';
+import PatientHistory from './patientHistory';
 
 class App {
   constructor() {
     this.scatterPlot = null;
     this.stackPlot = null;
     this.sliderUpdate = this.sliderUpdate.bind(this);
+    this.patientHistory= null;
     this.onPatientSelect = this.onPatientSelect.bind(this);
     this.showStackPlot = this.showStackPlot.bind(this);
+    this.showPatientHistory = this.showPatientHistory.bind(this);
     this.onSymptomsSelect = this.onSymptomsSelect.bind(this);
     this.patients = [];
     this.symptoms = [];
     this.selectPatient = this.selectPatient.bind(this);
+    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 
+    'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
+      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 
+      'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
+      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
   }
 
   async initTimeSlider() {
@@ -36,6 +44,7 @@ class App {
     this.initTimeSlider();
     this.showStackPlot(0);
     this.drawTendrilPlot();
+    this.showPatientHistory(0);
 
     $('#patient-list').dropdown({
       maxSelections: 3,
@@ -75,12 +84,14 @@ class App {
       $('#tendril').show();
       $('#stack').show();
       $('#star-plot').hide();
+      $('#patient-info').hide();
     });
 
     $('#mult-patients-btn').on('click', function () {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#tendril').hide();
+      $('#patient-info').hide();
       $('#star-plot').show();
       $('#stack').hide();
     });
@@ -89,6 +100,16 @@ class App {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#star-plot').show();
+      $('#patient-info').hide();
+      $('#tendril').hide();
+      $('#stack').hide();
+    });
+
+    $('#patient-history').on('click', function () {
+      $('#mult-symptoms-btn').toggleClass('active');
+      $('#mult-patients-btn').toggleClass('active');
+      $('#patient-info').show();
+      $('#star-plot').hide();
       $('#tendril').hide();
       $('#stack').hide();
     });
@@ -101,6 +122,9 @@ class App {
     this.patients = value;
     this.stackPlot.clear();
     this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
+    //this.showPatientHistory(this.patients[this.patients.length-1]);
+    this.patientHistory.clear();
+    this.patientHistory.update(this.patients[this.patients.length-1]);
   }
 
   async onSymptomsSelect(value) {
@@ -141,14 +165,9 @@ class App {
 
   async updateSymptoms() {
     $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Symptom(s)`)
-    const symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 
-    'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
-      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 
-      'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
-      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
     const selectEl = $('#symptoms-list');
     selectEl.empty();
-    symptoms.forEach((i) => {
+    this.symptoms.forEach((i) => {
       const optionEl = $('<option></option>', { value: i });
       optionEl.text(i);
       selectEl.append(optionEl);
@@ -187,6 +206,9 @@ class App {
     this.stackPlot.clear();
     this.stackPlot.update(value, this.symptoms);
     this.drawTendrilPlot(value, this.symptoms);
+    this.patientHistory.clear();
+    this.patientHistory.update(this.patients[this.patients.length-1]);
+    //this.showPatientHistory(this.patients[this.patients.length-1]);
   }
 
   async drawTendrilPlot(patientId, symptoms) {
@@ -228,6 +250,12 @@ class App {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
     this.stackPlot = new StackedLinePlot(patientInfo, patientId);
     this.stackPlot.init();
+  }
+
+  async showPatientHistory(patientId) {
+    const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
+    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length-1], this.symptoms);
+    this.patientHistory.init();
   }
 
   async highlightPatients(patientIds) {

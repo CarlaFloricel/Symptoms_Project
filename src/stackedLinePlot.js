@@ -4,7 +4,6 @@ class StackedLinePlot {
   constructor(data, patientId) {
     this.data = data;
     this.patientId = patientId;
-    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
     this.symptoms = [];
   }
 
@@ -112,9 +111,6 @@ class StackedLinePlot {
   }
 
   drawStackPlot(patientId, symptoms) {
-    console.log("pacienti selectati");
-    console.log(patientId);
-    console.log(this.patientId);
     const margin = { left: 10, right: 20, top: 30, bottom: 30 };
     const width = 300;
     const height = 200;
@@ -126,8 +122,6 @@ class StackedLinePlot {
     for(i = 0; i < patientId.length; i++){
       patients[i] = this.data.filter(p => p.patientId == patientId[i]);
     }
-    console.log("filtrati");
-    console.log(patients);
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
