@@ -9,12 +9,13 @@ import TimeSlider from './timeslider';
 import ScatterPlot from './scatterplot';
 import StackedLinePlot from './stackedLinePlot';
 import TendrilPlot from "./tendrilplot";
+import CorrelationMatrix from "./correlationmatrix";
 
 class App {
   constructor() {
     this.scatterPlot = null;
     this.stackPlot = null;
-    this.drawClusters = this.drawClusters.bind(this);
+    this.sliderUpdate = this.sliderUpdate.bind(this);
     this.onPatientSelect = this.onPatientSelect.bind(this);
     this.showStackPlot = this.showStackPlot.bind(this);
     this.onSymptomsSelect = this.onSymptomsSelect.bind(this);
@@ -27,7 +28,7 @@ class App {
     const symptoms = await d3.csv('/data/datasets/symptoms_period.csv');
     const timePeriods = _.sortedUniq(
       symptoms.map(({ period }) => parseInt(period, 10)).sort((a, b) => a - b));
-    const timeSlider = new TimeSlider('#time-slider', timePeriods, this.drawClusters);
+    const timeSlider = new TimeSlider('#time-slider', timePeriods, this.sliderUpdate);
     timeSlider.init();
   }
 
@@ -148,7 +149,18 @@ class App {
       optionEl.text(i);
       selectEl.append(optionEl);
     })
+  }
 
+  async sliderUpdate(period) {
+    this.drawClusters(period);
+    const matrixData = await d3.csv(`/data/output/correlation/${period}.csv`);
+    if (!this.correlationMatrix && matrixData.length > 0) {
+      this.correlationMatrix = new CorrelationMatrix('#matrix', 652, 512, matrixData);
+      this.correlationMatrix.init();
+    } else {
+      this.correlationMatrix.clear();
+      this.correlationMatrix.update(matrixData);
+    }
   }
 
   async drawClusters(period) {
