@@ -31,7 +31,7 @@
         <div class="tabcontent1 show">
           <div id="scatterplot">
           </div>
-          
+          <div id="scales">
             <div class="color-scale">
               <p>Ratings Severity</p>
               <p><span class="color-circle mild"></span> Mild</p>
@@ -50,7 +50,11 @@
               <p><span class="color-circle t3"></span> T3</p>
               <p><span class="color-circle t4"></span> T4</p>
             </div>
-          
+          </div>
+                  <div id="patient-history" class="tabcontent2 show">
+            <div id="patient-info">
+          </div>
+        </div>
         </div>
         <div id="matrix" class="tabcontent1">
           <!-- <img src="" alt="correlation matrix"> -->
@@ -62,10 +66,12 @@
         <div class="tab">
           <button class="tablinks2 active" id="mult-symptoms-btn">Patient Selection</button>
           <button class="tablinks2" id="mult-patients-btn">Symptom overview</button>
-          <button class="tablinks2" id="patient-history">Patient History</button>
+          <!-- <button class="tablinks2" id="patient-history">Patient History</button> -->
+          <div class="symtomsDropDown">
           <select multiple id="symptoms-list" class="ui dropdown">
             <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
           </select>
+        </div>
         <div>
         </div>
         </div>
@@ -78,10 +84,7 @@
         <div id="star-plot" class="tabcontent2 star-plot">
           <img src="./assets/imgs/star-plot.svg" alt="star plot">
         </div>
-        <div id="patient-history" class="tabcontent2 show">
-          <div id="patient-info">
-          </div>
-        </div>
+
       </div>
     </div>
   </div>

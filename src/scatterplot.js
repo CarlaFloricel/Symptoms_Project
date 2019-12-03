@@ -44,6 +44,7 @@ class ScatterPlot {
   }
 
   drawLeaves(leaves) {
+    console.log(leaves);
     const { svg, onPatientSelected } = this;
     const leaf = svg.selectAll("g")
       .data(leaves)
@@ -94,13 +95,13 @@ class ScatterPlot {
       .text(d => d.data.patientId);
 
     leaf.append("title")
-      .text(d => d.data.patientId + ', ' + d.data.gender + ', ' + d.data.Age);
+      .text(d => d.data.patientId + ', ' + d.data.gender + ', ' + d.data.age);
      }
 
   highlight(ids) {
     // lower opacity of all leaves
     const leaves = this.svg.selectAll('.leaf');
-    leaves.style('opacity', 0.15);
+    leaves.style('opacity', 0.35);
 
     // increase opacity of selected leaves
     ids.forEach((id) => {

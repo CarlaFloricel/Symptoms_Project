@@ -63,19 +63,22 @@ class App {
       $('#scatterplot-btn').toggleClass('active');
       $('#correlation-btn').toggleClass('active');
       $('#scatterplot').show();
-      $('#scatterplot-legend').show();
+      $('#scales').show();
       $('#star-plot').hide();
       $('#matrix').hide();
+      $('#patient-history').show();
       $('#infoButton').show();
+
     });
 
     $('#correlation-btn').on('click', function () {
       $('#scatterplot-btn').toggleClass('active');
       $('#correlation-btn').toggleClass('active');
       $('#scatterplot').hide();
-      $('#scatterplot-legend').hide();
       $('#matrix').show();
+      $('#patient-history').hide();
       $('#infoButton').hide();
+      $('#scales').hide();
     });
 
     $('#mult-symptoms-btn').on('click', function () {
@@ -91,7 +94,6 @@ class App {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#tendril').hide();
-      $('#patient-info').hide();
       $('#star-plot').show();
       $('#stack').hide();
     });
@@ -100,7 +102,6 @@ class App {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#star-plot').show();
-      $('#patient-info').hide();
       $('#tendril').hide();
       $('#stack').hide();
     });
@@ -108,7 +109,6 @@ class App {
     $('#patient-history').on('click', function () {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
-      $('#patient-info').show();
       $('#star-plot').hide();
       $('#tendril').hide();
       $('#stack').hide();

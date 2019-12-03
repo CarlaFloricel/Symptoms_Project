@@ -214,17 +214,31 @@ body {
 }
 
 .color-scale{
-  bottom:30px;
+  bottom:10px;
   left:30px;
 }
 
 .shape-scale{
-   bottom:30px;
+   bottom:10px;
    left:180px;
 }
 
 .size-scale{
-   bottom:30px;
+   bottom:10px;
    left:300px;
 
+}
+.symtomsDropDown{
+
+
+      position: absolute;
+      top: 40px;
+      left: -10px;
+  
+}
+
+#patient-info {
+  position: absolute;
+  bottom: 0;
+  right: 0px;
 }

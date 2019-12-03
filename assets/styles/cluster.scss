@@ -1,13 +1,11 @@
 #scatterplot {
   height: 80%;
-  width: auto;
+  width: 70%;
 
   svg {
-    height: 100%;
+    height: 95%;
     width: 100%;
-    height: -moz-available;          /* WebKit-based browsers will ignore this. */
-    height: -webkit-fill-available;  /* Mozilla-based browsers will ignore this. */
-    height: fill-available;
+    margin-left: -7%;
     padding: 12px;
   }
 }

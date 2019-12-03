@@ -13,26 +13,28 @@ class PatientHistory {
 	}
 
 
-   drawPatientHistory(patientId){
+   async drawPatientHistory(patientId){
 		console.log(this.data);
 		console.log(this.patientId);
+		const patients = await d3.csv('/data/datasets/patients_complete.csv');
+		var patientBackground=patients.find(p => p.patientId == this.patientId);
 		var i = 0;
 	    var j=0;
-	    const margin = { left: 10, right: 10, top: 10, bottom: 10 };
-	    const width = 200;
+	    const margin = { left: 0, right: 10, top: 10, bottom: 10 };
+	    const width = 260;
 	    const height = 670;
 
 	    const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
-	    const colors = ['#fff', '#fff5f0', '#fee0d2', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
+	    const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
 	    var patient=this.data.filter(p => p.patientId == this.patientId);
 	    console.log(patient);
 
 	 function transformRatingColor(r) {
       switch (r) {
         case 0:
-          return '#fff';
+          return '#bdbdbd';
         case 1:
-          return '#fff5f0';
+          return '#d9d9d9';
         case 2:
           return '#fee0d2'; 
         case 3:
@@ -52,7 +54,7 @@ class PatientHistory {
         case 10:
           return '#4a1212';                   
         default:
-          return '#bdbdbd';
+          return '#d9d9d9';
       }
   }
 
@@ -76,7 +78,7 @@ class PatientHistory {
 	      this.g.append('text')
 	        .attr('class', 'symptomText')
 	        .attr('x', 135)
-	        .attr('y', height - 146 - 15 * i)
+	        .attr('y', height - 86 - 15 * i)
 	        .attr('color','black')
 	        .text(this.symptoms[i])
 	    }	
@@ -85,7 +87,7 @@ class PatientHistory {
 	    this.g.append('text')
 	        .attr('class', 'periodText')
 	        .attr('x', margin.left +20*i)
-	        .attr('y', height-130)
+	        .attr('y', height-70)
 	        .attr('color','black')
 	        .attr('font-size','8')
 	        .text(p)
@@ -96,7 +98,7 @@ class PatientHistory {
 	      	this.g.append('rect')
 	      	.attr('class','symptoms')
 	        .attr('x', margin.left +20*j)
-	        .attr('y', height - 155 - 15 * i)
+	        .attr('y', height - 95 - 15 * i)
 	        .attr('height', 10)
 	        .attr('width', 15)
 	        .attr('fill',transformRatingColor(parseInt(patient[j][this.symptoms[i]])) )
@@ -108,7 +110,7 @@ class PatientHistory {
       .attr('class', 'patientTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top })`)
+      .attr('transform', `translate(${margin.left},${margin.top + 60})`)
       .text("Patient " + this.patientId)
 
 
@@ -116,42 +118,42 @@ class PatientHistory {
       .attr('class', 'AgeTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +20})`)
-      .text("Age: " )
+      .attr('transform', `translate(${margin.left},${margin.top +80})`)
+      .text("Age: " + parseInt(patientBackground.age));
 
 	this.g.append('text')
       .attr('class', 'GenderTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +30})`)
-      .text("Gender: " )
+      .attr('transform', `translate(${margin.left},${margin.top +90})`)
+      .text("Gender: " +  patientBackground.gender)
 
 	this.g.append('text')
       .attr('class', 'TumorTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +40})`)
-      .text("Tumor category: " )
+      .attr('transform', `translate(${margin.left},${margin.top +100})`)
+      .text("Tumor category: " + patientBackground.t_category )
 
 	this.g.append('text')
       .attr('class', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +50})`)
-      .text("Therapeutic combination: " )
+      .attr('transform', `translate(${margin.left},${margin.top +110})`)
+      .text("Therapeutic combination: " + patientBackground.therapeutic_combination )
 
 	this.g.append('text')
       .attr('class', 'DoseTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +60})`)
-      .text("Total dose: " )
+      .attr('transform', `translate(${margin.left},${margin.top +120})`)
+      .text("Total dose: " + patientBackground.total_dose)
 
     this.g.append('text')
       .attr('class', 'FractionTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top +70})`)
-      .text("Total fractions: ")  
+      .attr('transform', `translate(${margin.left},${margin.top +130})`)
+      .text("Total fractions: " + patientBackground.total_fractions)  
 
 }
 
@@ -168,7 +170,7 @@ clear() {
     this.svg.selectAll('.FractionTitle').remove();
     this.svg.selectAll('.GenderTitle').remove();
     this.svg.selectAll('.patientGroup').remove();
-    this.svg.selectAll('.patientSvg').remove();
+    d3.selectAll('.patientSvg').remove();
   }
 
 
