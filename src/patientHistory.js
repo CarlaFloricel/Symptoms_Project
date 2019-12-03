@@ -68,7 +68,8 @@ class PatientHistory {
 	      .attr("font-family", "sans-serif")
 	      .attr('preserveAspectRatio', "xMidYMid meet")
 	      .attr('width', width + margin.left + margin.right)
-	      .attr('height', height + margin.top + margin.bottom);
+	      .attr('height', height + margin.top + margin.bottom)
+        .style('display', 'none');
 
 	    this.g = this.svg.append('g')
 	      .attr('class','patientGroup')
@@ -86,18 +87,33 @@ class PatientHistory {
   	  periods.forEach((p,i) => {
 	    this.g.append('text')
 	        .attr('class', 'periodText')
-	        .attr('x', margin.left +20*i)
+	        .attr('x', 20 * i + margin.left)
 	        .attr('y', height-70)
 	        .attr('color','black')
 	        .attr('font-size','8')
 	        .text(p)
     	});
 
+    function transformPeriod(p) {
+      switch (p) {
+        case 0:
+        case 6:
+        case 12:
+        case 18:
+        case 24:
+          return Math.round(p/6);
+        default:
+          return 5;
+      }
+    }
+
+
 	   for (i = 0; i < 29; i++) {
 	   	for(j=0;j<patient.length;j++){
+          console.log(parseInt(patient[j].period));
 	      	this.g.append('rect')
 	      	.attr('class','symptoms')
-	        .attr('x', margin.left +20*j)
+	        .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
 	        .attr('y', height - 95 - 15 * i)
 	        .attr('height', 10)
 	        .attr('width', 15)
@@ -174,9 +190,10 @@ clear() {
   }
 
 
- update(patientId) {
+ async update(patientId) {
     this.patientId = patientId;
-    this.drawPatientHistory(patientId);
+    await this.drawPatientHistory(patientId);
+    this.svg.style('display', 'block');
   }
 }
 export default PatientHistory;

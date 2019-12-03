@@ -95,7 +95,7 @@ class ScatterPlot {
       .text(d => d.data.patientId);
 
     leaf.append("title")
-      .text(d => d.data.patientId + ', ' + d.data.gender + ', ' + d.data.age);
+      .text(d => d.data.patientId);
      }
 
   highlight(ids) {

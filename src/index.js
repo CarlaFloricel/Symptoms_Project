@@ -12,6 +12,7 @@ import TendrilPlot from './tendrilplot';
 import CorrelationMatrix from './correlationmatrix';
 import PatientHistory from './patientHistory';
 
+
 class App {
   constructor() {
     this.scatterPlot = null;
@@ -45,6 +46,7 @@ class App {
     this.showStackPlot(0);
     this.drawTendrilPlot();
     this.showPatientHistory(0);
+
 
     $('#patient-list').dropdown({
       maxSelections: 3,
@@ -102,14 +104,6 @@ class App {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#star-plot').show();
-      $('#tendril').hide();
-      $('#stack').hide();
-    });
-
-    $('#patient-history').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#star-plot').hide();
       $('#tendril').hide();
       $('#stack').hide();
     });
@@ -175,7 +169,10 @@ class App {
   }
 
   async sliderUpdate(period) {
-    this.drawClusters(period);
+    await this.drawClusters(period);
+    if (this.patients && this.patients.length > 0) {
+      this.highlightPatients(this.patients);
+    }
     const matrixData = await d3.csv(`/data/output/correlation/${period}.csv`);
     if (!this.correlationMatrix && matrixData.length > 0) {
       this.correlationMatrix = new CorrelationMatrix('#matrix', 652, 512, matrixData);

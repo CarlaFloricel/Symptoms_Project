@@ -242,3 +242,40 @@ body {
   bottom: 0;
   right: 0px;
 }
+
+.rating-scale {
+  height: 11%;
+  width: max-content;
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  border: 1px solid black;
+  border-radius: 4px;
+  padding: 6px;
+  color: black;
+  font-size: 1rem;
+
+  p {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+    margin: 6px;
+  }
+
+  .box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid black;
+    display: inline-block;
+    margin: 0;
+    padding: 0;
+    position: relative;
+
+    span {
+      position: absolute;
+      bottom: -20px;
+      right: 0;
+      left: 0;
+    }
+  }
+}

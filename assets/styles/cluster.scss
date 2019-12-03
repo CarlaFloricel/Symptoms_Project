@@ -36,7 +36,7 @@
   }
 
   .color-circle {
-    border-radius: 20px;
+    border-radius: 0px;
     border: 1px solid black;
     display: inline-block;
     height: 20px;
@@ -77,6 +77,10 @@
     height: 16px;
   }
 
+  .color-circle {
+    border-radius: 20px;
+  }
+
   .color-circle.female {
     border: none;
     background: url(/assets/imgs/hex.png);
@@ -106,3 +110,4 @@
     background-color: #fee0d2;
   }
 }
+
