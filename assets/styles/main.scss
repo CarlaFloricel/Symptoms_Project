@@ -122,14 +122,6 @@ body {
   display: block;
 }
 
-#matrix {
-  .correlation {
-    width: 45%;
-    float: left;
-    height: auto;
-  }
-}
-
 .star-plot img {
   width: 95%;
   height: 100%;
@@ -294,4 +286,20 @@ body {
   left: 70%;
   color: black;
   font-size: 14px;
+}
+
+#matrix {
+  height: 100%;
+
+  .correlation {
+    width: 45%;
+    float: left;
+    height: auto;
+  }
+
+  .correlation-full {
+    width: auto;
+    height: 100%;
+    float: unset;
+  }
 }

@@ -230,11 +230,16 @@ class App {
   }
 
   async drawStarPlots(patientId, currPeriod) {
-    if (!patientId)
-      return;
-
     if (this.starPlots)
-      this.starPlots.forEach(plot => plot.svg.remove());
+      this.starPlots.forEach(plot => plot.container.remove());
+
+    if (!patientId) {
+      d3.select('#matrix .correlation')
+        .classed('correlation-full', true);
+      return;
+    }
+    d3.select('#matrix .correlation')
+      .classed('correlation-full', false);
 
     currPeriod = currPeriod === 0 ? 6 : currPeriod === 25 ? 24 : currPeriod;
     const nextPeriod = currPeriod === 24 ? 25 : currPeriod + 6;

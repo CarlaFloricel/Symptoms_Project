@@ -37,7 +37,8 @@ class CorrelationMatrix {
       .attr("font-family", "sans-serif")
       .attr("text-anchor", "middle")
       .attr('preserveAspectRatio', "xMidYMid meet")
-      .classed('correlation', true);
+      .classed('correlation', true)
+      .classed('correlation-full', true);
 
     this.tooltip = d3.select("body")
       .append("div")
