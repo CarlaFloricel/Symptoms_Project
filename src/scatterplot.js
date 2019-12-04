@@ -44,7 +44,6 @@ class ScatterPlot {
   }
 
   drawLeaves(leaves) {
-    console.log(leaves);
     const { svg, onPatientSelected } = this;
     const leaf = svg.selectAll("g")
       .data(leaves)

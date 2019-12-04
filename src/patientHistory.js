@@ -11,7 +11,6 @@ class PatientHistory {
     this.drawPatientHistory(this.patientId);
   }
 
-
   async drawPatientHistory(patientId) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
     var patientBackground = patients.find(p => p.patientId == this.patientId);
@@ -24,7 +23,6 @@ class PatientHistory {
     const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
     const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
     var patient = this.data.filter(p => p.patientId == this.patientId);
-    console.log(patient);
 
     function transformRatingColor(r) {
       switch (r) {
@@ -107,7 +105,6 @@ class PatientHistory {
 
     for (i = 0; i < 29; i++) {
       for (j = 0; j < patient.length; j++) {
-        console.log(parseInt(patient[j].period));
         this.g.append('rect')
           .attr('class', 'symptoms')
           .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
@@ -126,6 +123,7 @@ class PatientHistory {
       .attr('transform', `translate(${margin.left},${margin.top + 242})`)
       .text("Patient " + this.patientId)
 
+    if (!patientBackground) return;
 
     this.g.append('text')
       .attr('class', 'AgeTitle')

@@ -136,6 +136,7 @@ class App {
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
     $('#defaultPatientText').hide();
+    this.drawTendrilPlot(this.patients, this.symptoms);
   }
 
   async onSymptomsSelect(value) {
@@ -219,16 +220,16 @@ class App {
     this.patients = value;
     this.stackPlot.clear();
     this.stackPlot.update(value, this.symptoms);
-    this.drawTendrilPlot(value, this.symptoms);
+    this.drawTendrilPlot(this.patients, this.symptoms);
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
     $('#defaultPatientText').hide();
   }
 
-  async drawTendrilPlot(patientId, symptoms) {
+  async drawTendrilPlot(patientIds, symptoms) {
     $('#tendril-note').remove();
 
-    if (!patientId) {
+    if (!patientIds || patientIds.length === 0) {
       d3.select('#tendril')
         .append('p')
         .attr('id', 'tendril-note')
@@ -249,15 +250,17 @@ class App {
     $('#tendril-note').remove();
 
     const data = await d3.csv('/data/datasets/symptoms_period.csv');
-    const patient = data.filter(d => d.patientId === patientId);
-    const patientData = { patient, symptoms };
-    if (!this.tendrilPlot) {
-      this.tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
-      this.tendrilPlot.init();
-    } else {
-      this.tendrilPlot.clear();
-      this.tendrilPlot.drawTendrils(patientData);
-    }
+    const patients = patientIds.map(patientId => data.filter(d => d.patientId === patientId));
+    if (this.tendrilPlots)
+      this.tendrilPlots.forEach(plot => plot.svg.remove());
+
+    this.tendrilPlots = [];
+    patients.forEach(patient => {
+      const patientData = { patient, symptoms };
+      const tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
+      tendrilPlot.init();
+      this.tendrilPlots.push(tendrilPlot);
+    });
   }
 
   async showStackPlot(patientId) {
