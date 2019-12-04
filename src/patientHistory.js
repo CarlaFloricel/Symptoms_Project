@@ -8,21 +8,18 @@ class PatientHistory {
   }
 
   init() {
-
     this.drawPatientHistory(this.patientId);
   }
 
 
   async drawPatientHistory(patientId) {
-    console.log(this.data);
-    console.log(this.patientId);
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
     var patientBackground = patients.find(p => p.patientId == this.patientId);
     var i = 0;
     var j = 0;
     const margin = { left: 0, right: 10, top: 10, bottom: 10 };
     const width = 260;
-    const height = 670;
+    const height = 870;
 
     const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
     const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
@@ -79,7 +76,7 @@ class PatientHistory {
       this.g.append('text')
         .attr('class', 'symptomText')
         .attr('x', 135)
-        .attr('y', height - 86 - 15 * i)
+        .attr('y', height - 106 - 15 * i)
         .attr('color', 'black')
         .text(this.symptoms[i])
     }
@@ -88,7 +85,7 @@ class PatientHistory {
       this.g.append('text')
         .attr('class', 'periodText')
         .attr('x', 20 * i + margin.left)
-        .attr('y', height - 70)
+        .attr('y', height - 90)
         .attr('color', 'black')
         .attr('font-size', '8')
         .text(p)
@@ -114,7 +111,7 @@ class PatientHistory {
         this.g.append('rect')
           .attr('class', 'symptoms')
           .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
-          .attr('y', height - 95 - 15 * i)
+          .attr('y', height - 115 - 15 * i)
           .attr('height', 10)
           .attr('width', 15)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
@@ -125,8 +122,8 @@ class PatientHistory {
     this.g.append('text')
       .attr('class', 'patientTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 60})`)
+      .attr('font-size', '12px')
+      .attr('transform', `translate(${margin.left},${margin.top + 242})`)
       .text("Patient " + this.patientId)
 
 
@@ -134,41 +131,41 @@ class PatientHistory {
       .attr('class', 'AgeTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 80})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 256})`)
       .text("Age: " + parseInt(patientBackground.age));
 
     this.g.append('text')
       .attr('class', 'GenderTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 90})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 268})`)
       .text("Gender: " + patientBackground.gender)
 
     this.g.append('text')
       .attr('class', 'TumorTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 100})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 280})`)
       .text("Tumor category: " + patientBackground.t_category)
 
     this.g.append('text')
       .attr('class', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 110})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 292})`)
       .text("Therapeutic combination: " + patientBackground.therapeutic_combination)
 
     this.g.append('text')
       .attr('class', 'DoseTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 120})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 304})`)
       .text("Total dose: " + patientBackground.total_dose)
 
     this.g.append('text')
       .attr('class', 'FractionTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 130})`)
+      .attr('transform', `translate(${margin.left},${margin.top + 316})`)
       .text("Total fractions: " + patientBackground.total_fractions)
 
   }

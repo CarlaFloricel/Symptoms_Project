@@ -70,6 +70,10 @@ class App {
       $('#matrix').hide();
       $('#patient-history').show();
       $('#infoButton').show();
+      $('#defaultPatientText').show();
+      if (this.patients = 'undefined' || this.patients.length == 0) {
+        $('#defaultPatientText').hide();
+      }
 
     });
 
@@ -81,6 +85,8 @@ class App {
       $('#patient-history').hide();
       $('#infoButton').hide();
       $('#scales').hide();
+      $('#defaultPatientText').hide();
+
     });
 
     $('#mult-symptoms-btn').on('click', function () {
@@ -90,6 +96,8 @@ class App {
       $('#stack').show();
       $('#star-plot').hide();
       $('#patient-info').hide();
+
+
     });
 
     $('#mult-patients-btn').on('click', function () {
@@ -98,6 +106,8 @@ class App {
       $('#tendril').hide();
       $('#star-plot').show();
       $('#stack').hide();
+      // $('#defaultPatientText').hide();
+
     });
 
     $('#mult-timestamps-btn').on('click', function () {
@@ -109,6 +119,12 @@ class App {
     });
 
     this.updateSymptoms();
+    if (this.patients.length == 0) {
+      $('#defaultPatientText').show();
+    }
+    else {
+      $('#defaultPatientText').hide();
+    }
   }
 
   async onPatientSelect(value) {
@@ -119,6 +135,7 @@ class App {
     //this.showPatientHistory(this.patients[this.patients.length-1]);
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
+    $('#defaultPatientText').hide();
   }
 
   async onSymptomsSelect(value) {
@@ -205,7 +222,7 @@ class App {
     this.drawTendrilPlot(value, this.symptoms);
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
-    //this.showPatientHistory(this.patients[this.patients.length-1]);
+    $('#defaultPatientText').hide();
   }
 
   async drawTendrilPlot(patientId, symptoms) {

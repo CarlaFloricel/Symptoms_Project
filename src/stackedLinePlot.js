@@ -10,8 +10,8 @@ class StackedLinePlot {
   init() {
     var i = 0;
     const { data, patientId } = this;
-    const margin = { left: 0, right: 0, top: 10, bottom: 10 };
-    const width = 500;
+    const margin = { left: 0, right: 0, top: 0, bottom: 10 };
+    const width = 570;
     const height = 260;
 
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
@@ -32,7 +32,7 @@ class StackedLinePlot {
 
     this.xScale = d3.scalePoint()
       .domain(periods)
-      .range([margin.left + 45, width - 10]);
+      .range([margin.left + 45, width - 200]);
 
     this.yScale = d3.scaleLinear()
       .domain([0, 5])
@@ -41,7 +41,7 @@ class StackedLinePlot {
     this.g.append('g')
       .attr('class', 'axis')
       .attr('color', 'black')
-      .attr('transform', `translate(${0},${height - margin.top - 30})`)
+      .attr('transform', `translate(${0},${height - margin.top - 40})`)
       .call(d3.axisBottom(this.xScale));
 
     this.yScales = periods.map(period =>
@@ -67,25 +67,16 @@ class StackedLinePlot {
     for (i = 0; i < 5; i++) {
       this.g.append('rect')
         .attr('x', margin.left + 46)
-        .attr('y', height - 78 - (height / 10 * 1.4) * i)
-        .attr('height', height / 10 * 1.4)
-        .attr('width', 225)
+        .attr('y', height - 77 - (height / 10 * 1.42) * i)
+        .attr('height', height / 10 * 1.42)
+        .attr('width', width - 245)
         .attr('fill', colors[i])
         .attr('opacity', '0.2');
     }
 
-    // for(i=0;i<groupsNo;i++){
-    //   g.append('rect')
-    //     .attr('x',margin.left + 290)
-    //     .attr('y',height-58-28*i)
-    //     .attr('height',28)
-    //     .attr('width',10)
-    //     .attr('fill',colors[i])
-    //     .attr('opacity', '0.2');
-    // }
 
     this.g.append('text')
-      .attr('transform', `translate(${width / 2},${height})`)
+      .attr('transform', `translate(${width / 2.8},${height})`)
       .style('text-anchor', 'middle')
       .text('Time')
       .attr('font-size', '30px');
@@ -99,19 +90,19 @@ class StackedLinePlot {
       .text('Symptoms Group no.')
       .attr('font-size', '30px');
 
-    for (i = 0; i < 5; i++) {
-      this.g.append('text')
-        .attr('class', 'symptomText')
-        .attr('x', 285)
-        .attr('y', height - 40 - 28 * i)
-        .text(this.symptoms[i])
-    }
+    // for (i = 0; i < 5; i++) {
+    //   this.g.append('text')
+    //     .attr('class', 'symptomText')
+    //     .attr('x', width -200)
+    //     .attr('y', height - 77 -  (height/10*1.42) * i)
+    //     .text(this.symptoms[i])
+    // }
   }
 
   drawStackPlot(patientId, symptoms) {
-    const margin = { left: 10, right: 20, top: 30, bottom: 30 };
-    const width = 300;
-    const height = 200;
+    const margin = { left: 0, right: 0, top: 0, bottom: 10 };
+    const width = 570;
+    const height = 260;
     var i = 0;
     var j = 0;
     var groupsNo = 5;
@@ -219,14 +210,14 @@ class StackedLinePlot {
       .attr('class', 'stackTitle')
       .attr('id', 'stackTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${width / 2 - margin.left},${margin.top / 2})`)
+      .attr('transform', `translate(${width / 3 - margin.left},20)`)
       .text("Patient " + this.patientId)
 
     for (i = 0; i < 5; i++) {
       this.g.append('text')
         .attr('class', 'symptomText')
-        .attr('x', 285)
-        .attr('y', height - 40 - 28 * i)
+        .attr('x', width - 180)
+        .attr('y', height - 50 - (height / 10 * 1.42) * i)
         .text(this.symptoms[i])
     }
   }

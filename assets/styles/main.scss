@@ -227,10 +227,11 @@ body {
   bottom: 10px;
   left: 300px;
 }
+
 .symtomsDropDown {
   position: absolute;
-  top: 40px;
-  left: -10px;
+  top: 0px;
+  left: 300px;
 }
 
 #patient-info {
@@ -274,4 +275,12 @@ body {
       left: 0;
     }
   }
+}
+
+#defaultPatientText {
+  position: absolute;
+  top: 40%;
+  left: 70%;
+  color: black;
+  font-size: 14px;
 }

@@ -13,6 +13,11 @@
   <select multiple id="patient-list" class="ui dropdown">
     <option id="patient-list-placeholder" value="">Select Patient ID(s)</option>
   </select>
+  <div class="symtomsDropDown">
+      <select multiple id="symptoms-list" class="ui dropdown">
+        <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
+      </select>
+  </div>
   <div id="time-slider" class="ui labeled ticked slider"></div>
   <div class="flex-container-row">
     <div class="flex-container-column">
@@ -23,14 +28,11 @@
           <button class="tooltip" id="infoButton">i
               <span class="tooltiptext">This is a clustering representation of the overall rating severity of each patient </span>
           </button>
-<!--
-          <button class="tablinks1 tooltip" id="infoButton">i</button>
-            <span class="tooltiptext">This is a representation of<br>the overall severity rating of each patient
-            </span> -->
         </div>
         <div class="tabcontent1 show">
           <div id="scatterplot">
           </div>
+          <p id='defaultPatientText'>Please select a patient</p>
           <div id="scales">
             <div class="color-scale">
               <p>Ratings Severity</p>
@@ -77,18 +79,13 @@
     </div>
     <div class="flex-container-column">
       <div class="flex-item">
-        <div class="tab">
+<!--         <div class="tab">
           <button class="tablinks2 active" id="mult-symptoms-btn">Patient Selection</button>
           <button class="tablinks2" id="mult-patients-btn">Symptom overview</button>
-          <!-- <button class="tablinks2" id="patient-history">Patient History</button> -->
-          <div class="symtomsDropDown">
-          <select multiple id="symptoms-list" class="ui dropdown">
-            <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
-          </select>
-        </div>
+
         <div>
         </div>
-        </div>
+        </div> -->
         <div id="stack" class="tabcontent2 show">
           <div id="stackedLinePlot">
           </div>
@@ -101,6 +98,8 @@
 
       </div>
     </div>
+
+
   </div>
   <script src="./src/index.js"></script>
 </body>
