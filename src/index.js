@@ -234,7 +234,7 @@ class App {
         .append('p')
         .attr('id', 'tendril-note')
         .style('color', 'black')
-        .text('Click on a patient in the clusters to show info.');
+        .text('Please select a patient.');
       return;
     }
 
