@@ -134,8 +134,12 @@ class App {
     this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
     //this.showPatientHistory(this.patients[this.patients.length-1]);
     this.patientHistory.clear();
-    this.patientHistory.update(this.patients[this.patients.length - 1]);
-    $('#defaultPatientText').hide();
+    if (this.patients.length === 0) {
+      $('#defaultPatientText').show();
+    } else {
+      this.patientHistory.update(this.patients[this.patients.length - 1]);
+      $('#defaultPatientText').hide();
+    }
     this.drawTendrilPlot(this.patients, this.symptoms);
   }
 
