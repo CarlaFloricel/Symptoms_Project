@@ -98,6 +98,11 @@ class ScatterPlot {
   }
 
   highlight(ids) {
+    if (!ids || ids.length === 0) {
+      this.svg.selectAll('.leaf').style('opacity', 1);
+      return;
+    }
+
     // lower opacity of all leaves
     const leaves = this.svg.selectAll('.leaf');
     leaves.style('opacity', 0.35);
