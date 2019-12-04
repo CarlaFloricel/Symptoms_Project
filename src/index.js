@@ -228,6 +228,8 @@ class App {
 
   async drawTendrilPlot(patientIds, symptoms) {
     $('#tendril-note').remove();
+    if (this.tendrilPlots)
+      this.tendrilPlots.forEach(plot => plot.svg.remove());
 
     if (!patientIds || patientIds.length === 0) {
       d3.select('#tendril')
@@ -251,8 +253,6 @@ class App {
 
     const data = await d3.csv('/data/datasets/symptoms_period.csv');
     const patients = patientIds.map(patientId => data.filter(d => d.patientId === patientId));
-    if (this.tendrilPlots)
-      this.tendrilPlots.forEach(plot => plot.svg.remove());
 
     this.tendrilPlots = [];
     patients.forEach(patient => {
