@@ -152,7 +152,7 @@ body {
   flex-direction: column;
 
   #stackedLinePlot {
-    flex: 1 0 auto;
+    flex: 1 0;
     width: 100%;
 
     svg {
@@ -162,7 +162,7 @@ body {
   }
 
   #tendril {
-    flex: 1 0 auto;
+    flex: 1 0;
     width: 100%;
     display: flex;
     justify-content: center;
