@@ -11,12 +11,19 @@ class PatientHistory {
     this.drawPatientHistory(this.patientId);
   }
 
+
+
   async drawPatientHistory(patientId) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
     var patientBackground = patients.find(p => p.patientId == this.patientId);
     var i = 0;
     var j = 0;
-    const margin = { left: 0, right: 10, top: 10, bottom: 10 };
+    const margin = {
+      left: 0,
+      right: 10,
+      top: 10,
+      bottom: 10
+    };
     const width = 260;
     const height = 870;
 
@@ -102,9 +109,13 @@ class PatientHistory {
       }
     }
 
-
+    var symptoms_localdata = []
+    var patients_localdata = []
+    var text_tooltip = ''
     for (i = 0; i < 29; i++) {
+      symptoms_localdata.push(this.symptoms[i]);
       for (j = 0; j < patient.length; j++) {
+        patients_localdata.push(patient[j])
         this.g.append('rect')
           .attr('class', 'symptoms')
           .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
@@ -112,7 +123,28 @@ class PatientHistory {
           .attr('height', 10)
           .attr('width', 15)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
-          .attr('opacity', '0.9');
+          .attr('opacity', '0.9')
+          .append("title")
+          .text(function () {
+            var months = ''
+            text_tooltip = 'Symptom: ' + symptoms_localdata[i] + '\n';
+            text_tooltip = text_tooltip + 'Rating: ' + patients_localdata[j][symptoms_localdata[i]] + '\n' + 'Months: ';
+            if (j == 0) {
+              months = '0';
+            } else if (j == 1) {
+              months = '6';
+            } else if (j == 2) {
+              months = '12';
+            } else if (j == 3) {
+              months = '18';
+            } else if (j == 4) {
+              months = '24';
+            } else {
+              months = '25';
+            }
+            text_tooltip = text_tooltip + months;
+            return text_tooltip;
+          });
       }
     }
 

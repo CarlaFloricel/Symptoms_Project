@@ -17,7 +17,7 @@ class StackedLinePlot {
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
-    this.svg = d3.select("#stackedLinePlot")
+    this.svg = d3.select("#stackplot")
       .append('svg')
       .attr('class', 'plot')
       .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
@@ -97,8 +97,10 @@ class StackedLinePlot {
     //     .attr('y', height - 77 -  (height/10*1.42) * i)
     //     .text(this.symptoms[i])
     // }
+   
   }
-
+  
+            
   drawStackPlot(patientId, symptoms) {
     const margin = { left: 0, right: 0, top: 0, bottom: 10 };
     const width = 570;
@@ -137,6 +139,51 @@ class StackedLinePlot {
 
     const { tooltip, xScale, yScale } = this;
     let path;
+console.log(patients)
+    d3.select("#patient1").attr('visibility','hidden')
+      d3.select("#patient2").attr('visibility','hidden')
+      d3.select("#patient3").attr('visibility','hidden')
+      d3.select("#line1").attr('visibility','hidden')
+      d3.select("#line2").attr('visibility','hidden')
+      d3.select("#line3").attr('visibility','hidden')
+    if(patients.length == 1){
+      d3.select("#patient1").attr('visibility','visible')
+      d3.select("#patient2").attr('visibility','hidden')
+      d3.select("#patient3").attr('visibility','hidden')
+      d3.select('#line1')
+      .text("Patient: " + patients[0][0]["patientId"])
+      .attr("visibility","visible")
+    d3.select("#line2").attr("visibility","hidden")
+    d3.select("#line3").attr("visibility","hidden")}
+
+    else if(patients.length == 2){
+      d3.select("#patient1").attr('visibility','visible')
+      d3.select("#patient2").attr('visibility','visible')
+      d3.select("#patient3").attr('visibility','hidden')
+      d3.select('#line1')
+      .text("Patient: " + patients[0][0]["patientId"])
+      .attr("visibility","visible")
+    d3.select("#line2")
+    .text("Patient: " + patients[1][0]["patientId"])
+    .attr("visibility","visible")
+    d3.select("#line3").attr("visibility","hidden")
+
+    }
+
+    else if(patients.length == 3){
+      d3.select("#patient1").attr('visibility','visible')
+      d3.select("#patient2").attr('visibility','visible')
+      d3.select("#patient3").attr('visibility','visible')
+      d3.select('#line1')
+      .text("Patient: " + patients[0][0]["patientId"])
+      .attr("visibility","visible")
+    d3.select("#line2")
+    .text("Patient: " + patients[1][0]["patientId"])
+    .attr("visibility","visible")
+    d3.select("#line3")
+    .text("Patient: " + patients[2][0]["patientId"])
+    .attr("visibility","visible")
+    }
     for (let i = 0; i < symptoms.length; i++) {
       for (j = 0; j < patients.length; j++) {
         if (j == 1) {
@@ -147,7 +194,7 @@ class StackedLinePlot {
             .attr('fill', 'none')
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
-            .style("stroke-dasharray", ("5, 5"))
+            .style("stroke-dasharray", ("5, 5"));
         }
         if (j == 2) {
           path = this.g.append("path")
