@@ -11,6 +11,7 @@ import StackedLinePlot from './stackedLinePlot';
 import TendrilPlot from './tendrilplot';
 import CorrelationMatrix from './correlationmatrix';
 import PatientHistory from './patientHistory';
+import StarPlot from "./starplot";
 
 
 class App {
@@ -30,7 +31,8 @@ class App {
       'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
       'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking',
       'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
-      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
+      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife'];
+    this.allSymptoms = [...this.symptoms];
   }
 
   async initTimeSlider() {
@@ -74,7 +76,7 @@ class App {
       if (this.patients = 'undefined' || this.patients.length == 0) {
         $('#defaultPatientText').hide();
       }
-
+      $('#star-plot').hide();
     });
 
     $('#correlation-btn').on('click', function () {
@@ -86,7 +88,7 @@ class App {
       $('#infoButton').hide();
       $('#scales').hide();
       $('#defaultPatientText').hide();
-
+      $('#star-plot').show();
     });
 
     $('#mult-symptoms-btn').on('click', function () {
@@ -94,17 +96,13 @@ class App {
       $('#mult-patients-btn').toggleClass('active');
       $('#tendril').show();
       $('#stack').show();
-      $('#star-plot').hide();
       $('#patient-info').hide();
-
-
     });
 
     $('#mult-patients-btn').on('click', function () {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
       $('#tendril').hide();
-      $('#star-plot').show();
       $('#stack').hide();
       // $('#defaultPatientText').hide();
 
@@ -113,7 +111,6 @@ class App {
     $('#mult-timestamps-btn').on('click', function () {
       $('#mult-symptoms-btn').toggleClass('active');
       $('#mult-patients-btn').toggleClass('active');
-      $('#star-plot').show();
       $('#tendril').hide();
       $('#stack').hide();
     });
@@ -141,6 +138,7 @@ class App {
       $('#defaultPatientText').hide();
     }
     this.drawTendrilPlot(this.patients, this.symptoms);
+    this.drawStarPlots(this.patients[this.patients.length - 1], window.currentPeriod);
   }
 
   async onSymptomsSelect(value) {
@@ -192,12 +190,13 @@ class App {
 
   async sliderUpdate(period) {
     await this.drawClusters(period);
+    await this.drawStarPlots(this.patients[this.patients.length - 1], period);
     if (this.patients && this.patients.length > 0) {
       this.highlightPatients(this.patients);
     }
     const matrixData = await d3.csv(`/data/output/correlation/${period}.csv`);
     if (!this.correlationMatrix && matrixData.length > 0) {
-      this.correlationMatrix = new CorrelationMatrix('#matrix', 652, 512, matrixData);
+      this.correlationMatrix = new CorrelationMatrix('#matrix', 512, 512, matrixData);
       this.correlationMatrix.init();
     } else {
       this.correlationMatrix.clear();
@@ -228,6 +227,28 @@ class App {
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
     $('#defaultPatientText').hide();
+  }
+
+  async drawStarPlots(patientId, currPeriod) {
+    if (!patientId)
+      return;
+
+    if (this.starPlots)
+      this.starPlots.forEach(plot => plot.svg.remove());
+
+    currPeriod = currPeriod === 0 ? 6 : currPeriod === 25 ? 24 : currPeriod;
+    const nextPeriod = currPeriod === 24 ? 25 : currPeriod + 6;
+    const prevPeriod = currPeriod - 6;
+    const timestamps = [prevPeriod, currPeriod, nextPeriod];
+
+    const data = await d3.csv('/data/datasets/symptoms_period.csv');
+    const patient = data.filter(p => p.patientId === patientId);
+    this.starPlots = this.allSymptoms.map(symptom => {
+      const data = { patient, symptom, timestamps };
+      const starPlot = new StarPlot('#matrix', 120, 120, data);
+      starPlot.init();
+      return starPlot;
+    });
   }
 
   async drawTendrilPlot(patientIds, symptoms) {

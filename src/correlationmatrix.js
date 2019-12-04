@@ -11,7 +11,7 @@ class CorrelationMatrix {
   }
 
   prepareData(data) {
-    this.symptoms = data.columns;
+    this.symptoms = data.columns.sort((a, b) => a.length - b.length);
     this.correlationData = [];
     for (let i = 0; i < data.length; i++) {
       for (let j = 0; j < Object.keys(data[i]).length; j++) {
@@ -26,17 +26,18 @@ class CorrelationMatrix {
 
   init() {
     const { data, width, height } = this;
-    this.margin = { left: 150, bottom: 30 };
+    this.margin = { left: 30, bottom: 30 };
 
     this.svg = d3.select(this.selector)
       .append('svg')
       .attr('width', width)
       .attr('height', height)
       .attr("viewBox", `0 0 ${width}, ${height}`)
-      .attr("font-size", 10)
+      .attr("font-size", 20)
       .attr("font-family", "sans-serif")
       .attr("text-anchor", "middle")
-      .attr('preserveAspectRatio', "xMidYMid meet");
+      .attr('preserveAspectRatio', "xMidYMid meet")
+      .classed('correlation', true);
 
     this.tooltip = d3.select("body")
       .append("div")
@@ -106,14 +107,17 @@ class CorrelationMatrix {
           .attr('class', 'correlation-label')
           .attr('x', margin.left + xScale(symptoms[d.col]))
           .attr('y', height - margin.bottom / 2)
-          .text(symptoms[d.col]);
+          .text(symptoms[d.col])
+          .attr('text-anchor', d.col <= symptoms.length / 2 ? 'start' : 'end')
+          .style('font-size', '1em');
 
         svg.append('text')
           .attr('class', 'correlation-label')
-          .attr('y', margin.bottom / 2 - 5 + yScale(symptoms[d.row]))
-          .attr('x', margin.left)
-          .attr('text-anchor', 'end')
+          .attr('x', -15 - yScale(symptoms[d.row]))
+          .attr('y', margin.left - 5)
+          .attr('text-anchor', d.row > symptoms.length / 2 ? 'start' : 'end')
           .attr('dominant-baseline', 'middle')
+          .attr('transform', 'rotate(-90)')
           .text(symptoms[d.row]);
 
         tooltip.style('visibility', 'visible')
