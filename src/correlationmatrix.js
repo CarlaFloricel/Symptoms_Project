@@ -26,7 +26,7 @@ class CorrelationMatrix {
 
   init() {
     const { data, width, height } = this;
-    this.margin = {left: 150, bottom: 30};
+    this.margin = { left: 150, bottom: 30 };
 
     this.svg = d3.select(this.selector)
       .append('svg')

@@ -96,7 +96,7 @@ class ScatterPlot {
 
     leaf.append("title")
       .text(d => d.data.patientId);
-     }
+  }
 
   highlight(ids) {
     // lower opacity of all leaves

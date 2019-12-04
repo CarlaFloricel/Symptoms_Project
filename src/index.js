@@ -18,7 +18,7 @@ class App {
     this.scatterPlot = null;
     this.stackPlot = null;
     this.sliderUpdate = this.sliderUpdate.bind(this);
-    this.patientHistory= null;
+    this.patientHistory = null;
     this.onPatientSelect = this.onPatientSelect.bind(this);
     this.showStackPlot = this.showStackPlot.bind(this);
     this.showPatientHistory = this.showPatientHistory.bind(this);
@@ -26,9 +26,9 @@ class App {
     this.patients = [];
     this.symptoms = [];
     this.selectPatient = this.selectPatient.bind(this);
-    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress', 
-    'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
-      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking', 
+    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress',
+      'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
+      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking',
       'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
       'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife', 'period'];
   }
@@ -118,7 +118,7 @@ class App {
     this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
     //this.showPatientHistory(this.patients[this.patients.length-1]);
     this.patientHistory.clear();
-    this.patientHistory.update(this.patients[this.patients.length-1]);
+    this.patientHistory.update(this.patients[this.patients.length - 1]);
   }
 
   async onSymptomsSelect(value) {
@@ -204,7 +204,7 @@ class App {
     this.stackPlot.update(value, this.symptoms);
     this.drawTendrilPlot(value, this.symptoms);
     this.patientHistory.clear();
-    this.patientHistory.update(this.patients[this.patients.length-1]);
+    this.patientHistory.update(this.patients[this.patients.length - 1]);
     //this.showPatientHistory(this.patients[this.patients.length-1]);
   }
 
@@ -251,7 +251,7 @@ class App {
 
   async showPatientHistory(patientId) {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
-    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length-1], this.symptoms);
+    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length - 1], this.symptoms);
     this.patientHistory.init();
   }
 

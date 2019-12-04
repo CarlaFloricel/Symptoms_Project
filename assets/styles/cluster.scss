@@ -17,7 +17,9 @@
   text-transform: uppercase;
 }
 
-.size-scale, .shape-scale, .color-scale {
+.size-scale,
+.shape-scale,
+.color-scale {
   --margin: 8px;
   color: black;
   font-size: 1rem;
@@ -26,7 +28,6 @@
   padding: 6px;
   width: fit-content;
   position: absolute;
-
 
   p {
     display: flex;
@@ -59,12 +60,12 @@
     width: 8px;
     height: 8px;
   }
-  
+
   .color-circle.t3 {
     width: 12px;
     height: 12px;
   }
-  
+
   .color-circle.t4 {
     width: 16px;
     height: 16px;
@@ -110,4 +111,3 @@
     background-color: #fee0d2;
   }
 }
-

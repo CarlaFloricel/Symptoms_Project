@@ -67,8 +67,8 @@ class StackedLinePlot {
     for (i = 0; i < 5; i++) {
       this.g.append('rect')
         .attr('x', margin.left + 46)
-        .attr('y', height - 78 -  (height/10*1.4) * i)
-        .attr('height', height/10*1.4)
+        .attr('y', height - 78 - (height / 10 * 1.4) * i)
+        .attr('height', height / 10 * 1.4)
         .attr('width', 225)
         .attr('fill', colors[i])
         .attr('opacity', '0.2');
@@ -92,7 +92,7 @@ class StackedLinePlot {
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 +20)
+      .attr('y', 0 + 20)
       .attr('x', 0 - (height / 2))
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
@@ -116,8 +116,8 @@ class StackedLinePlot {
     var j = 0;
     var groupsNo = 5;
     var groupPlots = [];
-    var patients=[];
-    for(i = 0; i < patientId.length; i++){
+    var patients = [];
+    for (i = 0; i < patientId.length; i++) {
       patients[i] = this.data.filter(p => p.patientId == patientId[i]);
     }
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
@@ -144,76 +144,76 @@ class StackedLinePlot {
         .y(d => this.yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
     }
 
-    const {tooltip, xScale, yScale} = this;
+    const { tooltip, xScale, yScale } = this;
     let path;
     for (let i = 0; i < symptoms.length; i++) {
-        for(j = 0; j<patients.length; j++ ) {
-          if(j == 1){
-            path = this.g.append("path")
-              .datum(patients[j])
-              .attr("d", groupPlots[i])
-              .attr('class', 'linePlots')
-              .attr('fill', 'none')
-              .attr('stroke', colors[i])
-              .attr('stroke-width', '1px')
-               .style("stroke-dasharray", ("5, 5"))
-          }
-          if(j == 2){
-            path = this.g.append("path")
-              .datum(patients[j])
-              .attr("d", groupPlots[i])
-              .attr('class', 'linePlots')
-              .attr('fill', 'none')
-              .attr('stroke', colors[i])
-              .attr('stroke-width', '1px')
-               .style("stroke-dasharray", ("3, 3"))
-          }
-          if (j==0) {
-            path = this.g.append("path")
-              .datum(patients[j])
-              .attr("d", groupPlots[i])
-              .attr('class', 'linePlots')
-              .attr('fill', 'none')
-              .attr('stroke', colors[i])
-              .attr('stroke-width', '1px')  
-          }
-
-          path.style('cursor', 'pointer')
-            .on('mouseover', function(d) {
-              d3.select(this)
-                .attr('stroke-width', 2);
-              // const mouseX = d3.event.pageX;
-              // const mouseY = d3.event.pageY;
-              // const symptom = symptoms[i];
-              // const symptomValues = d.map(x => x[symptom]);
-              // console.log(yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
-              // tooltip
-              //   .style('display', 'block')
-              //   .style('top', `${mouseY + 20}px`)
-              //   .style('left', `${mouseX + 20}px`)
-              //   .text(Math.round(yScale.invert(y)));
-
-            }).on('mousemove', function (d) {
-              // const mouseX = d3.event.pageX;
-              // const mouseY = d3.event.pageY;
-              // const symptom = symptoms[i];
-              // const symptomValues = d.map(x => x[symptom]);
-              // const [x, y] = d3.mouse(this);
-
-              // tooltip
-              //   .style('display', 'block')
-              //   .style('top', `${mouseY + 20}px`)
-              //   .style('left', `${mouseX + 20}px`)
-              //   .text(Math.round(yScale.invert(y)));
-            }).on('mouseout', function() {
-              d3.select(this)
-                .attr('stroke-width', 1);
-
-              // tooltip
-              //   .style('display', 'none');
-            })
+      for (j = 0; j < patients.length; j++) {
+        if (j == 1) {
+          path = this.g.append("path")
+            .datum(patients[j])
+            .attr("d", groupPlots[i])
+            .attr('class', 'linePlots')
+            .attr('fill', 'none')
+            .attr('stroke', colors[i])
+            .attr('stroke-width', '1px')
+            .style("stroke-dasharray", ("5, 5"))
         }
+        if (j == 2) {
+          path = this.g.append("path")
+            .datum(patients[j])
+            .attr("d", groupPlots[i])
+            .attr('class', 'linePlots')
+            .attr('fill', 'none')
+            .attr('stroke', colors[i])
+            .attr('stroke-width', '1px')
+            .style("stroke-dasharray", ("3, 3"))
+        }
+        if (j == 0) {
+          path = this.g.append("path")
+            .datum(patients[j])
+            .attr("d", groupPlots[i])
+            .attr('class', 'linePlots')
+            .attr('fill', 'none')
+            .attr('stroke', colors[i])
+            .attr('stroke-width', '1px')
+        }
+
+        path.style('cursor', 'pointer')
+          .on('mouseover', function (d) {
+            d3.select(this)
+              .attr('stroke-width', 2);
+            // const mouseX = d3.event.pageX;
+            // const mouseY = d3.event.pageY;
+            // const symptom = symptoms[i];
+            // const symptomValues = d.map(x => x[symptom]);
+            // console.log(yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
+            // tooltip
+            //   .style('display', 'block')
+            //   .style('top', `${mouseY + 20}px`)
+            //   .style('left', `${mouseX + 20}px`)
+            //   .text(Math.round(yScale.invert(y)));
+
+          }).on('mousemove', function (d) {
+            // const mouseX = d3.event.pageX;
+            // const mouseY = d3.event.pageY;
+            // const symptom = symptoms[i];
+            // const symptomValues = d.map(x => x[symptom]);
+            // const [x, y] = d3.mouse(this);
+
+            // tooltip
+            //   .style('display', 'block')
+            //   .style('top', `${mouseY + 20}px`)
+            //   .style('left', `${mouseX + 20}px`)
+            //   .text(Math.round(yScale.invert(y)));
+          }).on('mouseout', function () {
+            d3.select(this)
+              .attr('stroke-width', 1);
+
+            // tooltip
+            //   .style('display', 'none');
+          })
       }
+    }
 
     this.g.append('text')
       .attr('class', 'stackTitle')
