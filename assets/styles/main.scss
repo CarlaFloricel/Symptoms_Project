@@ -128,7 +128,7 @@ body {
   margin-top: 30px;
 }
 
-#matrix > img {
+#matrix>img {
   width: 90%;
 }
 
@@ -288,6 +288,10 @@ body {
   font-size: 14px;
 }
 
+#patientID {
+  margin-left: 0;
+}
+
 #matrix {
   height: 100%;
 
@@ -303,3 +307,4 @@ body {
     float: unset;
   }
 }
+

@@ -9,9 +9,17 @@ class StackedLinePlot {
 
   init() {
     var i = 0;
-    const { data, patientId } = this;
-    const margin = { left: 0, right: 0, top: 0, bottom: 10 };
-    const width = 570;
+    const {
+      data,
+      patientId
+    } = this;
+    const margin = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 10
+    };
+    const width = 525;
     const height = 260;
 
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
@@ -46,8 +54,8 @@ class StackedLinePlot {
 
     this.yScales = periods.map(period =>
       d3.scaleLinear()
-        .range([height - margin.bottom - 30, margin.top + 35])
-        .domain(d3.extent(periods.map(d => d[period])))
+      .range([height - margin.bottom - 30, margin.top + 35])
+      .domain(d3.extent(periods.map(d => d[period])))
     )
 
     periods.forEach((period, i) => {
@@ -76,7 +84,7 @@ class StackedLinePlot {
 
 
     this.g.append('text')
-      .attr('transform', `translate(${width / 2.8},${height})`)
+      .attr('transform', `translate(${width / 3},${height})`)
       .style('text-anchor', 'middle')
       .text('Time')
       .attr('font-size', '30px');
@@ -97,12 +105,17 @@ class StackedLinePlot {
     //     .attr('y', height - 77 -  (height/10*1.42) * i)
     //     .text(this.symptoms[i])
     // }
-   
+
   }
-  
-            
+
+
   drawStackPlot(patientId, symptoms) {
-    const margin = { left: 0, right: 0, top: 0, bottom: 10 };
+    const margin = {
+      left: 0,
+      right: 0,
+      top: 0,
+      bottom: 10
+    };
     const width = 570;
     const height = 260;
     var i = 0;
@@ -137,52 +150,64 @@ class StackedLinePlot {
         .y(d => this.yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
     }
 
-    const { tooltip, xScale, yScale } = this;
+    const {
+      tooltip,
+      xScale,
+      yScale
+    } = this;
     let path;
-console.log(patients)
-    d3.select("#patient1").attr('visibility','hidden')
-      d3.select("#patient2").attr('visibility','hidden')
-      d3.select("#patient3").attr('visibility','hidden')
-      d3.select("#line1").attr('visibility','hidden')
-      d3.select("#line2").attr('visibility','hidden')
-      d3.select("#line3").attr('visibility','hidden')
-    if(patients.length == 1){
-      d3.select("#patient1").attr('visibility','visible')
-      d3.select("#patient2").attr('visibility','hidden')
-      d3.select("#patient3").attr('visibility','hidden')
+    d3.select("#patient1").attr('visibility', 'hidden')
+    d3.select("#patient2").attr('visibility', 'hidden')
+    d3.select("#patient3").attr('visibility', 'hidden')
+    d3.select("#line1").attr('visibility', 'hidden')
+    d3.select("#line2").attr('visibility', 'hidden')
+    d3.select("#line3").attr('visibility', 'hidden')
+    if (patients.length == 1) {
+      d3.select("#patient1").attr('visibility', 'visible')
+      d3.select("#patient2").attr('visibility', 'hidden')
+      d3.select("#patient3").attr('visibility', 'hidden')
       d3.select('#line1')
-      .text("Patient: " + patients[0][0]["patientId"])
-      .attr("visibility","visible")
-    d3.select("#line2").attr("visibility","hidden")
-    d3.select("#line3").attr("visibility","hidden")}
-
-    else if(patients.length == 2){
-      d3.select("#patient1").attr('visibility','visible')
-      d3.select("#patient2").attr('visibility','visible')
-      d3.select("#patient3").attr('visibility','hidden')
+        .text("Patient: " + patients[0][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
+      d3.select("#line2").attr("visibility", "hidden")
+      d3.select("#line3").attr("visibility", "hidden")
+    } else if (patients.length == 2) {
+      d3.select("#patient1").attr('visibility', 'visible')
+      d3.select("#patient2").attr('visibility', 'visible')
+      d3.select("#patient3").attr('visibility', 'hidden')
       d3.select('#line1')
-      .text("Patient: " + patients[0][0]["patientId"])
-      .attr("visibility","visible")
-    d3.select("#line2")
-    .text("Patient: " + patients[1][0]["patientId"])
-    .attr("visibility","visible")
-    d3.select("#line3").attr("visibility","hidden")
+        .text("Patient: " + patients[0][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
+      d3.select("#line2")
+        .text("Patient: " + patients[1][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
+      d3.select("#line3").attr("visibility", "hidden")
 
-    }
-
-    else if(patients.length == 3){
-      d3.select("#patient1").attr('visibility','visible')
-      d3.select("#patient2").attr('visibility','visible')
-      d3.select("#patient3").attr('visibility','visible')
+    } else if (patients.length == 3) {
+      d3.select("#patient1").attr('visibility', 'visible')
+      d3.select("#patient2").attr('visibility', 'visible')
+      d3.select("#patient3").attr('visibility', 'visible')
       d3.select('#line1')
-      .text("Patient: " + patients[0][0]["patientId"])
-      .attr("visibility","visible")
-    d3.select("#line2")
-    .text("Patient: " + patients[1][0]["patientId"])
-    .attr("visibility","visible")
-    d3.select("#line3")
-    .text("Patient: " + patients[2][0]["patientId"])
-    .attr("visibility","visible")
+        .text("Patient: " + patients[0][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
+      d3.select("#line2")
+        .text("Patient: " + patients[1][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
+      d3.select("#line3")
+        .text("Patient: " + patients[2][0]["patientId"])
+        .attr("visibility", "visible")
+        .style("font-size", 12)
+        .attr("font-weight", "bold")
     }
     for (let i = 0; i < symptoms.length; i++) {
       for (j = 0; j < patients.length; j++) {
@@ -257,13 +282,13 @@ console.log(patients)
       .attr('class', 'stackTitle')
       .attr('id', 'stackTitle')
       .attr('font-size', '10px')
-      .attr('transform', `translate(${width / 3 - margin.left},20)`)
+      .attr('transform', `translate(${width / 4 - margin.left},20)`)
       .text("Patient " + this.patientId)
 
     for (i = 0; i < 5; i++) {
       this.g.append('text')
         .attr('class', 'symptomText')
-        .attr('x', width - 180)
+        .attr('x', width - 220)
         .attr('y', height - 50 - (height / 10 * 1.42) * i)
         .text(this.symptoms[i])
     }

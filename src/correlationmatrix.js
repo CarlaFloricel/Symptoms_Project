@@ -25,13 +25,20 @@ class CorrelationMatrix {
   }
 
   init() {
-    const { data, width, height } = this;
-    this.margin = { left: 30, bottom: 30 };
+    const {
+      data,
+      width,
+      height
+    } = this;
+    this.margin = {
+      left: 30,
+      bottom: 30
+    };
 
     this.svg = d3.select(this.selector)
       .append('svg')
       .attr('width', width)
-      .attr('height', height)
+      .attr('height', height + 85)
       .attr("viewBox", `0 0 ${width}, ${height}`)
       .attr("font-size", 20)
       .attr("font-family", "sans-serif")
@@ -97,7 +104,16 @@ class CorrelationMatrix {
       .attr('r', d => d.col >= d.row ? 0 : this.radiusScale(Math.abs(d.value)))
       .style('fill', d => this.colorScale(d.value));
 
-    const { svg, toolval, tooltip, xScale, yScale, height, symptoms, margin } = this;
+    const {
+      svg,
+      toolval,
+      tooltip,
+      xScale,
+      yScale,
+      height,
+      symptoms,
+      margin
+    } = this;
     svg.selectAll('g.cell')
       .on('mouseover', function (d) {
         d3.select(this)
@@ -134,6 +150,136 @@ class CorrelationMatrix {
         d3.selectAll('#correlation-tooltip')
           .style('visibility', 'hidden');
       });
+    var defs = d3.select(".correlation").append("defs");
+    var linearGradient = defs.append("linearGradient")
+      .attr("id", "linear-gradient");
+    linearGradient
+      .attr("x1", "0%")
+      .attr("y1", "0%")
+      .attr("x2", "100%")
+      .attr("y2", "0%");
+    linearGradient.append("stop")
+      .attr("offset", "0%")
+      .attr("stop-color", "crimson");
+    linearGradient.append("stop")
+      .attr("offset", "50%")
+      .attr("stop-color", "white");
+    linearGradient.append("stop")
+      .attr("offset", "100%")
+      .attr("stop-color", "slateblue")
+    svg.append("rect")
+      .attr("width", "90%")
+      .attr("height", 7)
+      .style("fill", "url(#linear-gradient)")
+      .attr('x', 30)
+      .attr('y', 510)
+      .style("stroke", "lightgrey")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "5%")
+      .attr('cy', height + 33)
+      .attr('r', "8.5")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("-1")
+      .attr("x", "5%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "15.5%")
+      .attr('cy', height + 33)
+      .attr('r', "7.36")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("-0.75")
+      .attr("x", "15.5%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "27%")
+      .attr('cy', height + 33)
+      .attr('r', "6")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("-0.5")
+      .attr("x", "27%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "38.5%")
+      .attr('cy', height + 33)
+      .attr('r', "4.27")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("-0.25")
+      .attr("x", "38.5%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "50%")
+      .attr('cy', height + 33)
+      .attr('r', "0")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("0")
+      .attr("x", "50%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "62.5%")
+      .attr('cy', height + 33)
+      .attr('r', "4.27")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("0.25")
+      .attr("x", "62.5%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "75%")
+      .attr('cy', height + 33)
+      .attr('r', "6")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("0.5")
+      .attr("x", "75%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "86.5%")
+      .attr('cy', height + 33)
+      .attr('r', "7.36")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("0.75")
+      .attr("x", "86.5%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append('circle')
+      .attr('cx', "96%")
+      .attr('cy', height + 33)
+      .attr('r', "8.5")
+      .style('fill', 'black');
+    d3.select(".correlation").append("text")
+      .text("1")
+      .attr("x", "96%")
+      .attr("y", height + 19)
+      .style("font-size", "12px")
+
+    d3.select(".correlation").append("text")
+      .text("Correlation")
+      .attr("x", height / 2 + 10)
+      .attr("y", height + 33)
+      .style("font-size", "12px")
+
   }
 
   clear() {

@@ -2,10 +2,27 @@
   text {
     font-size: 10px;
   }
+
   display: flex;
-}
-#stackplotLegend{
-  display: flex;
-  margin-top:10%;
 }
 
+#stackplotLegend {
+  display: flex;
+  margin-top: 10%;
+}
+
+#stackplot {
+  width: 550px;
+}
+
+#stackplotLegend {
+  position: realtive;
+  border: 1px solid black;
+  border-radius: 4px;
+  color: black;
+  font-size: 1rem;
+  height: 45%;
+  width: 25%;
+  padding-left: 12px;
+  padding-bottom: 5px;
+}

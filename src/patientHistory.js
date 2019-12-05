@@ -123,6 +123,7 @@ class PatientHistory {
           .attr('height', 10)
           .attr('width', 15)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
+          .style("cursor", "pointer")
           .attr('opacity', '0.9')
           .append("title")
           .text(function () {
