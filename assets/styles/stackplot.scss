@@ -12,17 +12,18 @@
 }
 
 #stackplot {
-  width: 550px;
+  width: 580px;
 }
 
 #stackplotLegend {
   position: realtive;
-  border: 1px solid black;
+  border: none;
   border-radius: 4px;
   color: black;
   font-size: 1rem;
-  height: 45%;
-  width: 25%;
-  padding-left: 12px;
+  height: 35%;
+  width: 20%;
+  padding-left: 200px;
   padding-bottom: 5px;
+  font-size:1.5rem ;
 }

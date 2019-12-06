@@ -83,8 +83,8 @@ class StarPlot {
       .datum(coordinates)
       .attr("d", this.line)
       .attr("stroke-width", 3)
-      .attr("stroke", "blue")
-      .attr("fill", "blue")
+      .attr("stroke",  '#de2d26')
+      .attr("fill",  '#de2d26')
       .attr("stroke-opacity", 1)
       .attr("opacity", 0.5);
 

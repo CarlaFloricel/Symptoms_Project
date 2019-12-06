@@ -1,3 +1,4 @@
+
 import * as d3 from 'd3';
 
 class CorrelationMatrix {
@@ -51,13 +52,14 @@ class CorrelationMatrix {
       .append("div")
       .style("width", "40px")
       .style("height", "24px")
-      .style("background", "#C3B3E5")
+      .style("background", "#fee0d2")
       .style("opacity", "1")
       .style("position", "absolute")
       .style("visibility", "hidden")
       .style("box-shadow", "0px 0px 6px #7861A5")
       .style("padding", "4px")
-      .attr('id', 'correlation-tooltip');
+      .attr('id', 'correlation-tooltip')
+      .style('border-radius', '10px');
 
     this.toolval = this.tooltip.append('div');
 
@@ -71,7 +73,7 @@ class CorrelationMatrix {
       .domain(this.symptoms);
     this.colorScale = d3.scaleLinear()
       .domain([-1, 0, 1])
-      .range(['crimson', 'white', 'slateblue']);
+      .range(['#fc9272', '#fee0d2', '#de2d26']);
     this.radiusScale = d3.scaleSqrt()
       .domain([0, 1])
       .range([0, 0.5 * this.xScale.bandwidth()]);
@@ -102,7 +104,8 @@ class CorrelationMatrix {
       .attr('cx', d => this.xScale(this.symptoms[d.col]) + 0.5 * this.xScale.bandwidth())
       .attr('cy', d => this.yScale(this.symptoms[d.row]) + 0.5 * this.yScale.bandwidth())
       .attr('r', d => d.col >= d.row ? 0 : this.radiusScale(Math.abs(d.value)))
-      .style('fill', d => this.colorScale(d.value));
+      .style('fill', d => this.colorScale(d.value))
+      .style('fill-opacity', 0.5);
 
     const {
       svg,
@@ -160,13 +163,13 @@ class CorrelationMatrix {
       .attr("y2", "0%");
     linearGradient.append("stop")
       .attr("offset", "0%")
-      .attr("stop-color", "crimson");
+      .attr("stop-color", '#fc9272');
     linearGradient.append("stop")
       .attr("offset", "50%")
-      .attr("stop-color", "white");
+      .attr("stop-color", '#fee0d2');
     linearGradient.append("stop")
       .attr("offset", "100%")
-      .attr("stop-color", "slateblue")
+      .attr("stop-color", '#de2d26')
     svg.append("rect")
       .attr("width", "90%")
       .attr("height", 7)

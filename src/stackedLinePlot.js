@@ -98,14 +98,6 @@ class StackedLinePlot {
       .text('Symptoms Group no.')
       .attr('font-size', '30px');
 
-    // for (i = 0; i < 5; i++) {
-    //   this.g.append('text')
-    //     .attr('class', 'symptomText')
-    //     .attr('x', width -200)
-    //     .attr('y', height - 77 -  (height/10*1.42) * i)
-    //     .text(this.symptoms[i])
-    // }
-
   }
 
 
@@ -116,7 +108,7 @@ class StackedLinePlot {
       top: 0,
       bottom: 10
     };
-    const width = 570;
+    const width = 580;
     const height = 260;
     var i = 0;
     var j = 0;
@@ -155,6 +147,15 @@ class StackedLinePlot {
       xScale,
       yScale
     } = this;
+    // if(patients.length == 0){
+    //   d3.select('#stackplotLegend').attr('visibility', 'hidden')
+
+    // }
+    // else{
+    //    d3.select('#stackplotLegend').attr('visibility', 'visible')
+    // }
+
+
     let path;
     d3.select("#patient1").attr('visibility', 'hidden')
     d3.select("#patient2").attr('visibility', 'hidden')
@@ -162,6 +163,7 @@ class StackedLinePlot {
     d3.select("#line1").attr('visibility', 'hidden')
     d3.select("#line2").attr('visibility', 'hidden')
     d3.select("#line3").attr('visibility', 'hidden')
+    const fontSize = 15;
     if (patients.length == 1) {
       d3.select("#patient1").attr('visibility', 'visible')
       d3.select("#patient2").attr('visibility', 'hidden')
@@ -169,7 +171,7 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
       d3.select("#line2").attr("visibility", "hidden")
       d3.select("#line3").attr("visibility", "hidden")
@@ -180,12 +182,12 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
       d3.select("#line2")
         .text("Patient: " + patients[1][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
       d3.select("#line3").attr("visibility", "hidden")
 
@@ -196,17 +198,17 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
       d3.select("#line2")
         .text("Patient: " + patients[1][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
       d3.select("#line3")
         .text("Patient: " + patients[2][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", 12)
+        .style("font-size", fontSize)
         .attr("font-weight", "bold")
     }
     for (let i = 0; i < symptoms.length; i++) {
@@ -288,7 +290,7 @@ class StackedLinePlot {
     for (i = 0; i < 5; i++) {
       this.g.append('text')
         .attr('class', 'symptomText')
-        .attr('x', width - 220)
+        .attr('x', width - 240)
         .attr('y', height - 50 - (height / 10 * 1.42) * i)
         .text(this.symptoms[i])
     }

@@ -10,6 +10,11 @@ class TendrilPlot {
 
   init() {
     const { data, width, height } = this;
+    d3.select(this.selector)
+      .attr('title', 'This plot shows how the selected symptom ratings change over time. ' + 
+        'Each circle represents one time stamp and they all map out from the center.' + 
+        'Clockwise direction change indicates rating increase and vice versa.');
+
     this.svg = d3.select(this.selector)
       .append('svg')
       .attr('width', width)
@@ -23,7 +28,7 @@ class TendrilPlot {
     this.patientIdEl = this.svg
       .append('text')
       .classed('patientTitle', true)
-      .attr('font-size', 5)
+      .attr('font-size', 8)
       .attr('transform', `translate(${width / 2},12)`);
     this.drawTendrils(data);
   }

@@ -33,6 +33,7 @@ class App {
       'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
       'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife'];
     this.allSymptoms = [...this.symptoms];
+    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
   }
 
   async initTimeSlider() {
@@ -181,7 +182,7 @@ class App {
     $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Symptom(s)`)
     const selectEl = $('#symptoms-list');
     selectEl.empty();
-    this.symptoms.forEach((i) => {
+    this.allSymptoms.forEach((i) => {
       const optionEl = $('<option></option>', { value: i });
       optionEl.text(i);
       selectEl.append(optionEl);
@@ -301,7 +302,7 @@ class App {
 
   async showPatientHistory(patientId) {
     const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
-    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length - 1], this.symptoms);
+    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length - 1], this.allSymptoms);
     this.patientHistory.init();
   }
 

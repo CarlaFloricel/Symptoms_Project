@@ -69,8 +69,8 @@ class PatientHistory {
       .attr('font-size', 10)
       .attr("font-family", "sans-serif")
       .attr('preserveAspectRatio', "xMidYMid meet")
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', 300)
+      .attr('height', 1000)
       .style('display', 'none');
 
     this.g = this.svg.append('g')

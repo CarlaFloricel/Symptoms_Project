@@ -24,7 +24,7 @@
       <div class="flex-item">
         <div class="tab">
           <button class="tablinks1 active" id="scatterplot-btn">Symptom Clusters</button>
-          <button class="tablinks1" id="correlation-btn">Correlation Matrix</button>
+          <button class="tablinks1" id="correlation-btn">Time Selection</button>
           <button class="tooltip" id="infoButton">i
             <span class="tooltiptext">This is a clustering representation of the overall rating severity of each patient
             </span>
@@ -33,7 +33,7 @@
         <div class="tabcontent1 show">
           <div id="scatterplot">
           </div>
-          <p id='defaultPatientText'>Please select a patient</p>
+          <p id='defaultPatientText'></p>
           <div id="scales">
             <div class="color-scale">
               <p>Ratings Severity</p>
@@ -82,8 +82,9 @@
         <div id="stack" class="tabcontent2 show">
           <div id="stackedLinePlot">
             <div id="stackplot"></div>
-            <div id="stackplotLegend">
-              <div style="padding-top: 15px;" id="patientIDLine">
+            <div id="stackplotLegend" >
+              
+            <div style="padding-top: 15px;" id="patientIDLine">
                 <svg width="50" id="patientIDLineSVG">
                   <line id="patient1" x1="0" y1="10" x2="45" y2="10" style="stroke:black;stroke-width:1"
                     visibility="hidden" />
@@ -105,12 +106,12 @@
 
           <div id="tendril">
           </div>
-          <div class="tab" style="margin-right: 90%;margin-bottom: 10%;">
+<!--           <div class="tab" style="margin-right: 90%;margin-bottom: 1%;">
             <button class="tooltip" id="infoButton">i
               <span class="tooltiptext">This is a tendril plot
               </span>
             </button>
-          </div>
+          </div> -->
         </div>
       </div>
     </div>
