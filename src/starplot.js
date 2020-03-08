@@ -44,10 +44,10 @@ class StarPlot {
 
   getPathCoordinates(ratings) {
     const coordinates = [];
-    console.log(ratings);
+    // console.log(ratings);
     for (var i = 0; i < ratings.length; i++) {
       let rating = ratings[i];
-      let angle = (Math.PI / 2) + (2 * Math.PI * i / ratings.length);
+      let angle = (Math.PI / 2) + (Math.PI * i / ratings.length);
       coordinates.push(this.angleToCoordinate(angle, rating));
     }
     return coordinates;
@@ -78,7 +78,7 @@ class StarPlot {
     const dataPoints = timestamps.map(ts => patient.find(p => parseInt(p.period) === ts));
     const ratings = dataPoints.map(d => d && parseInt(d[symptom]) || 0);
     const coordinates = this.getPathCoordinates(ratings);
-    console.log(coordinates);
+    // console.log(coordinates);
     this.svg.append("path")
       .datum(coordinates)
       .attr("d", this.line)

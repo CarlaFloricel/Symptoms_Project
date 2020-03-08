@@ -31,20 +31,28 @@
           </button>
         </div>
         <div class="tabcontent1 show">
+          <div class="tab1up">
           <div id="scatterplot">
           </div>
           <p id='defaultPatientText'></p>
-          <div id="scales">
+
+          <div id="patient-history" class="tabcontent2 show">
+            <div id="patient-info">
+            </div>
+          </div>
+          </div>
+
+          <div id="scales" >
             <div class="color-scale">
               <p>Ratings Severity</p>
               <p><span class="color-circle mild"></span> Mild</p>
-              <p><span class="color-circle average"></span> Average</p>
+              
               <p><span class="color-circle severe"></span> Severe</p>
             </div>
             <div class="shape-scale">
               <p>Gender</p>
-              <p><span class="color-circle male"></span> Male</p>
-              <p><span class="color-circle female"></span> Female</p>
+              <p><span class="color-circle male"></span> Female</p>
+              <p><span class="color-circle female"></span> Male</p>
             </div>
             <div class="size-scale">
               <p>Tumor Category</p>
@@ -53,9 +61,12 @@
               <p><span class="color-circle t3"></span> T3</p>
               <p><span class="color-circle t4"></span> T4</p>
             </div>
-          </div>
-          <div id="patient-history" class="tabcontent2 show">
-            <div id="patient-info">
+            <div class="therapeutic-scale">
+              <p>Therapeutic Combination</p>
+              <p><span class="color-circle CC"></span> CC</p>
+              <p><span class="color-circle IC-CC"></span> IC + CC</p>
+              <p><span class="color-circle IC-R"></span> IC + Radiation alone</p>
+              <p><span class="color-circle R"></span>Radiation alone</p>
             </div>
             <div class="rating-scale">
               <p>Rating</p>
@@ -72,6 +83,7 @@
               <div style="background-color: #4a1212;" class="box"><span>10</span></div>
             </div>
           </div>
+
           <div id="matrix" class="tabcontent1">
           </div>
         </div>

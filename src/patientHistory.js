@@ -15,6 +15,7 @@ class PatientHistory {
 
   async drawPatientHistory(patientId) {
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
+    // console.log(patients);
     var patientBackground = patients.find(p => p.patientId == this.patientId);
     var i = 0;
     var j = 0;
@@ -25,7 +26,7 @@ class PatientHistory {
       bottom: 10
     };
     const width = 260;
-    const height = 870;
+    const height = 600;
 
     const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
     const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
@@ -66,11 +67,11 @@ class PatientHistory {
       .append('svg')
       .attr('class', 'patientSvg')
       .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-      .attr('font-size', 10)
+      .attr('font-size', '0.8rem')
       .attr("font-family", "sans-serif")
       .attr('preserveAspectRatio', "xMidYMid meet")
       .attr('width', 300)
-      .attr('height', 1000)
+      .attr('height', 600)
       .style('display', 'none');
 
     this.g = this.svg.append('g')
@@ -81,16 +82,16 @@ class PatientHistory {
       this.g.append('text')
         .attr('class', 'symptomText')
         .attr('x', 135)
-        .attr('y', height - 106 - 15 * i)
+        .attr('y', height - 66 - 15 * i)
         .attr('color', 'black')
-        .text(this.symptoms[i])
+        .text(this.symptoms[this.symptoms.length -1 -i])
     }
 
     periods.forEach((p, i) => {
       this.g.append('text')
         .attr('class', 'periodText')
         .attr('x', 20 * i + margin.left)
-        .attr('y', height - 90)
+        .attr('y', height - 50)
         .attr('color', 'black')
         .attr('font-size', '8')
         .text(p)
@@ -112,14 +113,14 @@ class PatientHistory {
     var symptoms_localdata = []
     var patients_localdata = []
     var text_tooltip = ''
-    for (i = 0; i < 29; i++) {
+    for (i = 0; i < 28; i++) {
       symptoms_localdata.push(this.symptoms[i]);
       for (j = 0; j < patient.length; j++) {
         patients_localdata.push(patient[j])
         this.g.append('rect')
           .attr('class', 'symptoms')
           .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
-          .attr('y', height - 115 - 15 * i)
+          .attr('y', height - 75 - 15 * i)
           .attr('height', 10)
           .attr('width', 15)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
@@ -152,8 +153,8 @@ class PatientHistory {
     this.g.append('text')
       .attr('class', 'patientTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '12px')
-      .attr('transform', `translate(${margin.left},${margin.top + 242})`)
+      .attr('font-size', '1.2rem')
+      .attr('transform', `translate(${margin.left},${margin.top +10})`)
       .text("Patient " + this.patientId)
 
     if (!patientBackground) return;
@@ -161,45 +162,74 @@ class PatientHistory {
     this.g.append('text')
       .attr('class', 'AgeTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 256})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 30})`)
       .text("Age: " + parseInt(patientBackground.age));
 
     this.g.append('text')
       .attr('class', 'GenderTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 268})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 42})`)
       .text("Gender: " + patientBackground.gender)
 
     this.g.append('text')
       .attr('class', 'TumorTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 280})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 54})`)
       .text("Tumor category: " + patientBackground.t_category)
 
     this.g.append('text')
       .attr('class', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 292})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 66})`)
       .text("Therapeutic combination: " + patientBackground.therapeutic_combination)
 
     this.g.append('text')
       .attr('class', 'DoseTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 304})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 80})`)
       .text("Total dose: " + patientBackground.total_dose)
 
     this.g.append('text')
       .attr('class', 'FractionTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '10px')
-      .attr('transform', `translate(${margin.left},${margin.top + 316})`)
+      .attr('font-size', '0.8rem')
+      .attr('transform', `translate(${margin.left},${margin.top +92})`)
       .text("Total fractions: " + patientBackground.total_fractions)
 
+
+      function transformHighlight(period){
+         switch (period) {
+        case 0:
+          return -1;
+        case 6:
+          return 19;
+        case 12:
+          return 39;
+        case 18:
+          return 59;
+        case 24:
+          return 79;
+        default:
+          return 99;
+      }
+
+      }
+
+    this.g.append('rect')
+          .attr('id','0months')
+          .attr('x',transformHighlight(window.currentPeriod))
+          .attr('y',height-481)
+          .attr('height', 416)
+          .attr('width', 17)
+          .attr("stroke", '#fdd835')
+          .attr("stroke-width", 3)
+          .attr('fill','transparent')
   }
+
 
   clear() {
     this.svg.selectAll('.symptomText').remove();

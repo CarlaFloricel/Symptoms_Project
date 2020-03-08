@@ -132,9 +132,7 @@ body {
   width: 90%;
 }
 
-.axis {
-  font-size: 10px;
-}
+
 
 .rightViewTabs {
   display: flex;
@@ -153,7 +151,7 @@ body {
 
   #stackedLinePlot {
     flex: 1 0;
-    width: 100%;
+
 
     svg {
       width: auto;
@@ -216,20 +214,7 @@ body {
   visibility: visible;
 }
 
-.color-scale {
-  bottom: 10px;
-  left: 30px;
-}
 
-.shape-scale {
-  bottom: 10px;
-  left: 180px;
-}
-
-.size-scale {
-  bottom: 10px;
-  left: 300px;
-}
 
 .symtomsDropDown {
   position: absolute;
@@ -239,21 +224,12 @@ body {
 
 #patient-info {
   position: absolute;
-  bottom: 0;
+  top:30px;
   right: 0px;
 }
 
 .rating-scale {
-  height: 11%;
-  width: max-content;
-  position: absolute;
-  right: 45px;
-  bottom: 10px;
-  border: 1px solid black;
-  border-radius: 4px;
-  padding: 6px;
-  color: black;
-  font-size: 1rem;
+  height: 73px;
 
   p {
     display: flex;
@@ -285,11 +261,15 @@ body {
   top: 40%;
   left: 70%;
   color: black;
-  font-size: 14px;
+  font-size: 1rem;
 }
 
 #patientID {
-  margin-left: 0;
+  margin-left: 0px;
+}
+
+#patientIDLine{
+   margin-left: -50px;
 }
 
 #matrix {
@@ -308,3 +288,21 @@ body {
   }
 }
 
+#scales{
+  display:flex;
+  justify-content:space-evenly;
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+}
+.patientSvg{
+  width:100%;
+}
+
+#patient-info{
+  width:30%;
+}
+
+.plot{
+  width:100%;
+}

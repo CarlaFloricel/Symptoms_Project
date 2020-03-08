@@ -46,7 +46,7 @@ class TendrilPlot {
       .range([10, 50]);
     const angleScale = d3.scaleLinear()
       .domain([0, 10])
-      .range([0, 2 * Math.PI]);
+      .range([-Math.PI/8, Math.PI / 8]);
     const colors = ['green', 'red', 'blue', 'orange', 'purple'];
     const colorScale = d3.scaleOrdinal(colors);
 
@@ -55,40 +55,129 @@ class TendrilPlot {
 
     this.patientIdEl.text(`Patient ${patient[0].patientId}`);
 
+    // const g = svg.append('g')
+    //   .classed('tendrils', true)
+    //   .attr('transform', `translate(${width / 2},${height / 2})`);
+
+    // symptoms.forEach(symptom => {
+    //   const points = patient.map(p => ({
+    //     [symptom]: parseInt(p[symptom]),
+    //     period: p.period
+    //   }))
+    //   .map(p => {
+    //       return [angleScale(p[symptom]), radiusScale(p.period)];
+    //     });
+
+    //   radialData.unshift([0, 0]);
+    //   const path = line(radialData);
+    //   g.append('path')
+    //     .attr('d', path)
+    //     .attr('fill', 'none')
+    //     .attr('stroke', colorScale(i))
+    //     .attr('stroke-linecap', 'round')
+    //     .attr('stroke-width', 0.5)
+    //     .classed(symptom, true);
+    //   d = 20;
+    //   alpha = 90;
+    //   angle = (t2 - t1) / 10 * 90 / 360 * Math.PI; 
+    // });
+
+function transformPeriod(p) {
+      switch (p) {
+        case 0:
+          return 0;
+        case 1:
+          return 20;
+        case 2:
+          return 40;
+        case 3:
+          return 60;
+        case 4:
+          return 80;
+        default:
+          return 100;
+      }
+    }
+
+
+
     const g = svg.append('g')
       .classed('tendrils', true)
-      .attr('transform', `translate(${width / 2},${height / 2})`);
+      .attr('transform', `translate(${width / 2},${height - 20}) scale(1.15, 1.15)`);
 
     symptoms.forEach((symptom, i) => {
+      var time = 1;
       const radialData = patient
         .map(p => ({
-          [symptom]: parseInt(p[symptom]),
-          period: parseInt(p.period),
-        })).map(p => {
-          return [angleScale(p[symptom]), radiusScale(p.period)];
-        });
+          [symptom]: parseInt(p[symptom])
+        }))
+        
 
-      radialData.unshift([0, 0]);
-      const path = line(radialData);
-      g.append('path')
-        .attr('d', path)
-        .attr('fill', 'none')
-        .attr('stroke', colorScale(i))
-        .attr('stroke-linecap', 'round')
-        .attr('stroke-width', 0.5)
-        .classed(symptom, true);
+// console.log(radialData);
 
-      radialData.slice(1, radialData.length)
-        .forEach(([angle, r]) => {
-          const x = r * Math.sin(angle);
-          const y = r * -Math.cos(angle);
-          g.append('circle')
-            .attr('cx', x)
-            .attr('cy', y)
-            .attr('r', 2)
-            .attr('fill-opacity', 0.45)
-            .attr('fill', colorScale(i));
-        });
+
+      // radialData.slice(1, radialData.length)
+      //   .forEach(([angle, r]) => {
+      //     const x = r * Math.sin(angle);
+      //     const y = r * -Math.cos(angle);
+      //     g.append('circle')
+      //       .attr('cx', x)
+      //       .attr('cy', y)
+      //       .attr('r', 2)
+      //       .attr('fill-opacity', 0.45)
+      //       .attr('fill', colorScale(i));
+      //   });
+
+        function rotate(cx, cy, x, y, angle) {
+           var radians = (Math.PI / 180) * angle,
+              cos = Math.cos(radians),
+              sin = Math.sin(radians),
+              nx = (cos * (x - cx)) + (sin * (y - cy)) + cx,
+              ny = (cos * (y - cy)) - (sin * (x - cx)) + cy;
+          return [nx, ny];
+      }
+
+      // radialData.unshift([0, 0]);
+      // const path = line(radialData);
+      // g.append('path')
+      //   .attr('d', path)
+      //   .attr('fill', 'none')
+      //   .attr('stroke', colorScale(i))
+      //   .attr('stroke-linecap', 'round')
+      //   .attr('stroke-width', 0.5)
+      //   .classed(symptom, true);
+
+        const angleRange = Math.PI;
+        var prevX=0;
+        var prevY=0;
+        const points = [{x: 0, y: 0}];
+        for(var k = 1; k< radialData.length; k++){
+            var dif =radialData[k][symptom] - radialData[k-1][symptom]; 
+            var angle = ((10+dif)/20) *  angleRange -  angleRange/2;
+            const vala = rotate(0,0,0,20,angle/(2*Math.PI)*360);
+            prevX = vala[0] + prevX;
+            prevY = vala[1] + prevY;
+            points.push({x: prevX, y: prevY})
+
+              g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.45)
+                .attr('fill', colorScale(i));
+        }
+
+        const line = d3.line()
+          .x((d) => (-d.x))
+          .y((d) => (-d.y))
+          .curve(d3.curveCardinal.tension(0.5));
+
+        g.append('path')
+          .attr('fill', 'none')
+          .attr('stroke', colorScale(i))
+          .attr('stroke-width', '0.5px')
+          .attr('d', line(points));
+
     });
   }
 }

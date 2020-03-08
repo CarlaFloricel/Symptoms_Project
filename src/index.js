@@ -27,10 +27,10 @@ class App {
     this.patients = [];
     this.symptoms = [];
     this.selectPatient = this.selectPatient.bind(this);
-    this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress',
-      'shortnessOfBreath', 'memory', 'lackOfAppetite', 'drowsiness', 'dryMouth', 'sadness',
-      'vomit', 'numbness', 'mucusInMouthAndThroat', 'difficultyInSwallowing', 'choking',
-      'speech', 'skinPain', 'constipation', 'taste', 'sores', 'teethProblem',
+    this.symptoms = ['nausea', 'vomiting', 'choking', 'shortnessOfBreath', 'sores',
+      'memory', 'lackOfAppetite', 'teethProblem', 'skinPain', 'constipation', 'taste',
+      'numbness', 'dryMouth', 'mucusInMouthAndThroat', 'difficultyInSwallowing',
+      'speech', 'distress', 'sadness', 'fatigue', 'drowsiness', 'disturbedSleep', 'pain',
       'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife'];
     this.allSymptoms = [...this.symptoms];
     this.symptoms = ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress'];
@@ -155,12 +155,13 @@ class App {
     const data = clusters
       .filter(cluster => patients.find(patient => patient.patientId === cluster.patientId))
       .map(cluster => ({ ...cluster, ...patients.find(patient => patient.patientId === cluster.patientId) }))
-      .sort((a, b) => a.cluster - b.cluster)
-      .map(({ cluster, gender, patientId, t_category }) => ({
+      .sort((a, b) => a.patientId - b.patientId)
+      .map(({ cluster, gender, patientId, t_category,therapeutic_combination }) => ({
         cluster: parseInt(cluster),
         patientId,
         gender,
         t_category,
+        therapeutic_combination
       }));
     return data;
   }
@@ -187,6 +188,7 @@ class App {
       optionEl.text(i);
       selectEl.append(optionEl);
     })
+    // console.log(this.allSymptoms);
   }
 
   async sliderUpdate(period) {
@@ -203,6 +205,15 @@ class App {
       this.correlationMatrix.clear();
       this.correlationMatrix.update(matrixData);
     }
+    this.patientHistory.clear();
+    if (this.patients.length === 0) {
+      $('#defaultPatientText').show();
+    } else {
+      this.patientHistory.update(this.patients[this.patients.length - 1]);
+      $('#defaultPatientText').hide();
+    }
+   
+
   }
 
   async drawClusters(period) {

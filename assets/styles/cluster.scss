@@ -19,7 +19,9 @@
 
 .size-scale,
 .shape-scale,
-.color-scale {
+.color-scale,
+.therapeutic-scale,
+.rating-scale {
   --margin: 8px;
   color: black;
   font-size: 1rem;
@@ -27,7 +29,8 @@
   border-radius: 4px;
   padding: 6px;
   width: fit-content;
-  position: absolute;
+  align-self:flex-end;
+  height:fit-content;
 
   p {
     display: flex;
@@ -48,7 +51,7 @@
 }
 
 .size-scale {
-  right: 4px;
+
   bottom: unset;
 
   .color-circle.t1 {
@@ -84,7 +87,11 @@
 
   .color-circle.female {
     border: none;
-    background: url(/assets/imgs/hex.png);
+    border-radius:1px;
+    width:20px;
+    height:20px;
+    margin-left:-3px;
+    background: url(/assets/imgs/triang1.JFIF);
     -webkit-background-size: contain;
     -moz-background-size: contain;
     -o-background-size: contain;
@@ -93,7 +100,7 @@
 }
 
 .color-scale {
-  left: var(--margin);
+
 
   .color-circle {
     opacity: 0.65;
@@ -110,4 +117,29 @@
   .color-circle.mild {
     background-color: #fee0d2;
   }
+
 }
+
+.therapeutic-scale {
+   
+ 
+
+    .CC {
+      background-color: ghostwhite;
+      border: 3px solid #80483b;
+    }
+    .IC-CC {
+      background-color: ghostwhite;
+      border: 3px solid #d29f43;
+    }
+    .IC-R {
+      background-color: ghostwhite;
+      border: 3px solid #058f96;
+    }
+    .R {
+      background-color: ghostwhite;
+      border: 3px solid #9854cc;
+    }
+}
+
+

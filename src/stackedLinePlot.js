@@ -87,7 +87,7 @@ class StackedLinePlot {
       .attr('transform', `translate(${width / 3},${height})`)
       .style('text-anchor', 'middle')
       .text('Time')
-      .attr('font-size', '30px');
+      .attr('font-size', '0.7rem');
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
@@ -96,7 +96,7 @@ class StackedLinePlot {
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
       .text('Symptoms Group no.')
-      .attr('font-size', '30px');
+      .attr('font-size', '0.7rem');
 
   }
 
@@ -283,7 +283,7 @@ class StackedLinePlot {
     this.g.append('text')
       .attr('class', 'stackTitle')
       .attr('id', 'stackTitle')
-      .attr('font-size', '10px')
+      .attr('font-size', '0.7rem')
       .attr('transform', `translate(${width / 4 - margin.left},20)`)
       .text("Patient " + this.patientId)
 
