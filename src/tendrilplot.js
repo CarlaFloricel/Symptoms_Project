@@ -12,8 +12,8 @@ class TendrilPlot {
     const { data, width, height } = this;
     d3.select(this.selector)
       .attr('title', 'This plot shows how the selected symptom ratings change over time. ' + 
-        'Each circle represents one time stamp and they all map out from the center.' + 
-        'Clockwise direction change indicates rating increase and vice versa.');
+        'Each tendril represents a symptom and each circle one time stamp .' + 
+        'Left leaning indicates rating increase and vice versa.');
 
     this.svg = d3.select(this.selector)
       .append('svg')
@@ -28,8 +28,8 @@ class TendrilPlot {
     this.patientIdEl = this.svg
       .append('text')
       .classed('patientTitle', true)
-      .attr('font-size', 8)
-      .attr('transform', `translate(${width / 2},12)`);
+      .attr('font-size', '0.7rem')
+      .attr('transform', `translate(${width / 2},20)`);
     this.drawTendrils(data);
   }
 
@@ -39,7 +39,8 @@ class TendrilPlot {
 
   drawTendrils(data) {
     const { svg, height, width } = this;
-    const { patient, symptoms } = data;
+    const { patient, symptoms, survival } = data;
+    const s = survival;
     const timestamps = patient.map(p => parseInt(p.period));
     const radiusScale = d3.scaleLinear()
       .domain(d3.extent(timestamps))
@@ -55,32 +56,6 @@ class TendrilPlot {
 
     this.patientIdEl.text(`Patient ${patient[0].patientId}`);
 
-    // const g = svg.append('g')
-    //   .classed('tendrils', true)
-    //   .attr('transform', `translate(${width / 2},${height / 2})`);
-
-    // symptoms.forEach(symptom => {
-    //   const points = patient.map(p => ({
-    //     [symptom]: parseInt(p[symptom]),
-    //     period: p.period
-    //   }))
-    //   .map(p => {
-    //       return [angleScale(p[symptom]), radiusScale(p.period)];
-    //     });
-
-    //   radialData.unshift([0, 0]);
-    //   const path = line(radialData);
-    //   g.append('path')
-    //     .attr('d', path)
-    //     .attr('fill', 'none')
-    //     .attr('stroke', colorScale(i))
-    //     .attr('stroke-linecap', 'round')
-    //     .attr('stroke-width', 0.5)
-    //     .classed(symptom, true);
-    //   d = 20;
-    //   alpha = 90;
-    //   angle = (t2 - t1) / 10 * 90 / 360 * Math.PI; 
-    // });
 
 function transformPeriod(p) {
       switch (p) {
@@ -103,7 +78,7 @@ function transformPeriod(p) {
 
     const g = svg.append('g')
       .classed('tendrils', true)
-      .attr('transform', `translate(${width / 2},${height - 20}) scale(1.15, 1.15)`);
+      .attr('transform', `translate(${width / 2},${height -10}) scale(1.15, 1.15)`);
 
     symptoms.forEach((symptom, i) => {
       var time = 1;
@@ -111,22 +86,7 @@ function transformPeriod(p) {
         .map(p => ({
           [symptom]: parseInt(p[symptom])
         }))
-        
 
-// console.log(radialData);
-
-
-      // radialData.slice(1, radialData.length)
-      //   .forEach(([angle, r]) => {
-      //     const x = r * Math.sin(angle);
-      //     const y = r * -Math.cos(angle);
-      //     g.append('circle')
-      //       .attr('cx', x)
-      //       .attr('cy', y)
-      //       .attr('r', 2)
-      //       .attr('fill-opacity', 0.45)
-      //       .attr('fill', colorScale(i));
-      //   });
 
         function rotate(cx, cy, x, y, angle) {
            var radians = (Math.PI / 180) * angle,
@@ -137,19 +97,11 @@ function transformPeriod(p) {
           return [nx, ny];
       }
 
-      // radialData.unshift([0, 0]);
-      // const path = line(radialData);
-      // g.append('path')
-      //   .attr('d', path)
-      //   .attr('fill', 'none')
-      //   .attr('stroke', colorScale(i))
-      //   .attr('stroke-linecap', 'round')
-      //   .attr('stroke-width', 0.5)
-      //   .classed(symptom, true);
-
         const angleRange = Math.PI;
         var prevX=0;
         var prevY=0;
+        const surv = this.survival;
+        console.log(s)
         const points = [{x: 0, y: 0}];
         for(var k = 1; k< radialData.length; k++){
             var dif =radialData[k][symptom] - radialData[k-1][symptom]; 
@@ -158,14 +110,37 @@ function transformPeriod(p) {
             prevX = vala[0] + prevX;
             prevY = vala[1] + prevY;
             points.push({x: prevX, y: prevY})
+            if(k == radialData.length-1 ){
+            	if( parseInt(s) ==0 ){
+            	g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.8)
+                .attr('fill', 'black');
 
+            }
+            else {
+            	 g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.45)
+                .attr('fill', colorScale(i));
+            }
+        }
+            else{
               g.append('circle')
                 .attr('cx', -prevX)
                 .attr('cy', -prevY)
                 .attr('r',2)
                 .attr('fill-opacity', 0.45)
                 .attr('fill', colorScale(i));
+            }
+
         }
+
+
 
         const line = d3.line()
           .x((d) => (-d.x))

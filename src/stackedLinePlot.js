@@ -28,12 +28,12 @@ class StackedLinePlot {
     this.svg = d3.select("#stackplot")
       .append('svg')
       .attr('class', 'plot')
-      .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-      .attr('font-size', 10)
+      .attr('viewBox', `0 0 ${width } ${height }`)
+      .attr('font-size', '0.5rem')
       .attr("font-family", "sans-serif")
       .attr('preserveAspectRatio', "xMidYMid meet")
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom);
+      .attr('width', width)
+      .attr('height', height );
 
     this.g = this.svg.append('g')
       .attr('transform', `translate(0,0)`);
@@ -79,15 +79,15 @@ class StackedLinePlot {
         .attr('height', height / 10 * 1.42)
         .attr('width', width - 245)
         .attr('fill', colors[i])
-        .attr('opacity', '0.2');
+        .attr('opacity', '0.15');
     }
 
 
     this.g.append('text')
-      .attr('transform', `translate(${width / 3},${height})`)
+      .attr('transform', `translate(${width / 2.8},${height-8})`)
       .style('text-anchor', 'middle')
       .text('Time')
-      .attr('font-size', '0.7rem');
+      .attr('font-size', '0.5rem');
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
@@ -96,7 +96,7 @@ class StackedLinePlot {
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
       .text('Symptoms Group no.')
-      .attr('font-size', '0.7rem');
+      .attr('font-size', '0.5rem');
 
   }
 
@@ -147,13 +147,6 @@ class StackedLinePlot {
       xScale,
       yScale
     } = this;
-    // if(patients.length == 0){
-    //   d3.select('#stackplotLegend').attr('visibility', 'hidden')
-
-    // }
-    // else{
-    //    d3.select('#stackplotLegend').attr('visibility', 'visible')
-    // }
 
 
     let path;
@@ -163,7 +156,7 @@ class StackedLinePlot {
     d3.select("#line1").attr('visibility', 'hidden')
     d3.select("#line2").attr('visibility', 'hidden')
     d3.select("#line3").attr('visibility', 'hidden')
-    const fontSize = 15;
+
     if (patients.length == 1) {
       d3.select("#patient1").attr('visibility', 'visible')
       d3.select("#patient2").attr('visibility', 'hidden')
@@ -171,7 +164,7 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
       d3.select("#line2").attr("visibility", "hidden")
       d3.select("#line3").attr("visibility", "hidden")
@@ -182,12 +175,12 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
       d3.select("#line2")
         .text("Patient: " + patients[1][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
       d3.select("#line3").attr("visibility", "hidden")
 
@@ -198,17 +191,17 @@ class StackedLinePlot {
       d3.select('#line1')
         .text("Patient: " + patients[0][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
       d3.select("#line2")
         .text("Patient: " + patients[1][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
       d3.select("#line3")
         .text("Patient: " + patients[2][0]["patientId"])
         .attr("visibility", "visible")
-        .style("font-size", fontSize)
+        .style("font-size", '1rem')
         .attr("font-weight", "bold")
     }
     for (let i = 0; i < symptoms.length; i++) {
@@ -247,35 +240,13 @@ class StackedLinePlot {
           .on('mouseover', function (d) {
             d3.select(this)
               .attr('stroke-width', 2);
-            // const mouseX = d3.event.pageX;
-            // const mouseY = d3.event.pageY;
-            // const symptom = symptoms[i];
-            // const symptomValues = d.map(x => x[symptom]);
-            // console.log(yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
-            // tooltip
-            //   .style('display', 'block')
-            //   .style('top', `${mouseY + 20}px`)
-            //   .style('left', `${mouseX + 20}px`)
-            //   .text(Math.round(yScale.invert(y)));
+
 
           }).on('mousemove', function (d) {
-            // const mouseX = d3.event.pageX;
-            // const mouseY = d3.event.pageY;
-            // const symptom = symptoms[i];
-            // const symptomValues = d.map(x => x[symptom]);
-            // const [x, y] = d3.mouse(this);
 
-            // tooltip
-            //   .style('display', 'block')
-            //   .style('top', `${mouseY + 20}px`)
-            //   .style('left', `${mouseX + 20}px`)
-            //   .text(Math.round(yScale.invert(y)));
           }).on('mouseout', function () {
             d3.select(this)
               .attr('stroke-width', 1);
-
-            // tooltip
-            //   .style('display', 'none');
           })
       }
     }

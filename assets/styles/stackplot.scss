@@ -1,28 +1,20 @@
 #stackedLinePlot {
 
-  width:850px;
-  display: flex;
-}
+font-family: sans-serif;
 
-#stackplotLegend {
+  width:100%;
   display: flex;
-  margin-top: 0;
-  border:1px solid black;
-  padding:5px;
 }
 
 #stackplot {
-  width:100%
+  width:50%;
+  position:absolute;
 }
 
 #stackplotLegend {
-  position: realtive;
+
   border: none;
-  border-radius: 4px;
-  color: black;
-  font-size: 1rem;
-  height: 35%;
-  width: 7%;
-  padding-bottom: 5px;
-  font-size:1.5rem ;
+  width: 15%;
+  display: flex;
+  margin-left:85%;
 }

@@ -27,7 +27,7 @@ class App {
     this.patients = [];
     this.symptoms = [];
     this.selectPatient = this.selectPatient.bind(this);
-    this.symptoms = ['nausea', 'vomiting', 'choking', 'shortnessOfBreath', 'sores',
+    this.symptoms = ['nausea', 'vomit', 'choking', 'shortnessOfBreath', 'sores',
       'memory', 'lackOfAppetite', 'teethProblem', 'skinPain', 'constipation', 'taste',
       'numbness', 'dryMouth', 'mucusInMouthAndThroat', 'difficultyInSwallowing',
       'speech', 'distress', 'sadness', 'fatigue', 'drowsiness', 'disturbedSleep', 'pain',
@@ -128,18 +128,25 @@ class App {
   async onPatientSelect(value) {
     this.highlightPatients(value);
     this.patients = value;
-    this.stackPlot.clear();
-    this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
+    if(this.symptoms != null){
+          this.stackPlot.clear();
+          this.stackPlot.update(value, this.symptoms);
+    }
+    else {
+          this.stackPlot.clear();
+          this.stackPlot.update(value, ['pain', 'fatigue', 'nausea', 'disturbedSleep', 'distress']);
+        }
     //this.showPatientHistory(this.patients[this.patients.length-1]);
     this.patientHistory.clear();
     if (this.patients.length === 0) {
       $('#defaultPatientText').show();
+      this.patientHistory.clear();
     } else {
       this.patientHistory.update(this.patients[this.patients.length - 1]);
       $('#defaultPatientText').hide();
     }
     this.drawTendrilPlot(this.patients, this.symptoms);
-    this.drawStarPlots(this.patients[this.patients.length - 1], window.currentPeriod);
+    //this.drawStarPlots(this.patients[this.patients.length - 1], window.currentPeriod);
   }
 
   async onSymptomsSelect(value) {
@@ -150,7 +157,7 @@ class App {
   }
 
   async loadDataset(period) {
-    const patients = await d3.csv('/data/datasets/patients_complete.csv');
+    const patients = await d3.csv('/data/datasets/patients_complete_with_survival.csv');
     const clusters = await d3.csv(`/data/output/raw_result-time-${period}.csv`);
     const data = clusters
       .filter(cluster => patients.find(patient => patient.patientId === cluster.patientId))
@@ -193,7 +200,7 @@ class App {
 
   async sliderUpdate(period) {
     await this.drawClusters(period);
-    await this.drawStarPlots(this.patients[this.patients.length - 1], period);
+   // await this.drawStarPlots(this.patients[this.patients.length - 1], period);
     if (this.patients && this.patients.length > 0) {
       this.highlightPatients(this.patients);
     }
@@ -239,34 +246,35 @@ class App {
     this.patientHistory.clear();
     this.patientHistory.update(this.patients[this.patients.length - 1]);
     $('#defaultPatientText').hide();
+    console.log(this.patients);
   }
 
-  async drawStarPlots(patientId, currPeriod) {
-    if (this.starPlots)
-      this.starPlots.forEach(plot => plot.container.remove());
+  // async drawStarPlots(patientId, currPeriod) {
+  //   if (this.starPlots)
+  //     this.starPlots.forEach(plot => plot.container.remove());
 
-    if (!patientId) {
-      d3.select('#matrix .correlation')
-        .classed('correlation-full', true);
-      return;
-    }
-    d3.select('#matrix .correlation')
-      .classed('correlation-full', false);
+  //   if (!patientId) {
+  //     d3.select('#matrix .correlation')
+  //       .classed('correlation-full', true);
+  //     return;
+  //   }
+  //   d3.select('#matrix .correlation')
+  //     .classed('correlation-full', false);
 
-    currPeriod = currPeriod === 0 ? 6 : currPeriod === 25 ? 24 : currPeriod;
-    const nextPeriod = currPeriod === 24 ? 25 : currPeriod + 6;
-    const prevPeriod = currPeriod - 6;
-    const timestamps = [prevPeriod, currPeriod, nextPeriod];
+  //   currPeriod = currPeriod === 0 ? 6 : currPeriod === 25 ? 24 : currPeriod;
+  //   const nextPeriod = currPeriod === 24 ? 25 : currPeriod + 6;
+  //   const prevPeriod = currPeriod - 6;
+  //   const timestamps = [prevPeriod, currPeriod, nextPeriod];
 
-    const data = await d3.csv('/data/datasets/symptoms_period.csv');
-    const patient = data.filter(p => p.patientId === patientId);
-    this.starPlots = this.allSymptoms.map(symptom => {
-      const data = { patient, symptom, timestamps };
-      const starPlot = new StarPlot('#matrix', 120, 120, data);
-      starPlot.init();
-      return starPlot;
-    });
-  }
+  //   const data = await d3.csv('/data/datasets/symptoms_period.csv');
+  //   const patient = data.filter(p => p.patientId === patientId);
+  //   this.starPlots = this.allSymptoms.map(symptom => {
+  //     const data = { patient, symptom, timestamps };
+  //     const starPlot = new StarPlot('#matrix', 120, 120, data);
+  //     starPlot.init();
+  //     return starPlot;
+  //   });
+  // }
 
   async drawTendrilPlot(patientIds, symptoms) {
     $('#tendril-note').remove();
@@ -294,14 +302,19 @@ class App {
     $('#tendril-note').remove();
 
     const data = await d3.csv('/data/datasets/symptoms_period.csv');
+    const data_patient = await d3.csv('/data/datasets/patients_complete_with_survival.csv');
     const patients = patientIds.map(patientId => data.filter(d => d.patientId === patientId));
 
     this.tendrilPlots = [];
     patients.forEach(patient => {
+      const id = patient[0].patientId;
       const patientData = { patient, symptoms };
+      const patientDataSelected=data_patient.filter(d => d.patientId == id)
+      patientData['survival'] = patientDataSelected[0].survival
       const tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
       tendrilPlot.init();
       this.tendrilPlots.push(tendrilPlot);
+      
     });
   }
 
