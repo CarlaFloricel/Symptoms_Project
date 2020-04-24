@@ -10,17 +10,47 @@
 </head>
 
 <body>
-  <select multiple id="patient-list" class="ui dropdown">
+  <select multiple id="patient-list" class="ui dropdown patient">
     <option id="patient-list-placeholder" value="">Select Patient ID(s)</option>
   </select>
-  <div class="symtomsDropDown">
+<!--   <div class="symtomsDropDown">
     <select multiple id="symptoms-list" class="ui dropdown">
       <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
     </select>
-  </div>
+  </div> -->
+
+    <select multiple id="filters-list" class="ui dropdown filters-list" tabindex="0">
+      <option id="symptoms-list-placeholder" value="">Rating Severity</option>
+        <option id="mildFilter" data-value="mild">Mild</option>
+        <option id="severeFilter" data-value="mild">Severe</option>
+    </select>
+
+      <select multiple id="filters-list1" class="ui dropdown filters-list">
+          <option id="symptoms-list-placeholder" value="">Gender</option>
+          <option id="male" data-value="male">Male</option>
+          <option id="female" data-value="mild">Female</option>
+    </select>
+
+      <select multiple id="filters-list2" class="ui dropdown filters-list">
+       <option id="symptoms-list-placeholder" value="">Tumor Category</option>
+          <option id="t1" data-value="mild">T1</option>
+          <option id="t2" data-value="mild">T2</option>
+          <option id="t3" data-value="mild">T3</option>
+          <option id="t4" data-value="mild">T4</option>
+    </select>
+
+      <select multiple id="filters-list3" class="ui dropdown filters-list">
+       <option id="symptoms-list-placeholder" value="">Therapeutic Combination</option>
+          <option id="cc" data-value="mild">Cc</option>
+          <option id="iccc" data-value="mild">IC+CC</option>
+          <option id="icrad" data-value="mild">IC+Rad</option>
+          <option id="radiation" data-value="mild">Radiation</option>
+      </select>
+
   <div id="time-slider" class="ui labeled ticked slider"></div>
   <div class="flex-container-row">
     <div class="flex-container-column">
+
       <div class="flex-item">
         <div class="tab">
           <button class="tablinks1 active" id="scatterplot-btn">Patient Clusters</button>
@@ -35,10 +65,13 @@
           <div id="scatterplot">
           </div>
           <p id='defaultPatientText'></p>
-
+            <div id="symptomsText">
+            </div>
           <div id="patient-history" class="tabcontent2 show">
+
             <div id="patient-info">
             </div>
+
           </div>
           </div>
 
@@ -88,6 +121,7 @@
           </div>
         </div>
       </div>
+
     </div>
     <div class="flex-container-column">
       <div class="flex-item">
@@ -126,6 +160,8 @@
 
 
   </div>
+
+
   <script src="./src/index.js"></script>
 </body>
 

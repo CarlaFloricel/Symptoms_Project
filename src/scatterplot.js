@@ -69,7 +69,7 @@ class ScatterPlot {
  transformClusterColor(r) {
       switch (r) {
         case 1:
-          return '#de2d26';
+          return '#cb181d';
         // case 1:
         //   return '#fc9272';
         default:
@@ -105,20 +105,20 @@ class ScatterPlot {
         return this.drawHexagon(hexagonData);
       })
       .attr("id", d => (d.leafUid = `leaf-${d.data.patientId}`))
-      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#de2d26' : '#fee0d2')
+      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#cb181d' : '#fee0d2')
       .attr("stroke", d => this.transformMarginColor(d.data.therapeutic_combination))
       .attr("stroke-width",2)
       .attr("stroke-opacity", d => d.data.gender === 'Female' ? 0 : 1.0)
-      .attr("fill-opacity", d => d.data.gender === 'Female' ? 0 : 0.5);
+      .attr("fill-opacity", d => d.data.gender === 'Female' ? 0 : 0.6);
 
     leaf.append("circle")
       .attr("id", d => (d.leafUid = `leaf-${d.data.patientId}`))
       .attr("r", d => d.r)
-      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#de2d26' : '#fee0d2')
+      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#cb181d' : '#fee0d2')
       .attr("stroke", d => this.transformMarginColor(d.data.therapeutic_combination))
       .attr("stroke-width",2)
       .attr("stroke-opacity", d => d.data.gender === 'Male' ? 0 : 1.0)
-      .attr("fill-opacity", d => d.data.gender === 'Male' ? 0 : 0.5);
+      .attr("fill-opacity", d => d.data.gender === 'Male' ? 0 : 0.6);
 
 
     leaf.append("text")
@@ -128,7 +128,7 @@ class ScatterPlot {
       .text(d => d.data.patientId);
   }
 
-  highlight(ids) {
+   highlight(ids) {
     if (!ids || ids.length === 0) {
       this.svg.selectAll('.leaf').style('opacity', 1);
       return;
@@ -136,7 +136,7 @@ class ScatterPlot {
 
     // lower opacity of all leaves
     const leaves = this.svg.selectAll('.leaf');
-    leaves.style('opacity', 0.35);
+    leaves.style('opacity', 0.3);
 
     // increase opacity of selected leaves
     ids.forEach((id) => {

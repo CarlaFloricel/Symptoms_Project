@@ -17,6 +17,8 @@ class TendrilPlot {
 
     this.svg = d3.select(this.selector)
       .append('svg')
+      .attr('class', 'Tendrils')
+      .attr('id', 'Tendrils')
       .attr('width', width)
       .attr('height', height)
       .attr("viewBox", `0 0 ${width}, ${height}`)
@@ -35,6 +37,7 @@ class TendrilPlot {
 
   clear() {
     this.svg.select('.tendrils').remove();
+    this.select('.Tendrils').remove();
   }
 
   drawTendrils(data) {
@@ -48,7 +51,7 @@ class TendrilPlot {
     const angleScale = d3.scaleLinear()
       .domain([0, 10])
       .range([-Math.PI/8, Math.PI / 8]);
-    const colors = ['green', 'red', 'blue', 'orange', 'purple'];
+    const colors =['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#d04'];
     const colorScale = d3.scaleOrdinal(colors);
 
     const line = d3.lineRadial()
@@ -101,7 +104,6 @@ function transformPeriod(p) {
         var prevX=0;
         var prevY=0;
         const surv = this.survival;
-        console.log(s)
         const points = [{x: 0, y: 0}];
         for(var k = 1; k< radialData.length; k++){
             var dif =radialData[k][symptom] - radialData[k-1][symptom]; 
@@ -116,7 +118,7 @@ function transformPeriod(p) {
                 .attr('cx', -prevX)
                 .attr('cy', -prevY)
                 .attr('r',2)
-                .attr('fill-opacity', 0.8)
+                .attr('fill-opacity', 0.65)
                 .attr('fill', 'black');
 
             }
@@ -125,7 +127,7 @@ function transformPeriod(p) {
                 .attr('cx', -prevX)
                 .attr('cy', -prevY)
                 .attr('r',2)
-                .attr('fill-opacity', 0.45)
+                .attr('fill-opacity', 0.65)
                 .attr('fill', colorScale(i));
             }
         }
@@ -134,7 +136,7 @@ function transformPeriod(p) {
                 .attr('cx', -prevX)
                 .attr('cy', -prevY)
                 .attr('r',2)
-                .attr('fill-opacity', 0.45)
+                .attr('fill-opacity', 0.65)
                 .attr('fill', colorScale(i));
             }
 

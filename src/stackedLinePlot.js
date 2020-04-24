@@ -24,7 +24,7 @@ class StackedLinePlot {
 
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
-    const colors = ['green', 'red', 'blue', 'orange', 'purple'];
+    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#d04'];
     this.svg = d3.select("#stackplot")
       .append('svg')
       .attr('class', 'plot')
@@ -36,7 +36,7 @@ class StackedLinePlot {
       .attr('height', height );
 
     this.g = this.svg.append('g')
-      .attr('transform', `translate(0,0)`);
+      .attr('transform', `translate(10,0)`);
 
     this.xScale = d3.scalePoint()
       .domain(periods)
@@ -62,6 +62,7 @@ class StackedLinePlot {
       this.g.append('g')
         .attr('class', 'axis')
         .attr('color', 'black')
+        .attr('stroke-width','1.2px')
         .attr('transform', `translate(${this.xScale(period)},0)`)
         .call(d3.axisLeft(this.yScales[i]))
     })
@@ -79,9 +80,43 @@ class StackedLinePlot {
         .attr('height', height / 10 * 1.42)
         .attr('width', width - 245)
         .attr('fill', colors[i])
-        .attr('opacity', '0.15');
+        .attr('opacity', '0.25');
     }
 
+    for(i=0; i<5; i++){
+      this.g.append('text')
+      .attr('transform', `translate(35,${height-220 +i*37})`)
+      .text('10')
+      .attr('font-size', '0.3rem');
+    }
+    for(i=0; i<5; i++){
+      this.g.append('text')
+      .attr('transform', `translate(37,${height-205 +i*37})`)
+      .text('5')
+      .attr('font-size', '0.3rem');
+    }
+    for(i=0; i<5; i++){
+      this.g.append('text')
+      .attr('transform', `translate(37,${height-188.5 +i*37})`)
+      .text('0')
+      .attr('font-size', '0.3rem');
+    }
+    for(i=0; i<5; i++){
+      this.g.append('text')
+      .attr('transform', `translate(45.5,${height-185 +i*36.92})`)
+      .text('-')
+      .attr('font-size', '0.7rem');
+    }
+    for(i=0; i<5; i++){
+      this.g.append('text')
+      .attr('transform', `translate(45.5,${height-203 +i*36.92})`)
+      .text('-')
+      .attr('font-size', '0.7rem');
+    }
+    this.g.append('text')
+      .attr('transform', `translate(45.5,${height-221.5})`)
+      .text('-')
+      .attr('font-size', '0.7rem');
 
     this.g.append('text')
       .attr('transform', `translate(${width / 2.8},${height-8})`)
@@ -91,7 +126,7 @@ class StackedLinePlot {
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 + 20)
+      .attr('y', 0 + 10)
       .attr('x', 0 - (height / 2))
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
@@ -118,7 +153,7 @@ class StackedLinePlot {
     for (i = 0; i < patientId.length; i++) {
       patients[i] = this.data.filter(p => p.patientId == patientId[i]);
     }
-    const colors = ['green', 'red', 'blue', 'orange', 'purple'];
+    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#d04'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
     function transformPeriod(p) {
@@ -212,6 +247,7 @@ class StackedLinePlot {
             .attr("d", groupPlots[i])
             .attr('class', 'linePlots')
             .attr('fill', 'none')
+            .attr("opacity",0.8)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
             .style("stroke-dasharray", ("5, 5"));
@@ -222,6 +258,7 @@ class StackedLinePlot {
             .attr("d", groupPlots[i])
             .attr('class', 'linePlots')
             .attr('fill', 'none')
+            .attr("opacity",0.8)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
             .style("stroke-dasharray", ("3, 3"))
@@ -232,6 +269,7 @@ class StackedLinePlot {
             .attr("d", groupPlots[i])
             .attr('class', 'linePlots')
             .attr('fill', 'none')
+            .attr("opacity",0.8)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
         }

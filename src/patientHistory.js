@@ -1,23 +1,22 @@
 import * as d3 from 'd3';
 
 class PatientHistory {
-  constructor(data, patientId, symptoms) {
+  constructor(data, patientId, symptom, selectedSymptoms) {
     this.data = data;
     this.patientId = patientId;
-    this.symptoms = symptoms;
+    this.symptoms = symptom;
+    this.selectedSymptoms = selectedSymptoms;
   }
 
   init() {
-    this.drawPatientHistory(this.patientId);
+    this.drawPatientHistory(this.patientId, this.selectedSymptoms);
   }
 
+  async drawPatientHistory(patientId, selectedSymptoms) {
 
-
-  async drawPatientHistory(patientId) {
-    console.log(this.data);
     const patients = await d3.csv('/data/datasets/patients_complete.csv');
-    // console.log(patients);
     var patientBackground = patients.find(p => p.patientId == this.patientId);
+    var symptomsSelected = this.selectedSymptoms;
     var i = 0;
     var j = 0;
     const margin = {
@@ -32,6 +31,8 @@ class PatientHistory {
     const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
     const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
     var patient = this.data.filter(p => p.patientId == this.patientId);
+
+
 
     function transformRatingColor(r) {
       switch (r) {
@@ -62,7 +63,13 @@ class PatientHistory {
       }
     }
 
-
+ // function transformText(p) {
+ 
+ //      if(selectedSymptoms.includes(p))
+ //        return "#ffab24";
+ //      else
+ //        return "black";
+ //    }
 
     this.svg = d3.select("#patient-info")
       .append('svg')
@@ -86,19 +93,25 @@ class PatientHistory {
           .attr('y',height-471)
           .attr('height', 416)
           .attr('width', 17)
-          .attr("stroke", '#fdd835')
+          .attr("stroke", '#ffd152')
+          .attr("opacity",'0.8')
           .attr("stroke-width", 3)
           .attr('fill','transparent')
 
-    for (i = 0; i < this.symptoms.length; i++) {
-      this.g.append('text')
-        .attr('class', 'symptomText')
-        .attr('x', 135)
-        .attr('y', height - 56 - 15 * i)
-        .attr('color', 'black')
-        .attr('font-size','0.8rem')
-        .text(this.symptoms[i])
-    }
+    // for (i = 0; i < this.symptoms.length; i++) {
+
+    //   this.svg.append('text')
+    //     .attr('class', 'symptomText')
+    //     .attr('id',this.symptoms[i])
+    //     .attr('x', 135)
+    //     .attr('y', height - 56 - 15 * i)
+    //     .attr('color', 'black')
+    //     .attr('font-size','0.8rem')
+    //     .text(this.symptoms[i])
+    //     .style("cursor", "pointer")
+    //     .style("fill", transformText(this.symptoms[i]))
+        
+    // }
 
     periods.forEach((p, i) => {
       this.g.append('text')
@@ -236,27 +249,27 @@ class PatientHistory {
 
   }
 
-
   clear() {
-    this.svg.selectAll('.symptomText').remove();
-    this.svg.selectAll('.periodText').remove();
-    this.svg.selectAll('.symptoms').remove();
-    this.svg.selectAll('.patientTitle').remove();
-    this.svg.selectAll('.AgeTitle').remove();
-    this.svg.selectAll('.TumorTitle').remove();
-    this.svg.selectAll('.patientTitle').remove();
-    this.svg.selectAll('.AgeTitle').remove();
-    this.svg.selectAll('.DoseTitle').remove();
-    this.svg.selectAll('.FractionTitle').remove();
-    this.svg.selectAll('.GenderTitle').remove();
-    this.svg.selectAll('.patientGroup').remove();
+    // this.svg.selectAll('.symptomText').remove();
+    // this.svg.selectAll('.periodText').remove();
+    // this.svg.selectAll('.symptoms').remove();
+    // this.svg.selectAll('.patientTitle').remove();
+    // this.svg.selectAll('.AgeTitle').remove();
+    // this.svg.selectAll('.TumorTitle').remove();
+    // this.svg.selectAll('.patientTitle').remove();
+    // this.svg.selectAll('.AgeTitle').remove();
+    // this.svg.selectAll('.DoseTitle').remove();
+    // this.svg.selectAll('.FractionTitle').remove();
+    // this.svg.selectAll('.GenderTitle').remove();
+    // this.svg.selectAll('.patientGroup').remove();
     d3.selectAll('.patientSvg').remove();
   }
 
 
-  async update(patientId) {
+  async update(patientId, selectedSymptoms) {
     this.patientId = patientId;
-    await this.drawPatientHistory(patientId);
+    this.clear();
+    await this.drawPatientHistory(patientId, selectedSymptoms);
     this.svg.style('display', 'block');
   }
 }
