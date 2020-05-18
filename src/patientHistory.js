@@ -87,16 +87,7 @@ class PatientHistory {
       .attr('transform', `translate(0,0)`);
 
 
-          this.g.append('rect')
-          .attr('id','selectedMonths')
-          .attr('x',transformHighlight(window.currentPeriod))
-          .attr('y',height-471)
-          .attr('height', 416)
-          .attr('width', 17)
-          .attr("stroke", '#ffd152')
-          .attr("opacity",'0.8')
-          .attr("stroke-width", 3)
-          .attr('fill','transparent')
+
 
     // for (i = 0; i < this.symptoms.length; i++) {
 
@@ -112,12 +103,23 @@ class PatientHistory {
     //     .style("fill", transformText(this.symptoms[i]))
         
     // }
+     if (!patientBackground) return;
+               this.g.append('rect')
+          .attr('id','selectedMonths')
+          .attr('x',transformHighlight(window.currentPeriod))
+          .attr('y',height-556)
+          .attr('height', 416)
+          .attr('width', 17)
+          .attr("stroke", '#ffd152')
+          .attr("opacity",'0.8')
+          .attr("stroke-width", 3)
+          .attr('fill','transparent')
 
     periods.forEach((p, i) => {
       this.g.append('text')
         .attr('class', 'periodText')
-        .attr('x', 20 * i + margin.left)
-        .attr('y', height - 40)
+        .attr('x', 20 * i -2)
+        .attr('y', height - 125)
         .attr('color', 'black')
         .attr('font-size', '0.65rem')
         .text(p)
@@ -136,6 +138,7 @@ class PatientHistory {
       }
     }
 
+
     var symptoms_localdata = []
     var patients_localdata = []
     var text_tooltip = ''
@@ -147,7 +150,7 @@ class PatientHistory {
         this.g.append('rect')
           .attr('class', 'symptoms')
           .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
-          .attr('y', height - 65 - 15 * i)
+          .attr('y', height - 150 - 15 * i)
           .attr('height', 10)
           .attr('width', 15)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
@@ -177,6 +180,8 @@ class PatientHistory {
       }
     }
 
+
+
     this.g.append('text')
       .attr('class', 'patientTitle')
       .attr('id', 'patientTitle')
@@ -184,47 +189,55 @@ class PatientHistory {
       .attr('transform', `translate(${margin.left},${margin.top +8})`)
       .text("Patient " + this.patientId)
 
-    if (!patientBackground) return;
+  
+
+
+    this.g.append('text')
+      .attr('class', 'OtherDetails')
+      .attr('id', 'patientTitle')
+      .attr('font-size', '1rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 510})`)
+      .text("Other Details: ");
 
     this.g.append('text')
       .attr('class', 'AgeTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 34})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 532})`)
       .text("Age: " + parseInt(patientBackground.age));
 
     this.g.append('text')
       .attr('class', 'GenderTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 48})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 548})`)
       .text("Gender: " + patientBackground.gender)
 
     this.g.append('text')
       .attr('class', 'TumorTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 62})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 564})`)
       .text("Tumor category: " + patientBackground.t_category)
 
     this.g.append('text')
       .attr('class', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 76})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 578})`)
       .text("Therapeutic combination: " + patientBackground.therapeutic_combination)
 
     this.g.append('text')
       .attr('class', 'DoseTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 90})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top + 594})`)
       .text("Total dose: " + patientBackground.total_dose)
 
     this.g.append('text')
       .attr('class', 'FractionTitle')
       .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top +102})`)
+      .attr('font-size', '0.9rem')
+      .attr('transform', `translate(${margin.left},${margin.top +610})`)
       .text("Total fractions: " + patientBackground.total_fractions)
 
 
@@ -262,6 +275,8 @@ class PatientHistory {
     // this.svg.selectAll('.FractionTitle').remove();
     // this.svg.selectAll('.GenderTitle').remove();
     // this.svg.selectAll('.patientGroup').remove();
+    this.svg.selectAll('#selectedMonths').remove();
+    this.svg.selectAll('.patientTitle').remove();
     d3.selectAll('.patientSvg').remove();
   }
 

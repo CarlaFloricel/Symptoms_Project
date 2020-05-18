@@ -185,6 +185,10 @@ body {
   pointer-events: none;
 }
 
+#scatterplot{
+    margin-top: 2%;
+}
+
 #infoButton {
   color: grey;
   border-radius: 50px;
@@ -263,10 +267,10 @@ body {
 
 #defaultPatientText {
   position: absolute;
-  top: 40%;
-  left: 70%;
+  top: 75%;
+  left: 63%;
   color: black;
-  font-size: 1rem;
+  font-size: 3rem;
 }
 
 #patientID {
@@ -332,7 +336,11 @@ body {
   z-index :999;
   position:absolute;
   right:0;
-  top:133px;
+  top:6%;
   display:block;
 
+}
+
+.symptomsText{
+  z-index:2;
 }

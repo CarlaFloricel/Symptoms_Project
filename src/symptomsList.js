@@ -8,14 +8,15 @@ class SymptomsList {
 	}
 
 	init() {
-		if(!this.patients)
+
+		if(!this.patients || this.patients.length < 1)
 			this.drawSymptomsList(this.symptoms, this.selectedSymptoms, []);
 		else
 			this.drawSymptomsList(this.symptoms, this.selectedSymptoms, this.patients);
 	}
 
 	async drawSymptomsList(symptoms, selectedSymptoms, patients){
-
+				console.log(patients)
 		    var i = 0;
 		    var j = 0;
 		    const margin = {
@@ -62,7 +63,7 @@ class SymptomsList {
 		    .attr('class', 'symptomText')
 		    .attr('id',symptoms[i])
 		    .attr('x', 135)
-		    .attr('y', height - 56 - 14.5 * i)
+		    .attr('y', height - 60 - 14.5 * i)
 		    .attr('color', 'black')
 		    .attr('font-size','0.8rem')
 		    .text(symptoms[i])

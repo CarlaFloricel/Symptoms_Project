@@ -24,7 +24,7 @@ class StackedLinePlot {
 
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
-    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#d04'];
+    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#66a61e'];
     this.svg = d3.select("#stackplot")
       .append('svg')
       .attr('class', 'plot')
@@ -137,6 +137,7 @@ class StackedLinePlot {
 
 
   drawStackPlot(patientId, symptoms) {
+    console.log(patientId)
     const margin = {
       left: 0,
       right: 0,
@@ -153,7 +154,7 @@ class StackedLinePlot {
     for (i = 0; i < patientId.length; i++) {
       patients[i] = this.data.filter(p => p.patientId == patientId[i]);
     }
-    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#d04'];
+    const colors = ['#803e3b', '#DA8A00', '#058f96', '#9854cc', '#66a61e'];
     const periods = ['Baseline', '6M', '12M', '18M', '24M', '> 2 years'];
 
     function transformPeriod(p) {
@@ -238,9 +239,24 @@ class StackedLinePlot {
         .attr("visibility", "visible")
         .style("font-size", '1rem')
         .attr("font-weight", "bold")
+
     }
     for (let i = 0; i < symptoms.length; i++) {
       for (j = 0; j < patients.length; j++) {
+        const p = patients[j][0]["patientId"]
+        if(patients.length > 3){
+          path = this.g.append("path")
+            .datum(patients[j])
+            .attr("d", groupPlots[i])
+            .attr('class', 'linePlots')
+            .attr('fill', 'none')
+            .attr("opacity",0.8)
+            .attr('stroke', colors[i])
+            .attr('stroke-width', '1px')
+        }
+
+        else{
+
         if (j == 1) {
           path = this.g.append("path")
             .datum(patients[j])
@@ -273,11 +289,14 @@ class StackedLinePlot {
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
         }
+        }
 
         path.style('cursor', 'pointer')
           .on('mouseover', function (d) {
             d3.select(this)
-              .attr('stroke-width', 2);
+              .attr('stroke-width', 2)
+              .append("title")
+              .text("Patient ID: " +p);
 
 
           }).on('mousemove', function (d) {
@@ -289,12 +308,23 @@ class StackedLinePlot {
       }
     }
 
-    this.g.append('text')
-      .attr('class', 'stackTitle')
-      .attr('id', 'stackTitle')
-      .attr('font-size', '0.7rem')
-      .attr('transform', `translate(${width / 4 - margin.left},20)`)
-      .text("Patient " + this.patientId)
+    if(patients.length <= 3){
+          this.g.append('text')
+            .attr('class', 'stackTitle')
+            .attr('id', 'stackTitle')
+            .attr('font-size', '0.7rem')
+            .attr('transform', `translate(${width / 4 - margin.left},20)`)
+            .text("Patient " + this.patientId)
+    }
+    else{
+       this.g.append('text')
+            .attr('class', 'stackTitle')
+            .attr('id', 'stackTitle')
+            .attr('font-size', '0.7rem')
+            .attr('transform', `translate(${width / 4 - margin.left},20)`)
+            .text("Filtered Patients")
+    
+    }
 
     for (i = 0; i < 5; i++) {
       this.g.append('text')
