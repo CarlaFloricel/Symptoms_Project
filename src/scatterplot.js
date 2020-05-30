@@ -20,7 +20,6 @@ class ScatterPlot {
     this.data = data.sort((a , b) => b.cluster - a.cluster)
     const { width, height } = this;
     const packer = d3.pack().size([width - 2, height - 2]).padding(3);
-    // console.log(this.data.map(t => [t.t_category, t.patientId]))
     return packer(d3.hierarchy({ children: this.data }).sum(d => {
     try {   
       return parseInt(d.t_category[1])

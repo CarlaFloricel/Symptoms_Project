@@ -30,6 +30,7 @@ class StackedLinePlot {
       .attr('class', 'plot')
       .attr('viewBox', `0 0 ${width } ${height }`)
       .attr('font-size', '0.5rem')
+      .attr('font-color','black')
       .attr("font-family", "sans-serif")
       .attr('preserveAspectRatio', "xMidYMid meet")
       .attr('width', width)
@@ -48,9 +49,13 @@ class StackedLinePlot {
 
     this.g.append('g')
       .attr('class', 'axis')
-      .attr('color', 'black')
+      .attr('color', 'grey')
       .attr('transform', `translate(${0},${height - margin.top - 40})`)
       .call(d3.axisBottom(this.xScale));
+
+
+      this.g.selectAll(".tick text")
+     .attr("color","black");
 
     this.yScales = periods.map(period =>
       d3.scaleLinear()
@@ -61,7 +66,7 @@ class StackedLinePlot {
     periods.forEach((period, i) => {
       this.g.append('g')
         .attr('class', 'axis')
-        .attr('color', 'black')
+        .attr('color', 'grey')
         .attr('stroke-width','1.2px')
         .attr('transform', `translate(${this.xScale(period)},0)`)
         .call(d3.axisLeft(this.yScales[i]))
@@ -69,7 +74,7 @@ class StackedLinePlot {
 
     this.g.append('g')
       .attr('class', 'axis')
-      .attr('color', 'black')
+      .attr('color', 'grey')
       .attr('transform', `translate(${margin.left + 45},0)`)
       .call(d3.axisLeft(this.yScale).ticks(0));
 
@@ -80,7 +85,7 @@ class StackedLinePlot {
         .attr('height', height / 10 * 1.42)
         .attr('width', width - 245)
         .attr('fill', colors[i])
-        .attr('opacity', '0.25');
+        .attr('opacity', '0.15');
     }
 
     for(i=0; i<5; i++){
@@ -105,39 +110,44 @@ class StackedLinePlot {
       this.g.append('text')
       .attr('transform', `translate(45.5,${height-185 +i*36.92})`)
       .text('-')
-      .attr('font-size', '0.7rem');
+      .attr('font-size', '0.7rem')
+      .attr('fill','grey');
     }
     for(i=0; i<5; i++){
       this.g.append('text')
       .attr('transform', `translate(45.5,${height-203 +i*36.92})`)
       .text('-')
-      .attr('font-size', '0.7rem');
+      .attr('font-size', '0.7rem')
+      .attr('fill', 'grey');
     }
     this.g.append('text')
       .attr('transform', `translate(45.5,${height-221.5})`)
       .text('-')
-      .attr('font-size', '0.7rem');
+      .attr('font-size', '0.7rem')
+      .attr('fill', 'grey');
 
     this.g.append('text')
-      .attr('transform', `translate(${width / 2.8},${height-8})`)
+      .attr('transform', `translate(${width / 2.8},${height-12})`)
       .style('text-anchor', 'middle')
       .text('Time')
       .attr('font-size', '0.5rem');
 
     this.g.append('text')
       .attr('transform', 'rotate(-90)')
-      .attr('y', 0 + 10)
+      .attr('y', 0 + 20)
       .attr('x', 0 - (height / 2))
       .attr('dy', '1em')
       .style('text-anchor', 'middle')
-      .text('Symptoms Group no.')
+      .text('Ratings')
       .attr('font-size', '0.5rem');
+
+
+
 
   }
 
 
   drawStackPlot(patientId, symptoms) {
-    console.log(patientId)
     const margin = {
       left: 0,
       right: 0,
@@ -176,6 +186,8 @@ class StackedLinePlot {
         .defined(d => parseInt(d.period) >= 0)
         .x(d => this.xScale(transformPeriod(parseInt(d.period))))
         .y(d => this.yScale((parseInt(d[symptoms[i]]) + 10 * i) / 10));
+
+
     }
 
     const {
@@ -242,13 +254,24 @@ class StackedLinePlot {
 
     }
     for (let i = 0; i < symptoms.length; i++) {
+      
       for (j = 0; j < patients.length; j++) {
+        // /console.log(this.yScale(((patients[j][patients[j].length-1][symptoms[i]] + 10 * i) / 10)))
+          this.g.append("circle")
+                        .attr("cx", this.xScale(transformPeriod(parseInt(patients[j][patients[j].length-1].period))))
+                        .attr("cy",  height - 40- (height / 10 * 1.42) * i -(height / 10 * 1.42)/10 *patients[j][patients[j].length-1][symptoms[i]]  )
+                        .attr("r",2)
+                        .attr("fill", colors[i])
+                        .attr('z-index','10')
+        let len = patients[j].length;
+        
+
         const p = patients[j][0]["patientId"]
         if(patients.length > 3){
           path = this.g.append("path")
             .datum(patients[j])
             .attr("d", groupPlots[i])
-            .attr('class', 'linePlots')
+            .attr('class',transformSymptomPath(i) )
             .attr('fill', 'none')
             .attr("opacity",0.8)
             .attr('stroke', colors[i])
@@ -258,12 +281,13 @@ class StackedLinePlot {
         else{
 
         if (j == 1) {
+          
           path = this.g.append("path")
             .datum(patients[j])
             .attr("d", groupPlots[i])
-            .attr('class', 'linePlots')
+            .attr('class',transformSymptomPath(i) )
             .attr('fill', 'none')
-            .attr("opacity",0.8)
+            .attr("opacity",1)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
             .style("stroke-dasharray", ("5, 5"));
@@ -272,9 +296,9 @@ class StackedLinePlot {
           path = this.g.append("path")
             .datum(patients[j])
             .attr("d", groupPlots[i])
-            .attr('class', 'linePlots')
+            .attr('class',transformSymptomPath(i) )
             .attr('fill', 'none')
-            .attr("opacity",0.8)
+            .attr("opacity",1)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
             .style("stroke-dasharray", ("3, 3"))
@@ -283,9 +307,9 @@ class StackedLinePlot {
           path = this.g.append("path")
             .datum(patients[j])
             .attr("d", groupPlots[i])
-            .attr('class', 'linePlots')
+            .attr('class',transformSymptomPath(i) )
             .attr('fill', 'none')
-            .attr("opacity",0.8)
+            .attr("opacity",1)
             .attr('stroke', colors[i])
             .attr('stroke-width', '1px')
         }
@@ -293,8 +317,10 @@ class StackedLinePlot {
 
         path.style('cursor', 'pointer')
           .on('mouseover', function (d) {
+
             d3.select(this)
-              .attr('stroke-width', 2)
+              .attr('stroke-width', 3)
+              .attr('stroke', "black")
               .append("title")
               .text("Patient ID: " +p);
 
@@ -302,15 +328,19 @@ class StackedLinePlot {
           }).on('mousemove', function (d) {
 
           }).on('mouseout', function () {
+
             d3.select(this)
-              .attr('stroke-width', 1);
+              .attr('stroke-width', 1)
+              .attr('stroke', colors[i]);
+
           })
       }
     }
 
     if(patients.length <= 3){
           this.g.append('text')
-            .attr('class', 'stackTitle')
+            .attr('class', 'stackTitle k')
+            .attr('class','kk')
             .attr('id', 'stackTitle')
             .attr('font-size', '0.7rem')
             .attr('transform', `translate(${width / 4 - margin.left},20)`)
@@ -325,18 +355,53 @@ class StackedLinePlot {
             .text("Filtered Patients")
     
     }
+   function transformSymptomText(i) {
+ 
+      if (i==4) {
+        return "lastSymp";
+      }
+        else 
+        return "symp";
+    }
+    function transformSymptomPath(i) {
+         
+      if (i==4) {
+        return "lastLinePlots";
+      }
+        else 
+        return "linePlots";
+    }
 
     for (i = 0; i < 5; i++) {
       this.g.append('text')
         .attr('class', 'symptomText')
+        .attr('id', transformSymptomText(i))
         .attr('x', width - 240)
         .attr('y', height - 50 - (height / 10 * 1.42) * i)
         .text(this.symptoms[i])
+        .attr('fill', colors[i])
+
     }
+
+    this.g.append('rect')
+      .attr('id','lastSelectedsymp')
+      .attr('x', margin.left + 43)
+      .attr('y',height - 78 - (height / 10 * 1.42) * 4)
+      .attr('height', height / 10 * 1.55)
+      .attr('width', width - 295)
+      .attr("stroke", '#ffd152')
+      .attr("stroke-width", 3)
+      .attr('opacity','1')
+      .attr('fill','transparent')
+      .attr('display','none')
+      .attr('z-index','100')
+
   }
 
   clear() {
+    this.svg.selectAll('.lastLinePlots').remove();
     this.svg.selectAll('.linePlots').remove();
+    this.svg.selectAll('circle').remove();
     this.svg.selectAll('.stackTitle').remove();
     this.svg.selectAll('.symptomText').remove();
   }

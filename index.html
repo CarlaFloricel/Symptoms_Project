@@ -10,55 +10,65 @@
 </head>
 
 <body>
-  <select multiple id="patient-list" class="ui dropdown patient">
-    <option id="patient-list-placeholder" value="">Select Patient ID(s)</option>
-  </select>
+
 <!--   <div class="symtomsDropDown">
     <select multiple id="symptoms-list" class="ui dropdown">
       <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
     </select>
   </div> -->
-
-    <select multiple id="filters-list" class="ui dropdown filters-list" tabindex="0">
-      <option id="symptoms-list-placeholder" value="">Rating Severity</option>
-        <option id="mildFilter" data-value="mild">Mild</option>
-        <option id="severeFilter" data-value="mild">Severe</option>
-    </select>
-
+  <div class="filters">
+    <div class="filter">
+      <p class="filterTitle">Therapeutic Combination</p>
+      <select multiple id="filters-list3" class="ui dropdown filters-list">
+       <option id="symptoms-list-placeholder" value="">Select Filter(s)</option>
+          <option id="cc" data-value="mild">Cc</option>
+          <option id="iccc" data-value="mild">IC+CC</option>
+          <option id="icrad" data-value="mild">IC+Radiation</option>
+          <option id="radiation" data-value="mild">Radiation</option>
+      </select>
+    </div>
+    <div  class="filter">
+       <p class="filterTitle">Rating Severity</p>
+      <select multiple id="filters-list4" class="ui dropdown filters-list" tabindex="0">
+        <option id="symptoms-list-placeholder" value="">Select Filter(s)</option>
+          <option id="mildFilter" data-value="mild">Mild</option>
+          <option id="severeFilter" data-value="mild">Severe</option>
+      </select>
+    </div>
+    <div  class="filter">
+      <p class="filterTitle">Gender</p>
       <select multiple id="filters-list1" class="ui dropdown filters-list">
-          <option id="symptoms-list-placeholder" value="">Gender</option>
+          <option id="symptoms-list-placeholder" value="">Select Filter(s)</option>
           <option id="male" data-value="male">Male</option>
           <option id="female" data-value="mild">Female</option>
-    </select>
-
+      </select>
+    </div  >
+    <div class="filter">
+      <p class="filterTitle">Tumor Category</p>
       <select multiple id="filters-list2" class="ui dropdown filters-list">
-       <option id="symptoms-list-placeholder" value="">Tumor Category</option>
+       <option id="symptoms-list-placeholder" value="">Select Filter(s)</option>
           <option id="t1" data-value="mild">T1</option>
           <option id="t2" data-value="mild">T2</option>
           <option id="t3" data-value="mild">T3</option>
           <option id="t4" data-value="mild">T4</option>
     </select>
-
-      <select multiple id="filters-list3" class="ui dropdown filters-list">
-       <option id="symptoms-list-placeholder" value="">Therapeutic Combination</option>
-          <option id="cc" data-value="mild">Cc</option>
-          <option id="iccc" data-value="mild">IC+CC</option>
-          <option id="icrad" data-value="mild">IC+Rad</option>
-          <option id="radiation" data-value="mild">Radiation</option>
+    </div>
+    <div class="filter">
+      <p class="filterTitle">Patient Selection</p>   
+      <select multiple id="patient-list" class="ui dropdown patient">
+        <option id="patient-list-placeholder" value="">Select Patient ID(s)</option>
       </select>
-
+    </div>
+  </div>
   <div id="time-slider" class="ui labeled ticked slider"></div>
+
   <div class="flex-container-row">
     <div class="flex-container-column">
-
+      <div>
+      <button class="ui left floated button" id="resetButton" style="margin-left: 5px; background:#e0e6ec70;">Clear Filters</button>
+    </div>
       <div class="flex-item">
         <div class="tab">
-          <!-- <button class="tablinks1 active" id="scatterplot-btn">Patient Clusters</button> -->
-         <!--  <button class="tablinks1" id="correlation-btn">Correlation Matrix</button> -->
-            <!-- <button class="tooltip" id="infoButton">i
-              <span class="tooltiptext">This is a clustering representation of the overall rating severity of each patient
-              </span>
-            </button> -->
         </div>
         <div class="tabcontent1 show">
           <div class="tab1up">
@@ -75,10 +85,17 @@
           </div>
 
           <div id="scales" >
+            <div class="therapeutic-scale">
+              <p>Therapeutic Combination</p>
+              <p><span class="color-circle CC"></span> CC</p>
+              <p><span class="color-circle IC-CC"></span> IC + CC</p>
+              <p><span class="color-circle IC-R"></span> IC + Radiation alone</p>
+              <p><span class="color-circle R"></span>Radiation alone</p>
+            </div>
+
             <div class="color-scale">
               <p>Ratings Severity</p>
               <p><span class="color-circle mild"></span> Mild</p>
-              
               <p><span class="color-circle severe"></span> Severe</p>
             </div>
             <div class="shape-scale">
@@ -93,15 +110,8 @@
               <p><span class="color-circle t3"></span> T3</p>
               <p><span class="color-circle t4"></span> T4</p>
             </div>
-            <div class="therapeutic-scale">
-              <p>Therapeutic Combination</p>
-              <p><span class="color-circle CC"></span> CC</p>
-              <p><span class="color-circle IC-CC"></span> IC + CC</p>
-              <p><span class="color-circle IC-R"></span> IC + Radiation alone</p>
-              <p><span class="color-circle R"></span>Radiation alone</p>
-            </div>
             <div class="rating-scale">
-              <p>Rating</p>
+              <p style="margin-left:0px;">Rating</p>
               <div style="background-color: #bdbdbd;" class="box"><span>0</span></div>
               <div style="background-color: #d9d9d9;" class="box"><span>1</span></div>
               <div style="background-color: #fee0d2;" class="box"><span>2</span></div>
@@ -127,26 +137,48 @@
         <div id="stack" class="tabcontent2 show">
           <div id="stackedLinePlot">
             <div id="stackplot"></div>
-            <div id="stackplotLegend" >
-              
+            <div style="position:absolute; right:100px">
+            <div id="stackplotLegend" style="height: 200px">
             <div style="padding-top: 15px;" id="patientIDLine">
-                <svg width="50" id="patientIDLineSVG">
-                  <line id="patient1" x1="0" y1="10" x2="45" y2="10" style="stroke:black;stroke-width:1"
+                <svg width="100px" id="patientIDLineSVG">
+                  <line id="patient1" x1="0" y1="10" x2="45" y2="10" style="stroke:grey;stroke-width:1"
                     visibility="hidden" />
                   <line id="patient2" x1="0" y1="40" x2="45" y2="40" stroke-dasharray="10,10"
-                    style="stroke:black;stroke-width:1" visibility="hidden" />
+                    style="stroke:grey;stroke-width:1" visibility="hidden" />
                   <line id="patient3" x1="0" y1="70" x2="45" y2="70" stroke-dasharray="5,5"
-                    style="stroke:black;stroke-width:1" visibility="hidden" />
+                    style="stroke:grey;stroke-width:1" visibility="hidden" />        
                 </svg>
               </div>
               <div style="padding-top: 15px;" id="patientID">
-                <svg width="200" id="patientIDSVG">
+                <svg width="200px" id="patientIDSVG">
                   <text id="line1" x="10" y="15"></text>
                   <text id="line2" x="10" y="45"></text>
                   <text id="line3" x="10" y="75"></text>
                 </svg>
               </div>
+      
             </div>
+            <div style="width: 200px;position: absolute;left: 300px;top: 305px;">
+              <svg  >
+                <line id="ratingLine" x1="24" y1="31" x2="24" y2="101"
+                    style="stroke:grey;stroke-width:3;"  /> 
+                <line id="ratingLine" x1="22" y1="32" x2="16" y2="32"
+                    style="stroke:grey;stroke-width:2;"  />
+                <line id="ratingLine" x1="22" y1="67" x2="16" y2="67"
+                    style="stroke:grey;stroke-width:2;"  />
+                <line id="ratingLine" x1="22" y1="100" x2="16" y2="100"
+                    style="stroke:grey;stroke-width:2;"  />
+                <text x="5" y="12" font-size="1.1rem">Rating</text>     
+                <text x="30" y="42" font-size="0.9rem">Severe</text> 
+                <text x="30" y="72" font-size="0.9rem">Medium</text> 
+                <text x="30" y="100" font-size="0.9rem">Low</text>  
+
+                <text x="-1" y="42" font-size="0.9rem">10</text> 
+                <text x="0" y="72" font-size="0.9rem">5</text> 
+                <text x="0" y="100" font-size="0.9rem">0</text>        
+              </svg>
+            </div>
+          </div>
           </div>
           <p id='defaultPatientText'> Please Select a Patient.</p>
           <div id="tendril">

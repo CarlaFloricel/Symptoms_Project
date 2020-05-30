@@ -147,18 +147,26 @@ class TendrilPlot {
             .attr('fill', 'none')
             .attr('stroke', colorScale(i))
             .attr('stroke-width', '0.5px')
-            .attr('d', line(points));
-
+            .attr('d', line(points))
+            .on('mouseover', function () {
+                d3.select(this)
+                  .attr('stroke-width', 2)
+                  .append("title")
+                  .text("Symptom: " + symptom)
+              })
+            .on('mouseout', function () {
+                d3.select(this)
+                  .attr('stroke-width', '0.5px')
+              });
+            
       });
-      
+
   }
   else{
     const g = svg.append('g')
         .classed('tendrils', true)
         .attr('transform', `translate(${width / 2},${height -10}) scale(1.15, 1.15)`);
     const patients = data;
-
-
 
     patients.forEach( (p,i) => {
       const timestamps = p.map(p => parseInt(p.length));
@@ -171,7 +179,7 @@ class TendrilPlot {
 
 
       const currentPatient = p[0]
-         var sum=[]
+      var sum=[]
       const radialData = currentPatient.map(t =>{
         sum.push( parseInt(t['sum']))
         
@@ -183,6 +191,11 @@ class TendrilPlot {
         var prevY=0;
         const points = [{x: 0, y: 0}];
 
+
+
+
+
+
         for(var k = 1; k< sum.length; k++){
             var dif =sum[k] - sum[k-1]; 
             var angle = ((10+dif)/20) *  angleRange -  angleRange/2;
@@ -191,15 +204,35 @@ class TendrilPlot {
             prevY = vala[1] + prevY;
             points.push({x: prevX, y: prevY})
 
-            g.append('circle')
-              .attr('cx', -prevX)
-              .attr('cy', -prevY)
-              .attr('r',2)
-              .attr('fill-opacity', 0.65)
-              .attr('fill', '#DA8A00')
+            if(k == radialData.length-1 ){
+       
+              if( p.survival ==0 ){
+              g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.65)
+                .attr('fill', 'black');
 
+            }
+            else {
+               g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.65)
+                .attr('fill', '#DA8A00');
+            }
+        }
+            else{
+              g.append('circle')
+                .attr('cx', -prevX)
+                .attr('cy', -prevY)
+                .attr('r',2)
+                .attr('fill-opacity', 0.65)
+                .attr('fill', '#DA8A00');
+            }
 
-        
         }
         const line = d3.line()
           .x((d) => (-d.x))
@@ -225,10 +258,6 @@ class TendrilPlot {
 
           
       });
-     
-
-    
-      
 
   }
 }

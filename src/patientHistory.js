@@ -63,13 +63,6 @@ class PatientHistory {
       }
     }
 
- // function transformText(p) {
- 
- //      if(selectedSymptoms.includes(p))
- //        return "#ffab24";
- //      else
- //        return "black";
- //    }
 
     this.svg = d3.select("#patient-info")
       .append('svg')
@@ -87,24 +80,8 @@ class PatientHistory {
       .attr('transform', `translate(0,0)`);
 
 
-
-
-    // for (i = 0; i < this.symptoms.length; i++) {
-
-    //   this.svg.append('text')
-    //     .attr('class', 'symptomText')
-    //     .attr('id',this.symptoms[i])
-    //     .attr('x', 135)
-    //     .attr('y', height - 56 - 15 * i)
-    //     .attr('color', 'black')
-    //     .attr('font-size','0.8rem')
-    //     .text(this.symptoms[i])
-    //     .style("cursor", "pointer")
-    //     .style("fill", transformText(this.symptoms[i]))
-        
-    // }
      if (!patientBackground) return;
-               this.g.append('rect')
+        this.g.append('rect')
           .attr('id','selectedMonths')
           .attr('x',transformHighlight(window.currentPeriod))
           .attr('y',height-556)
@@ -186,7 +163,7 @@ class PatientHistory {
       .attr('class', 'patientTitle')
       .attr('id', 'patientTitle')
       .attr('font-size', '1.5rem')
-      .attr('transform', `translate(${margin.left},${margin.top +8})`)
+      .attr('transform', `translate(${margin.left},${margin.top +10})`)
       .text("Patient " + this.patientId)
 
   
@@ -263,18 +240,6 @@ class PatientHistory {
   }
 
   clear() {
-    // this.svg.selectAll('.symptomText').remove();
-    // this.svg.selectAll('.periodText').remove();
-    // this.svg.selectAll('.symptoms').remove();
-    // this.svg.selectAll('.patientTitle').remove();
-    // this.svg.selectAll('.AgeTitle').remove();
-    // this.svg.selectAll('.TumorTitle').remove();
-    // this.svg.selectAll('.patientTitle').remove();
-    // this.svg.selectAll('.AgeTitle').remove();
-    // this.svg.selectAll('.DoseTitle').remove();
-    // this.svg.selectAll('.FractionTitle').remove();
-    // this.svg.selectAll('.GenderTitle').remove();
-    // this.svg.selectAll('.patientGroup').remove();
     this.svg.selectAll('#selectedMonths').remove();
     this.svg.selectAll('.patientTitle').remove();
     d3.selectAll('.patientSvg').remove();
