@@ -142,9 +142,6 @@ margin:5px;
   justify-content: space-between;
 }
 
-#symptoms-list {
-  margin-right: 0;
-}
 
 #stack {
   display: flex;
@@ -171,11 +168,10 @@ margin:5px;
     align-items: flex-end;
     height:fit-content;
     margin-bottom:10px;
-    padding-left:30px;
-    padding-right:30px;
+
 
     svg {
-     /* flex: 1 0 auto;*/
+      /* flex: 1 0 auto; */
       width: auto;
       height:100%;
     }
@@ -227,15 +223,16 @@ margin:5px;
 
 .symtomsDropDown {
   position: absolute;
-  top: 0px;
-  left: 300px;
+  top: 75%;
+  left: 0px;
+  z-index:9;
 }
 
 #patient-info {
   position: absolute;
   width:30%;
-  top:-19px;
-  right: 0px;
+  top:2.2%;
+  left:68%;
   font-wight:bold;
 }
 
@@ -324,7 +321,7 @@ margin:5px;
 
 .filters{
   margin:0;
-
+  z-index:100;
   display:flex;
   flex-align:flex-start;
 }
@@ -334,25 +331,21 @@ margin:5px;
   margin-right:0 !important;
 }
 
-.symtomsDropDown{
-    z-index:100;
-}
 #patient-list{
   margin-left:0 !important;
   margin-right:0 !important;
 }
 
 .symptomsText{
-  z-index :999;
   position:absolute;
   right:0;
-  top:2%;
+  top:6%;
   display:block;
-
+  z-index:2;
 }
 
-.symptomsText{
-  z-index:2;
+#symptomsText{
+
 }
 
 .filterTitle{

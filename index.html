@@ -11,11 +11,11 @@
 
 <body>
 
-<!--   <div class="symtomsDropDown">
+  <div class="symtomsDropDown" style="width:50%;">
     <select multiple id="symptoms-list" class="ui dropdown">
-      <option id="symptoms-list-placeholder" value="">Select Symptom(s)</option>
+      <option id="symptoms-list-placeholder" value="">Select Clustering Symptoms</option>
     </select>
-  </div> -->
+  </div>
   <div class="filters">
     <div class="filter">
       <p class="filterTitle">Therapeutic Combination</p>
@@ -23,7 +23,7 @@
        <option id="symptoms-list-placeholder" value="">Select Filter(s)</option>
           <option id="cc" data-value="mild">Cc</option>
           <option id="iccc" data-value="mild">IC+CC</option>
-          <option id="icrad" data-value="mild">IC+Radiation</option>
+          <option id="icrad" data-value="mild">IC+Rad</option>
           <option id="radiation" data-value="mild">Radiation</option>
       </select>
     </div>
@@ -65,8 +65,8 @@
   <div class="flex-container-row">
     <div class="flex-container-column">
       <div>
-      <button class="ui left floated button" id="resetButton" style="margin-left: 5px; background:#e0e6ec70;">Clear Filters</button>
-    </div>
+        <button class="ui left floated button" id="resetButton" style="margin-left: 5px; background:#e0e6ec70; z-index: 9; position: absolute; top: 8%; left: 5px;">Clear Filters</button>
+      </div>
       <div class="flex-item">
         <div class="tab">
         </div>
@@ -137,28 +137,11 @@
         <div id="stack" class="tabcontent2 show">
           <div id="stackedLinePlot">
             <div id="stackplot"></div>
-            <div style="position:absolute; right:100px">
-            <div id="stackplotLegend" style="height: 200px">
-            <div style="padding-top: 15px;" id="patientIDLine">
-                <svg width="100px" id="patientIDLineSVG">
-                  <line id="patient1" x1="0" y1="10" x2="45" y2="10" style="stroke:grey;stroke-width:1"
-                    visibility="hidden" />
-                  <line id="patient2" x1="0" y1="40" x2="45" y2="40" stroke-dasharray="10,10"
-                    style="stroke:grey;stroke-width:1" visibility="hidden" />
-                  <line id="patient3" x1="0" y1="70" x2="45" y2="70" stroke-dasharray="5,5"
-                    style="stroke:grey;stroke-width:1" visibility="hidden" />        
-                </svg>
-              </div>
-              <div style="padding-top: 15px;" id="patientID">
-                <svg width="200px" id="patientIDSVG">
-                  <text id="line1" x="10" y="15"></text>
-                  <text id="line2" x="10" y="45"></text>
-                  <text id="line3" x="10" y="75"></text>
-                </svg>
-              </div>
-      
-            </div>
-            <div style="width: 200px;position: absolute;left: 300px;top: 305px;">
+            <div style="width:180px;margin-left:83%;">
+
+
+          
+          <div style="width: 160px;position: absolute;margin-top:310px;margin-left:70px;">
               <svg  >
                 <line id="ratingLine" x1="24" y1="31" x2="24" y2="101"
                     style="stroke:grey;stroke-width:3;"  /> 
@@ -178,6 +161,28 @@
                 <text x="0" y="100" font-size="0.9rem">0</text>        
               </svg>
             </div>
+            <div id="stackplotLegend" style="height: 200px; margin-top:100px;margin-left:60px;">
+
+              <div style="padding-top: 15px; width:52px" id="patientID">
+                <svg  font-size="1.1rem" id="patientIDSVG">
+                  <text x="0" y="15" id="stackLegendTitle" visibility="hidden">Patient</text>
+                  <text id="line1" x="0" y="40"></text>
+                  <text id="line2" x="0" y="70"></text>
+                  <text id="line3" x="0" y="100"></text>
+                </svg>
+              </div>
+                  <div style="padding-top: 15px;" id="patientIDLine">
+                <svg width="50px" id="patientIDLineSVG">
+                  <line id="patient1" x1="0" y1="35" x2="35" y2="35" style="stroke:grey;stroke-width:1"
+                    visibility="hidden" />
+                  <line id="patient2" x1="0" y1="65" x2="35" y2="65" stroke-dasharray="10,10"
+                    style="stroke:grey;stroke-width:1" visibility="hidden" />
+                  <line id="patient3" x1="0" y1="95" x2="35" y2="95" stroke-dasharray="5,5"
+                    style="stroke:grey;stroke-width:1" visibility="hidden" />        
+                </svg>
+              </div>
+            </div>
+             <button class="ui right floated button" id="resetTimeButton" style="background:#e0e6ec70; z-index:100; position:absolute;top:7%;right: 5px;">Clear Time Filters</button>
           </div>
           </div>
           <p id='defaultPatientText'> Please Select a Patient.</p>
@@ -186,6 +191,7 @@
         </div>
 
         </div>
+
       </div>
     </div>
 

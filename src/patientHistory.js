@@ -73,7 +73,8 @@ class PatientHistory {
       .attr('preserveAspectRatio', "xMidYMid meet")
       .attr('width', 300)
       .attr('height', 600)
-      .style('display', 'none');
+      .style('display', 'none')
+      .attr('z-index',10);
 
     this.g = this.svg.append('g')
       .attr('class', 'patientGroup')

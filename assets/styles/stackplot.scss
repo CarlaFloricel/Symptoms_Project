@@ -8,13 +8,13 @@ font-family: sans-serif;
 
 #stackplot {
   width:50%;
-  position:absolute;
+  position:fixed;
 }
 
 #stackplotLegend {
 
   border: none;
-  width: 55%;
   display: flex;
-  margin-left:78%;
+  
+  top:-10%;
 }

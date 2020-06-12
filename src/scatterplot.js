@@ -33,7 +33,6 @@ class ScatterPlot {
   init() {
     const { data, width, height } = this;
     const root = this.pack(data);
-
     this.colorScale = d3.scaleOrdinal()
       .domain(d3.extent(data.map(d => d.cluster)))
       .range([ '#fee0d2',  '#de2d26'])

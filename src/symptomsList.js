@@ -88,6 +88,7 @@ class SymptomsList {
 			      .attr('preserveAspectRatio', "xMidYMid meet")
 			      .attr('width', 145)
 			      .attr('height', 419)
+			      .attr('z-index',100)
 
 		this.g = this.svg.append('g')
       			.attr('class', 'symptoms')
