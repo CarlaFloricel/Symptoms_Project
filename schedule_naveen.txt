@@ -1,9 +1,0 @@
-Schedule:
-
-- Checkpoint demo:
-    - Netlify Auto CI/CD deployment for pull request reviews & master branch
-    - Setting up collaborative tools
-    - Group discussion with team mates
-    - Write at least one functional requirement scenario, goal and non-goal
-    - Come up with 2 sheets of prototypes after the discussion
-    - Group discussion for the next deliverables

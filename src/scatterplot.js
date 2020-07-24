@@ -37,7 +37,6 @@ class ScatterPlot {
       .domain(d3.extent(data.map(d => d.cluster)))
       .range([ '#fee0d2',  '#de2d26'])
 
-
     this.svg = d3.select(this.selector)
       .append('svg')
       .attr('width', width)
@@ -48,7 +47,7 @@ class ScatterPlot {
       .attr("text-anchor", "middle")
       .attr('preserveAspectRatio', "xMidYMid meet");
 
-    this.drawLeaves(root.leaves());
+    this.drawLeaves(data);
   }
 
  transformMarginColor(r) {
@@ -68,28 +67,82 @@ class ScatterPlot {
       switch (r) {
         case 1:
           return '#cb181d';
-        // case 1:
-        //   return '#fc9272';
         default:
           return '#fee0d2';
       }
     }
 
 
+
+ transformRadius(r) {
+      switch (r) {
+        case 'T1':
+          return 3.5;
+        case 'T2':
+           return 5;
+        case 'T3':
+           return 6.5;
+        default:
+          return 8;
+      }
+    }
+
+
   drawLeaves(leaves) {
     const { svg, onPatientSelected } = this;
+    const minH = Math.min.apply(Math, leaves.map((o)=>{return o.PC2;}))
+    const maxH = Math.max.apply(Math, leaves.map((o)=>{return o.PC2;}))
+    const minW = Math.min.apply(Math, leaves.map((o)=>{return o.PC1;}))
+    const maxW = Math.max.apply(Math, leaves.map((o)=>{return o.PC1;}))
+
+    const xSc = d3.scaleLinear()
+    .domain([minW, maxW])
+    .range([10, this.width-50]);
+
+    const ySc = d3.scaleLinear()
+    .domain([minH, maxH])
+    .range([40,this.height-10]);
+
     const leaf = svg.selectAll("g")
       .data(leaves)
       .join("g")
-      .attr("transform", d => `translate(${d.x + 1},${d.y + 1})`)
-      .classed("leaf", true)
-      .attr("id", d => (d.leafUid = `leaf-container-${d.data.patientId}`))
-      .style('cursor', 'pointer');
+      .attr("transform", d => `translate(${xSc(d.PC1)},${ySc(d.PC2)})`)
+      .attr("class","leaf")
+      .attr("id", d => (`leaf-container-${d.patientId}`))
+      .style('cursor', 'pointer')
+      .on('mouseover', function () {
+            d3.select(this)
+            .append("title")
+            .text(d => "Patient ID: " +d.patientId);
+              var aux_id = this['id'];
+              aux_id = aux_id.replace("leaf-container-","");
+               window.selectedPatient = aux_id;
+               $('.stackPath').css('opacity','0.1');
+                $('.circle').css('opacity','0');
+               $(`.${window.selectedPatient}`).css('stroke-width','2.8')
+                                              .css('opacity','0.8');
+              $(".sympBar").css("opacity",'0.2')
+                    })
+      .on('mouseout', function () {
+         $('.stackPath').css('opacity','0.6')
+         $('.tendrilsPath').css('opacity','0.65')
+                            .css('stroke-width','0.5px')
+          $('.circle').css('opacity','1')
+          $('.circle').css('stroke-width','1')
+      })
+      leaf.append("rect")
+      .attr("class","leaf-rect")
+      .attr("id", d => (`leaf-rect-${d.patientId}`))
+       .attr("transform", d => `translate(-${ this.transformRadius(d.t_category)*1.5},-${ this.transformRadius(d.t_category)*1.5})`)
+      .attr("height", d=> this.transformRadius(d.t_category)*2.9)
+      .attr("width", d=> this.transformRadius(d.t_category) *2.9)
+      .attr("fill", "red")
+      .attr("opacity",'0')
 
     leaf.append("path")
       .attr("d", d => {
         const h = (Math.sqrt(3) / 2),
-          radius = d.r,
+          radius = this.transformRadius(d.t_category)+1,
           xp = 0,
           yp = 0,
           hexagonData = [
@@ -102,41 +155,38 @@ class ScatterPlot {
           ];
         return this.drawHexagon(hexagonData);
       })
-      .attr("id", d => (d.leafUid = `leaf-${d.data.patientId}`))
-      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#cb181d' : '#fee0d2')
-      .attr("stroke", d => this.transformMarginColor(d.data.therapeutic_combination))
-      .attr("stroke-width",2)
-      .attr("stroke-opacity", d => d.data.gender === 'Female' ? 0 : 1.0)
-      .attr("fill-opacity", d => d.data.gender === 'Female' ? 0 : 0.6);
+      .attr("id",d => (`leaf-${d.patientId}`))
+      .attr("class","leaf-patient")
+      .attr("fill", d => this.transformMarginColor(d.therapeutic_combination))
+      .attr("fill-opacity", d => d.gender === 'Female' ? 0 : 0.8);
 
     leaf.append("circle")
-      .attr("id", d => (d.leafUid = `leaf-${d.data.patientId}`))
-      .attr("r", d => d.r)
-      .attr("fill", d => parseInt(d.data.cluster) == 1 ? '#cb181d' : '#fee0d2')
-      .attr("stroke", d => this.transformMarginColor(d.data.therapeutic_combination))
-      .attr("stroke-width",2)
-      .attr("stroke-opacity", d => d.data.gender === 'Male' ? 0 : 1.0)
-      .attr("fill-opacity", d => d.data.gender === 'Male' ? 0 : 0.6);
+      .attr("id",d => (`leaf-${d.patientId}`))
+      .attr("class","leaf-patient")
+      .attr("r", d => this.transformRadius(d.t_category))
+      .attr("fill", d => this.transformMarginColor(d.therapeutic_combination))
+      .attr("fill-opacity", d => d.gender === 'Male' ? 0 : 0.8);
 
-
-    leaf.append("text")
-      .text(d => d.data.patientId);
 
     leaf.append("title")
-      .text(d => d.data.patientId);
+      .text(d => "Patient ID: " +d.patientId);
+
+    svg.append("text").text("Patients positioned using dimmentionality redution based on the selected clustering symptoms")
+        .attr("class","scatterPLOTTitle")
+        .attr('transform', `translate(${this.width /2},20)`)
+
   }
 
    highlight(ids) {
-    if (!ids || ids.length === 0) {
+       if (!ids || ids.length === 0) {
       this.svg.selectAll('.leaf').style('opacity', 1);
       return;
     }
-
-    // lower opacity of all leaves
     const leaves = this.svg.selectAll('.leaf');
-    leaves.style('opacity', 0.3);
-
-    // increase opacity of selected leaves
+   
+       leaves.style('opacity', 0.1);
+    
+   
     ids.forEach((id) => {
       this.svg.select(`#leaf-container-${id}`).style('opacity', 1);
     });
@@ -144,12 +194,12 @@ class ScatterPlot {
 
   clear() {
     this.svg.selectAll('.leaf').remove();
+    this.svg.selectAll('.scatterPLOTTitle').remove();
   }
 
   update(data) {
     this.data = data;
-    const leaves = this.pack(data).leaves();
-    this.drawLeaves(leaves);
+    this.drawLeaves(data);
   }
 }
 

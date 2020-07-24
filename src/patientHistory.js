@@ -20,13 +20,13 @@ class PatientHistory {
     var i = 0;
     var j = 0;
     const margin = {
-      left: 0,
-      right: 10,
+      left: 10,
+      right: 0,
       top: 10,
       bottom: 10
     };
-    const width = 260;
-    const height = 600;
+    const width = 100;
+    const height = window.innerHeight;
 
     const periods = ["0M", "6M", "12M", "18M", "24M", ">24M"];
     const colors = ['#fff', '#fff5f0', '#d1c0c0', '#fcbba1', '#fc9272', '#fb6a4a', '#ef3b2c', '#cb181d', '#a50f15', '#67000d', '#4a1212'];
@@ -67,12 +67,8 @@ class PatientHistory {
     this.svg = d3.select("#patient-info")
       .append('svg')
       .attr('class', 'patientSvg')
-      .attr('viewBox', `0 0 ${width + margin.left + margin.right} ${height + margin.top + margin.bottom}`)
-      .attr('font-size', '0.8rem')
-      .attr("font-family", "sans-serif")
+      .attr('viewBox', `0 0 ${width } ${height }`)
       .attr('preserveAspectRatio', "xMidYMid meet")
-      .attr('width', 300)
-      .attr('height', 600)
       .style('display', 'none')
       .attr('z-index',10);
 
@@ -84,24 +80,27 @@ class PatientHistory {
      if (!patientBackground) return;
         this.g.append('rect')
           .attr('id','selectedMonths')
-          .attr('x',transformHighlight(window.currentPeriod))
-          .attr('y',height-556)
-          .attr('height', 416)
-          .attr('width', 17)
+          .attr('x',transformHighlight(window.currentPeriod) + 24)
+          .attr('y',window.innerHeight -height + 62)
+          .attr('height', window.innerHeight -212)
+          .attr('width', 13)
           .attr("stroke", '#ffd152')
           .attr("opacity",'0.8')
           .attr("stroke-width", 3)
           .attr('fill','transparent')
 
-    periods.forEach((p, i) => {
-      this.g.append('text')
-        .attr('class', 'periodText')
-        .attr('x', 20 * i -2)
-        .attr('y', height - 125)
-        .attr('color', 'black')
-        .attr('font-size', '0.65rem')
-        .text(p)
-    });
+    // periods.forEach((p, i) => {
+    //   this.g.append('text')
+    //        .attr('transform', 'rotate(10)')
+    //     .attr('class', 'periodText')
+    //     .attr('x', 14 * i +145)
+    //     .attr('y', height-150)
+    //     .attr('color', 'black')
+        
+    //     .attr('font-size', '0.8rem')
+
+    //     .text(p)
+    // });
 
     function transformPeriod(p) {
       switch (p) {
@@ -127,10 +126,10 @@ class PatientHistory {
         patients_localdata.push(patient[j])
         this.g.append('rect')
           .attr('class', 'symptoms')
-          .attr('x', 20 * transformPeriod(parseInt(patient[j].period)) + margin.left)
-          .attr('y', height - 150 - 15 * i)
-          .attr('height', 10)
-          .attr('width', 15)
+          .attr('x', 25 +13 * transformPeriod(parseInt(patient[j].period)))
+          .attr('y', height-173- 27.1 * i)
+          .attr('height', 22)
+          .attr('width', 10)
           .attr('fill', transformRatingColor(parseInt(patient[j][this.symptoms[i]])))
           .style("cursor", "pointer")
           .attr('opacity', '0.9')
@@ -160,63 +159,63 @@ class PatientHistory {
 
 
 
-    this.g.append('text')
-      .attr('class', 'patientTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '1.5rem')
-      .attr('transform', `translate(${margin.left},${margin.top +10})`)
-      .text("Patient " + this.patientId)
+    // this.g.append('text')
+    //   .attr('class', 'patientTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '1.5rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top +10})`)
+    //   .text("Patient " + this.patientId)
 
   
 
 
-    this.g.append('text')
-      .attr('class', 'OtherDetails')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '1rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 510})`)
-      .text("Other Details: ");
+    // this.g.append('text')
+    //   .attr('class', 'OtherDetails')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '1rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 510})`)
+    //   .text("Other Details: ");
 
-    this.g.append('text')
-      .attr('class', 'AgeTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 532})`)
-      .text("Age: " + parseInt(patientBackground.age));
+    // this.g.append('text')
+    //   .attr('class', 'AgeTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 532})`)
+    //   .text("Age: " + parseInt(patientBackground.age));
 
-    this.g.append('text')
-      .attr('class', 'GenderTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 548})`)
-      .text("Gender: " + patientBackground.gender)
+    // this.g.append('text')
+    //   .attr('class', 'GenderTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 548})`)
+    //   .text("Gender: " + patientBackground.gender)
 
-    this.g.append('text')
-      .attr('class', 'TumorTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 564})`)
-      .text("Tumor category: " + patientBackground.t_category)
+    // this.g.append('text')
+    //   .attr('class', 'TumorTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 564})`)
+    //   .text("Tumor category: " + patientBackground.t_category)
 
-    this.g.append('text')
-      .attr('class', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 578})`)
-      .text("Therapeutic combination: " + patientBackground.therapeutic_combination)
+    // this.g.append('text')
+    //   .attr('class', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 578})`)
+    //   .text("Therapeutic combination: " + patientBackground.therapeutic_combination)
 
-    this.g.append('text')
-      .attr('class', 'DoseTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top + 594})`)
-      .text("Total dose: " + patientBackground.total_dose)
+    // this.g.append('text')
+    //   .attr('class', 'DoseTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top + 594})`)
+    //   .text("Total dose: " + patientBackground.total_dose)
 
-    this.g.append('text')
-      .attr('class', 'FractionTitle')
-      .attr('id', 'patientTitle')
-      .attr('font-size', '0.9rem')
-      .attr('transform', `translate(${margin.left},${margin.top +610})`)
-      .text("Total fractions: " + patientBackground.total_fractions)
+    // this.g.append('text')
+    //   .attr('class', 'FractionTitle')
+    //   .attr('id', 'patientTitle')
+    //   .attr('font-size', '0.9rem')
+    //   .attr('transform', `translate(${margin.left},${margin.top +610})`)
+    //   .text("Total fractions: " + patientBackground.total_fractions)
 
 
       function transformHighlight(period){

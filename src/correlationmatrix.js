@@ -12,17 +12,20 @@ class CorrelationMatrix {
   }
 
   prepareData(data) {
-    this.symptoms = data.columns.sort((a, b) => a.length - b.length);
+    this.symptoms = ['nausea', 'vomit','mucus', 'breath', 'choking',  'swallow','dryMouth','teeth','speech','taste','appetite','constipation', 
+    'sores','skin', 'pain','sleep', 'drowsiness', 'numbness','fatigue', 'distress','memory', 'sadness',
+    'mood','enjoyment','activities', 'work', 'relations', 'walking'];
+      this.symptoms = this.symptoms.reverse();
+      data = data.reverse();
     this.correlationData = [];
-    for (let i = 0; i < data.length; i++) {
-      for (let j = 0; j < Object.keys(data[i]).length; j++) {
-        this.correlationData.push({
-          row: i,
-          col: j,
-          value: parseFloat(data[i][this.symptoms[j]]),
-        });
-      }
+    for (let j = 0; j < 28; j++) {
+      this.correlationData.push({
+        row: j,
+        col: 0,
+        value: parseFloat(data[j]),
+      });
     }
+    
   }
 
   init() {
@@ -39,9 +42,9 @@ class CorrelationMatrix {
     this.svg = d3.select(this.selector)
       .append('svg')
       .attr('width', width)
-      .attr('height', height + 85)
+      .attr('height', height)
       .attr("viewBox", `0 0 ${width}, ${height}`)
-      .attr("font-size", 20)
+      .attr("font-size", "1rem")
       .attr("font-family", "sans-serif")
       .attr("text-anchor", "middle")
       .attr('preserveAspectRatio', "xMidYMid meet")
@@ -69,7 +72,7 @@ class CorrelationMatrix {
       .rangeRound([0, width - this.margin.left])
       .domain(this.symptoms);
     this.yScale = d3.scaleBand()
-      .rangeRound([0, height - this.margin.bottom])
+      .range([0, height *1.21])
       .domain(this.symptoms);
     this.colorScale = d3.scaleLinear()
       .domain([-1, 0, 1])
@@ -83,19 +86,20 @@ class CorrelationMatrix {
 
   drawCells() {
     const cells = this.svg.append('g')
-      .attr('transform', `translate(${this.margin.left}, 0)`)
+      .attr('transform', `translate(5, -230)`)
       .attr('id', 'cells')
       .selectAll('empty')
       .data(this.correlationData)
       .enter().append('g')
       .attr('class', 'cell')
-      .style('pointer-events', 'all');
+      .style('pointer-events', 'all')
+      .attr("transform",`scale(2, 2)`);
 
     cells.append('rect')
       .attr('x', d => this.xScale(this.symptoms[d.col]))
       .attr('y', d => this.yScale(this.symptoms[d.row]))
-      .attr('width', d => d.col >= d.row ? 0 : this.xScale.bandwidth())
-      .attr('height', d => d.col >= d.row ? 0 : this.yScale.bandwidth())
+      .attr('width', d => this.xScale.bandwidth()/1.2)
+      .attr('height', d => this.yScale.bandwidth())
       .attr('fill', 'none')
       .attr('stroke', 'none')
       .attr('stroke-width', '1')
@@ -103,7 +107,7 @@ class CorrelationMatrix {
     cells.append('circle')
       .attr('cx', d => this.xScale(this.symptoms[d.col]) + 0.5 * this.xScale.bandwidth())
       .attr('cy', d => this.yScale(this.symptoms[d.row]) + 0.5 * this.yScale.bandwidth())
-      .attr('r', d => d.col >= d.row ? 0 : this.radiusScale(Math.abs(d.value)))
+      .attr('r', d => this.radiusScale(Math.abs(d.value))/1.)
       .style('fill', d => this.colorScale(d.value))
       .style('fill-opacity', 0.5);
 
@@ -122,26 +126,25 @@ class CorrelationMatrix {
         d3.select(this)
           .select('rect')
           .attr('stroke', 'black');
+        // svg.append('text')
+        //   .attr('class', 'correlation-label')
+        //   .attr('x', margin.left + xScale(symptoms[d.col]))
+        //   .attr('y', height - margin.bottom)
+        //   .text(symptoms[d.col])
+        //   .attr('text-anchor', d.col <= symptoms.length / 2 ? 'start' : 'end')
+        //   .style('font-size', '1em');
 
-        svg.append('text')
-          .attr('class', 'correlation-label')
-          .attr('x', margin.left + xScale(symptoms[d.col]))
-          .attr('y', height - margin.bottom / 2)
-          .text(symptoms[d.col])
-          .attr('text-anchor', d.col <= symptoms.length / 2 ? 'start' : 'end')
-          .style('font-size', '1em');
-
-        svg.append('text')
-          .attr('class', 'correlation-label')
-          .attr('x', -15 - yScale(symptoms[d.row]))
-          .attr('y', margin.left - 5)
-          .attr('text-anchor', d.row > symptoms.length / 2 ? 'start' : 'end')
-          .attr('dominant-baseline', 'middle')
-          .attr('transform', 'rotate(-90)')
-          .text(symptoms[d.row]);
+        // svg.append('text')
+        //   .attr('class', 'correlation-label')
+        //   .attr('x', -15 - yScale(symptoms[d.row]))
+        //   .attr('y', margin.left - 5 )
+        //   .attr('text-anchor', d.row > symptoms.length / 2 ? 'start' : 'end')
+        //   .attr('dominant-baseline', 'middle')
+        //   .attr('transform', 'rotate(-90)')
+        //   .text(symptoms[d.row]);
 
         tooltip.style('visibility', 'visible')
-          .style('left', `${d3.event.pageX + 20}px`)
+          .style('left', `${d3.event.pageX - 20}px`)
           .style('top', `${d3.event.pageY - 20}px`);
         toolval.text(d3.format('.2f')(d.value));
       })
@@ -170,118 +173,6 @@ class CorrelationMatrix {
     linearGradient.append("stop")
       .attr("offset", "100%")
       .attr("stop-color", '#de2d26')
-    svg.append("rect")
-      .attr("width", "90%")
-      .attr("height", 7)
-      .style("fill", "url(#linear-gradient)")
-      .attr('x', 30)
-      .attr('y', 510)
-      .style("stroke", "lightgrey")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "5%")
-      .attr('cy', height + 33)
-      .attr('r', "8.5")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("-1")
-      .attr("x", "5%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "15.5%")
-      .attr('cy', height + 33)
-      .attr('r', "7.36")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("-0.75")
-      .attr("x", "15.5%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "27%")
-      .attr('cy', height + 33)
-      .attr('r', "6")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("-0.5")
-      .attr("x", "27%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "38.5%")
-      .attr('cy', height + 33)
-      .attr('r', "4.27")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("-0.25")
-      .attr("x", "38.5%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "50%")
-      .attr('cy', height + 33)
-      .attr('r', "0")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("0")
-      .attr("x", "50%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "62.5%")
-      .attr('cy', height + 33)
-      .attr('r', "4.27")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("0.25")
-      .attr("x", "62.5%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "75%")
-      .attr('cy', height + 33)
-      .attr('r', "6")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("0.5")
-      .attr("x", "75%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "86.5%")
-      .attr('cy', height + 33)
-      .attr('r', "7.36")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("0.75")
-      .attr("x", "86.5%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append('circle')
-      .attr('cx', "96%")
-      .attr('cy', height + 33)
-      .attr('r', "8.5")
-      .style('fill', 'black');
-    d3.select(".correlation").append("text")
-      .text("1")
-      .attr("x", "96%")
-      .attr("y", height + 19)
-      .style("font-size", "12px")
-
-    d3.select(".correlation").append("text")
-      .text("Correlation")
-      .attr("x", height / 2 + 10)
-      .attr("y", height + 33)
-      .style("font-size", "12px")
 
   }
 

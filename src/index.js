@@ -1,9 +1,12 @@
 import * as d3 from "d3";
 import $ from 'jquery';
 import _ from 'lodash';
+// import 'bootstrap';
+require('bootstrap/dist/css/bootstrap.min.css');
 window.$ = window.jQuery = $;
 require('fomantic-ui-css/semantic');
 require('fomantic-ui-css/semantic.min.css');
+
 
 import TimeSlider from './timeslider';
 import ScatterPlot from './scatterplot';
@@ -28,6 +31,12 @@ class App {
     this.onPatientFilter = this.onPatientFilter.bind(this);
     this.drawFilteredClusters = this.drawFilteredClusters.bind(this);
     this.clusterSymptoms = this.clusterSymptoms.bind(this);
+    this.onFilterToggle = this.onFilterToggle.bind(this);
+    this.onCategoryFilterReset = this.onCategoryFilterReset.bind(this);
+    this.updateCategoryResetButton = this.updateCategoryResetButton.bind(this);
+    this.selectSymptom= this.selectSymptom.bind(this);
+    this.drawMatrix = this.drawMatrix.bind(this);
+    this.showPatientNeighbors =this.showPatientNeighbors.bind(this);
     this.patients = [];
     this.symptoms = [];
     this.patientFilters = [];
@@ -36,19 +45,17 @@ class App {
     this.symptomsList = null;
     this.tendrilPlots = [];
     this.period = 0;
-    this.clearDropDown =  this.clearDropDown.bind(this);
     this.clusteringSymptoms = [];
-    this.symptoms = ['nausea', 'vomit', 'choking', 'shortnessOfBreath', 'sores',
-      'memory', 'lackOfAppetite', 'teethProblem', 'skinPain', 'constipation', 'taste',
-      'numbness', 'dryMouth', 'mucusInMouthAndThroat', 'difficultyInSwallowing',
-      'speech', 'distress', 'sadness', 'fatigue', 'drowsiness', 'disturbedSleep', 'pain',
-      'generalActivity', 'mood', 'work', 'relations', 'walking', 'enjoymentOfLife'];
+    this.lastSelectedSymptom = 'nausea';
+    this.symptoms = ['nausea', 'vomit','mucus', 'breath', 'choking',  'swallow','dryMouth','teeth','speech','taste','appetite','constipation', 
+    'sores','skin', 'pain','sleep', 'drowsiness', 'numbness','fatigue', 'distress','memory', 'sadness',
+    'mood','enjoyment','activities', 'work', 'relations', 'walking'];
     this.allSymptoms = [...this.symptoms];
-    this.symptoms = ['mood', 'work', 'relations', 'walking', 'enjoymentOfLife'];
+    this.symptoms = ['choking','breath','mucus','vomit','nausea'];
   }
 
   async initTimeSlider() {
-    const symptoms = await d3.csv('/data/datasets/symptoms_period.csv');
+    const symptoms = await d3.csv('/data/datasets/symptoms.csv');
     const timePeriods = _.sortedUniq(
       symptoms.map(({ period }) => parseInt(period, 10)).sort((a, b) => a - b));
     const timeSlider = new TimeSlider('#time-slider', timePeriods, await this.sliderUpdate);
@@ -56,196 +63,253 @@ class App {
   }
 
   init() {
+    window.freshTendril = 1;
     this.initTimeSlider();
     this.showStackPlot(0);
-    this.showPatientHistory(0,this.symptoms);
-    this.symptomsList = new SymptomsList(this.allSymptoms, this.symptoms);
-    this.symptomsList.drawSymptomsList(this.allSymptoms, []);
-
     var i = 0;
-    var allSymp = this.allSymptoms;
+    window.lastSelectedSymptom = 'nausea';
+    window.selectedpatient="";
 
     $('#patient-list').dropdown({
-      maxSelections: 3,
+      maxSelections: 1,
       action: 'activate',
       onChange: this.onPatientSelect,
-      value: "2"
-    });
-
-    $('#symptoms-list').dropdown({
-      maxSelections: 28,
-      action: 'activate',
-      onChange: this.clusterSymptoms,
-    });
-
-    $('.filters-list').dropdown({
-      maxSelections: 20,
-      action: 'activate',
-      onChange: this.onPatientFilter,
-    });
-
-    $('#scatterplot-btn').on('click', function () {
-      $('#scatterplot-btn').toggleClass('active');
-      $('#correlation-btn').toggleClass('active');
-      $('#scatterplot').show();
-      $('#scales').show();
-      $('#star-plot').hide();
-      $('#matrix').hide();
-      $('#patient-history').show();
-      $('#infoButton').show();
-      $('#defaultPatientText').show();
-      if (this.patients = 'undefined' || this.patients.length == 0) {
-        $('#defaultPatientText').hide();
-      }
-      $('#star-plot').hide();
-    });
-
-    $('#correlation-btn').on('click', function () {
-      $('#scatterplot-btn').toggleClass('active');
-      $('#correlation-btn').toggleClass('active');
-      $('#scatterplot').hide();
-      $('#matrix').show();
-      $('#patient-history').hide();
-      $('#infoButton').hide();
-      $('#scales').hide();
-      $('#defaultPatientText').hide();
-      $('#star-plot').show();
-    });
-
-    $('#mult-symptoms-btn').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#tendril').show();
-      $('#stack').show();
-      $('#patient-info').hide();
-    });
-
-    $('#mult-patients-btn').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#tendril').hide();
-      $('#stack').hide();
-    });
-
-    $('#mult-timestamps-btn').on('click', function () {
-      $('#mult-symptoms-btn').toggleClass('active');
-      $('#mult-patients-btn').toggleClass('active');
-      $('#tendril').hide();
-      $('#stack').hide();
-    });   
-
-      $("#resetTimeButton").on('click', function(){
-        $('.stackPath').css('opacity','0.8')
-        $('circle').css('opacity','1');
-      })
-
-    $(document).on("click", (event) =>{
-      for(i=0; i< allSymp.length; i++){
-          if (allSymp[i] == event.target.id){
-
-              if(!this.symptoms.includes(allSymp[i]) ){
-                if(this.symptoms.length <5){
-                  this.symptoms.push(allSymp[i]);
-                  this.onSymptomsSelect(this.symptoms);
-                  this.symptomsList.clear();
-                  this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, this.patients);
-                }
-                else{
-                  this.symptoms.shift();
-                  this.symptoms.push(allSymp[i]);
-                  this.onSymptomsSelect(this.symptoms);
-                  this.symptomsList.clear();
-                  if(this.patients.length > 0){
-                    this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, this.patients);
-                    setTimeout(() =>{
-                        this.drawTendrilPlot(this.patients, this.symptoms);
-            
-            
-                   }, 500);
-                  }
-                  else{
-                    this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, this.filteredPatients);
-                    setTimeout(() =>{
-                        this.drawTendrilPlot(this.filteredPatients, this.symptoms);
-            
-            
-                   }, 500);
-                    
-                  }
-                }
-              } 
-              if(this.patients.length > 0 || this.filteredPatients.length >0){
-                $('#lastSymp').css('font-size','2em');
-                $('.linePlots').css('opacity','0.3');
-                $('.lastLinePlots').css('stroke-width','2')
-                 $('#lastSelectedsymp').css('display','block');
-                    setTimeout(function() {
-                       $('#lastSelectedsymp').css('display','none');
-                       $('#lastSymp').css('font-size','1em');
-                       $('.linePlots').css('opacity','0.8');
-                       $('.lastLinePlots').css('stroke-width','1')
-
-                    }, 1000);
-                    
-              }
-        }
-      }
 
     });
 
-    this.updateSymptoms();
-    this.updateFilters();
-    if (this.patients.length == 0) {
-      $('#defaultPatientText').show();
-    }
-    else {
-      $('#defaultPatientText').hide();
-    }
-
-
-    $('#resetButton').on("click",(event) =>{
-      $('#scatterplot').css('visibility','hidden');
-      if(this.clusteringSymptoms.length > 22){
-        setTimeout(() =>{
-            this.drawClusters(this.period).then($('#scatterplot').css('visibility','visible'));
-            
-            
-        }, 5000);
-      }
-      else if(this.clusteringSymptoms.length > 14){
-        setTimeout(() =>{
-            this.drawClusters(this.period).then($('#scatterplot').css('visibility','visible'));
-            
-            
-        }, 3500);
-      }
-      else{
-        setTimeout(() =>{
-            this.drawClusters(this.period).then($('#scatterplot').css('visibility','visible'));
-            
-            
-        }, 2000);
-      }
-
-      
-      $('.filters-list').dropdown('clear'); 
-      $('#symptoms-list').dropdown('clear');
+    $("#resetTimeButton").on('click', function(){
+      $('.stackPath').css('opacity','0.6')
+      $('circle').css('opacity','1');
     })
+
+    $(`#${this.lastSelectedSymptom}`).css("color","red");
+    $(".symptoms-list").on("click", this.selectSymptom);
+    $(".symptoms-list").on("click", (event) => {
+      this.lastSelectedSymptom = event.target.id;
+      window.lastSelectedSymptom=event.target.id;
+
+      var element = event.target.id;
+       $(".symptoms-list").css("color","black");
+        $(`#${element}`).css("color","red");
+      this.drawMatrix(event.target.id);
+    });
+
+     $(".symptoms-list").on("mouseover", (event) => {
+
+      var s = event.target.id;
+
+      $(`.symptoms-list`).css("color","black")
+      $(`#${s}`).css("color","#fd8d3c")
+      $(`#${window.lastSelectedSymptom}`).css("color","red")
+      $(`#${s}-highlight`).css('opacity','1');
+    });
+    $(".symptoms-list").on("mouseout", (event) => {
+      var s = event.target.id;
+      $(`.symptoms-list`).css("color","black");
+      
+      $(`#${s}-highlight`).css('opacity','0');
+      $(`#${window.lastSelectedSymptom}`).css("color","red")
+    });
+   
+   $("#show-patient").on("click",() => {
+    this.onPatientSelect(this.patients);
+   } )
+
+    $(".category-entry").on("click", this.onFilterToggle);
+    $(".reset-category-filter").on("click", this.onCategoryFilterReset);
+    $(".filters-symptoms-list").on("click", this.clusterSymptoms);
+    $("#filtersResetButton").on("click",()=>{
+      for(var k = 0; k < $(".filters-list").length ; k++){
+         var el = $(".filters-list")[k].id;
+        $(`#${el}`).removeClass("active");
+        this.updateCategoryResetButton(el);
+      }
+    });
+
+
+    this.patientFilters = ["Male", "Female"];
+    this.onPatientSelect();
+    
+        setTimeout(()=> {
+      $('.stackPath').css('opacity','0.2');
+      $('.tendrilCircle').css('opacity','0');
+
+
+      }, 2000);
+
+         $(document).on("click", (event) =>{
+          var idd = event.target.id;
+          if(idd){
+
+           if ($(`#${idd}`).hasClass("leaf-patient")){
+              idd=idd.replace("leaf-","");
+               this.onPatientSelect([idd]);
+               this.updatePatientIds(window.totalPatientsIds,idd)
+              console.log(this.patients)
+
+           }
+
+         }})
+
+
+      $("#show-patient-nearest_neighbors").on("click",() => {
+        this.showPatientNeighbors();
+       })
+
+  }
+
+  async showPatientNeighbors(){
+    if($("#show-patient-nearest_neighbors").is(":checked")){
+      const data = await this.loadDataset(parseInt(window.currentPeriod), this.clusteringSymptoms,this.patients[0]);
+      data.push(this.patients[0])
+          this.drawTendrilPlot(data, this.symptoms);
+          this.stackPlot.clear();
+          this.stackPlot.update(data, this.symptoms);
+          this.highlightPatients(data)
+    }
+    else{
+      this.onPatientSelect(this.patients);
+    }
+  }
+
+  async  onFilterToggle(event){
+    var element = event.target.id;
+    if(element){
+      if (!$(`#${element}`).hasClass("active"))
+        $(`#${element}`).addClass("active");
+      else
+        $(`#${element}`).removeClass("active");
+      
+      this.updateCategoryResetButton(element);
+    }
   }
 
 
-  async clusterSymptoms(value){
-    this.clusteringSymptoms = value;
-    await this.drawFilteredClusters(this.period, value)
-    this.onPatientFilter(this.period)
+  async updateCategoryResetButton(element){
+    if($(".filters-list.active").length > 0){
+      $("#filtersResetButton").removeClass("hidden");
+    }
+    else{
+      $("#filtersResetButton").addClass("hidden");
+    }
+    var container = $(`#${element}`).parent();
+    var resetButton = container.parent().find(".reset-category-filter");
+    if (container.children(".category-entry:not(.active)").length < container.children().length){
+      resetButton.removeClass("hidden");
+    }
+    else{
+      resetButton.addClass("hidden");
+    }
+
+      this.patientFilters = [];
+          for(var i = 0; i < $(".filters-list.active").length; i++){
+            if( !this.patientFilters.includes( $(".filters-list.active")[i].id))
+            this.patientFilters.push($(".filters-list.active")[i].id)
+        }
+      if($(`#${element}`).hasClass("filters-symptoms-list")){
+        this.onPatientFilter(this.period,true);
+      }
+      else{
+        this.onPatientFilter(this.period);
+      }
+      
+  }
+
+  async onCategoryFilterReset(event){
+
+    var element = event.target.id;
+    $(`#${element}`).parent().next(".category-entries-container").children(".category-entry").removeClass("active");
+    $(`#${element}`).addClass("hidden");
+        this.patientFilters = [];
+          for(var i = 0; i < $(".filters-list.active").length; i++){
+            if( !this.patientFilters.includes( $(".filters-list.active")[i].id))
+            this.patientFilters.push($(".filters-list.active")[i].id)
+        }
+      if($(`#${element}`).hasClass("reset-clustering")){
+        this.onPatientFilter(this.period,true);
+      }
+      else{
+        this.onPatientFilter(this.period);
+      }
+      this.clusterSymptoms();
+  }
+
+
+  async clusterSymptoms(){
+
+    this.clusteringSymptoms = [];
+    for(var i = 0; i <  $(".filters-symptoms-list.active").length; i++){
+      var id =  $(".filters-symptoms-list.active")[i].id;
+
+      id = id.slice(0,id.length - 6)
+      if(! this.clusteringSymptoms.includes(id)){
+        this.clusteringSymptoms.push(id)
+      }
+    }
+
+    await this.drawClusters(this.period, this.clusteringSymptoms)
   }
 
   async drawFilteredClusters(period, symptoms){
-    await this.drawClusters(period,symptoms);
+   // await this.drawClusters(period,symptoms);
+  }
+
+  async selectSymptom(event) {
+    var allSymp = this.allSymptoms;
+    if(!this.symptoms.includes(`${event.target.id}`)){
+        this.symptoms.shift();
+        this.symptoms.push(`${event.target.id}`);
+       await this.onSymptomsSelect(this.symptoms);
+        for(var j = 0; j < $('.symptoms-list').length; j++){
+          var id = $('.symptoms-list')[j].id;
+           $(`#${id}`).removeClass("active");
+        }
+        for(var i = 0; i < this.symptoms.length; i++){
+          $(`#${this.symptoms[i]}`).addClass("active");
+        }
+        if(this.patients.length > 0 || this.filteredPatients.length >0){
+          $('#lastSymp').css('font-size','1.1em');
+          $('.linePlots').css('opacity','0.3');
+          $('.lastLinePlots').css('stroke-width','2')
+          $('#lastSelectedsymp').css('display','block');
+          setTimeout(function() {
+             $('#lastSelectedsymp').css('display','none');
+             $('#lastSymp').css('font-size','1em');
+             $('.linePlots').css('opacity','0.6');
+             $('.lastLinePlots').css('stroke-width','1')
+
+          }, 1000);  
+        }
+      }
+      var a1 = this.symptoms.filter(v => ['sleep','drowsiness', 'numbness','fatigue', 'distress','memory', 'sadness','mood','enjoyment','activities', 'work', 'relations' ].includes(v))
+      var a2 = this.symptoms.filter(v => ['mucus', 'breath', 'dryMouth','teeth','speech','taste','appetite'].includes(v));
+      var a3 =  this.symptoms.filter(v => ['mucus','nausea','vomit', 'choking',  'swallow'].includes(v));
+
+      if(a1.length>0){
+        $("#brain").css("opacity",'0.2')
+      }
+      else{
+        $("#brain").css("opacity",'0')
+      }
+
+      if(a2.length>0){
+        $("#mouth").css("opacity",'0.2')
+      }
+      else{
+        $("#mouth").css("opacity",'0')
+      }
+
+      if(a3.length>0){
+        $("#throat").css("opacity",'0.2')
+      }
+      else{
+        $("#throat").css("opacity",'0')
+      }
   }
 
 
   async onSymptomsSelect(value) {
+
     var i;
     var sympList = [];
     for(i =0; i<value.length;i++){
@@ -259,84 +323,64 @@ class App {
     if(sympList.length >5){
       sympList.slice(sympList.length-5)
     }
-    this.stackPlot.clear();
-    if(this.patients.length > 0){
-       this.stackPlot.update(this.patients, sympList);
-    }
-    else if(this.filteredPatients.length >0){
-      this.stackPlot.update(this.filteredPatients, sympList);
-    }
-    
+    if(this.filteredPatients.length >0 && ! $("#show-patient").is(":checked")){
+       this.drawTendrilPlot(this.filteredPatients, sympList);
+    } 
     this.symptoms = sympList;
-    if (!this.filteredPatients || this.filteredPatients.length == 0){
-      setTimeout(()=> {
-       this.drawTendrilPlot(this.patients, sympList);
-
-      }, 500);
-      
-    }
-    if(this.patients.length > 0)
-      this.patientHistory.update(this.patients[this.patients.length - 1], this.symptoms);
-
   }
 
 
   async onPatientSelect(value) {
-   this.patientHistory.clear();
-  if(!value)
-    {return;}
-   this.patientHistory.clear();
+
+    $(".leaf-rect").css('opacity','0')
+    if(!value)
+      {return;}
     this.patients = value;
-    this.symptomsList.clear()
-    this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, this.patients);
-    if (this.patients.length == 0 && this.filteredPatients.length == 0) {
-           setTimeout(()=> {
-       $('#defaultPatientText').show();
 
-      }, 600);
-      
-          $('#tendril').empty();
-    } else {
-      this.patientHistory.update(this.patients[this.patients.length - 1], this.symptoms);
-     $('#defaultPatientText').hide();
-      setTimeout(()=> {
+    if (this.patients.length == 0 ) {
+      window.selectedpatient="";
+      $("#show-patient").prop("checked", false);
+      $(".show-patient-checkbox").css("visibility","hidden")
+      $("#show-patient-nearest_neighbors").prop("checked", false);
+      $(".show-patient-checkbox-neighbors").css("visibility","hidden")
+      this.onPatientFilter(window.currentPeriod)
+      return;
+    }
+    else{
+      window.selectedpatient=""+this.patients[0];
+      var patient_highlight = "leaf-rect-"+this.patients[0]
+
+      $(".show-patient-checkbox").css("visibility","visible")
+      if ($("#show-patient").is(":checked")){
+        $(".show-percentages").css("visibility","hidden")
+        $(".show-patient-checkbox-neighbors").css("visibility","visible")
+       
         this.drawTendrilPlot(this.patients, this.symptoms);
-
-      }, 500);
+        this.highlightPatients(this.patients);
+        this.stackPlot.clear();
+        this.stackPlot.update(value, this.symptoms);
+         $(".leaf-rect").css("opacity",'0')
+      }
+      else{
+         $("#show-patient-nearest_neighbors").prop("checked", false);
+        $(".show-patient-checkbox-neighbors").css("visibility","hidden")
+        await this.onPatientFilter(window.currentPeriod)
+        $( `#${patient_highlight}`).css('opacity','0.3')
+        $(".show-percentages").css("visibility","visible")
+      }
        
     }
-    this.highlightPatients(this.patients);
-    if(this.symptoms != null){
-          this.stackPlot.clear();
-          this.stackPlot.update(value, this.symptoms);
+
+    window.selectedpatient=""+this.patients[0];
+    for(var i = 0; i < this.symptoms.length; i++){
+      $(`#${this.symptoms[i]}`).addClass("active");
     }
-    else {
-      if(value.length > 0){
-          this.stackPlot.clear();
-          this.stackPlot.update(value, ['mood', 'work', 'relations', 'walking', 'enjoymentOfLife']);
-        }else{
-          this.stackPlot.clear();
-          this.stackPlot.update([], []);
-        }
-          
-    }
-
-
-
   }
 
 
-  async onPatientFilter(period){
-      if (this.patients.length > 0){
-        $('#patient-list').dropdown('clear'); 
-        this.patients = [];
-        await this.onPatientSelect([]) 
-        this.patientHistory.update([],[])
-      }
-
-      this.patientFilters = $('.filters-list').find(":selected").text();
+  async onPatientFilter(period, redrawTendrils){
       if(this.patientFilters.length == 0){
-        //await this.onPatientSelect(this.patients)
+        this.patientFilters=["Male", "Female"]
       }
       const data = await this.loadDataset(parseInt(window.currentPeriod), this.clusteringSymptoms);
       var i =0;
@@ -346,6 +390,7 @@ class App {
       var genderFilter = [];
       var therapyFilter = [];
       var tumorFilter = [];
+      var outcomeFilter = [];
       this.emptyPatientFilter = false;
       if(this.patientFilters.includes("T1")){
         patients = (data.filter(d => d.t_category == "T1"));
@@ -365,17 +410,17 @@ class App {
         patients = (data.filter(d => d.t_category == "T4"));
          patients.forEach(el => tumorFilter.push(el));
       }
-      if(this.patientFilters.includes("Cc")){
+      if(this.patientFilters.includes("CC")){
         patients = (data.filter(d => d.therapeutic_combination == "CC"));
         patients.forEach(el => therapyFilter.push(el));
        
       }
-      if(this.patientFilters.includes("IC+CC")){
+      if(this.patientFilters.includes("ICCC")){
         patients = (data.filter(d => d.therapeutic_combination == "IC+CC"));
          patients.forEach(el => therapyFilter.push(el));
       }
 
-      if(this.patientFilters.includes("IC+Rad")){
+      if(this.patientFilters.includes("ICRad")){
         patients = (data.filter(d => d.therapeutic_combination == "IC+Radiation alone"));
         patients.forEach(el => therapyFilter.push(el));
        
@@ -385,13 +430,13 @@ class App {
          patients.forEach(el => therapyFilter.push(el));
       }
 
-      if(this.patientFilters.includes("Male")){
-        patients = (data.filter(d => d.gender == "Male"));
+      if(this.patientFilters.includes("Female")){
+        patients = (data.filter(d => d.gender == "Female"));
         patients.forEach(el => genderFilter.push(el));
        
       }
-      if(this.patientFilters.includes("Female")){
-        patients = (data.filter(d => d.gender == "Female"));
+      if(this.patientFilters.includes("Male")){
+        patients = (data.filter(d => d.gender == "Male"));
          patients.forEach(el => genderFilter.push(el));
       }
 
@@ -405,15 +450,27 @@ class App {
          patients.forEach(el => ratingsFilter.push(el));
 
       }
-      if(ratingsFilter.length >0){
+      if(this.patientFilters.includes("Negative")){
+
+        patients = (data.filter(d => d.outcome == -1 || d.survival == "0"));
+        patients.forEach(el => outcomeFilter.push(el));
+       
+      }
+      if(this.patientFilters.includes("Positive")){
+       patients = (data.filter(d => d.outcome == 1 && d.survival == "1"));
+         patients.forEach(el => outcomeFilter.push(el));
+
+      }
+
+      if(therapyFilter.length >0){
         if(totalPatients.length < 1){
-          totalPatients = ratingsFilter;
+          totalPatients = therapyFilter;
         }
         else{
           var x = [];
-          for(i = 0; i < ratingsFilter.length; i++){
-            if(totalPatients.includes(ratingsFilter[i])){
-              x.push(ratingsFilter[i]);
+          for(i = 0; i < therapyFilter.length; i++){
+            if(totalPatients.includes(therapyFilter[i])){
+              x.push(therapyFilter[i]);
                this.emptyPatientFilter = false;
             }
           }
@@ -424,16 +481,16 @@ class App {
         } 
 
       }
-      if(genderFilter.length >0){
-        if(totalPatients.length <1 && ratingsFilter.length <1){
-         totalPatients = genderFilter;
+      if(ratingsFilter.length >0){
+        if(totalPatients.length <1 && therapyFilter.length <1){
+         totalPatients = ratingsFilter;
         }
         else{
           var x = [];
-          for(i = 0; i < genderFilter.length; i++){
-            if(totalPatients.includes(genderFilter[i])){
+          for(i = 0; i < ratingsFilter.length; i++){
+            if(totalPatients.includes(ratingsFilter[i])){
               this.emptyPatientFilter = false;
-              x.push(genderFilter[i]);
+              x.push(ratingsFilter[i]);
             }
           }
           if(x.length <1)
@@ -442,16 +499,16 @@ class App {
         } 
 
       }
-      if(therapyFilter.length >0){
-        if(totalPatients.length <1 && ratingsFilter.length <1 && genderFilter.length <1){
-         totalPatients = therapyFilter;
+      if(genderFilter.length >0){
+        if(totalPatients.length <1 && ratingsFilter.length <1 && therapyFilter.length <1){
+         totalPatients = genderFilter;
         }
         else{
           var x = [];
-          for(i = 0; i < therapyFilter.length; i++){
-            if(totalPatients.includes(therapyFilter[i])){
+          for(i = 0; i < genderFilter.length; i++){
+            if(totalPatients.includes(genderFilter[i])){
               this.emptyPatientFilter = false;
-              x.push(therapyFilter[i]);
+              x.push(genderFilter[i]);
             }
           }
           if(x.length <1)
@@ -477,74 +534,101 @@ class App {
           totalPatients = x;
         } 
       }
-    
+      if(outcomeFilter.length >0){
+
+        if(totalPatients.length <1 && ratingsFilter.length<1 && genderFilter.length <1 && therapyFilter.length <1 && tumorFilter.length <1){
+         totalPatients = outcomeFilter;
+
+        }
+        else{
+          var x = [];
+          for(i = 0; i < outcomeFilter.length; i++){
+            if(totalPatients.includes(outcomeFilter[i])){
+              this.emptyPatientFilter = false;
+              x.push(outcomeFilter[i]);
+            }
+          }
+          if(x.length <1)
+            this.emptyPatientFilter = true;
+          totalPatients = x;
+        } 
+      }
+
+
       if(this.emptyPatientFilter == true){
+        if(this.patients.length >0){
+           this.highlightPatients(this.patients);
+        }
+        else
         this.highlightPatients('none');
       }
       else{
          if(this.patients.length >0 && totalPatients.length ==[]){
           this.highlightPatients(this.patients);
         }
-        else
-        this.highlightPatients(totalPatients.map(d => d.patientId));
+        else{
+          var p = totalPatients.map(d => d.patientId)
+          if(!p.includes(this.patients[0]))
+            p.push(this.patients[0])
+        }
+        this.highlightPatients(p);
+
       }
 
+
       this.filteredPatients = totalPatients.map(el => el.patientId);
+
+      if(this.patients.length > 0 && !this.filteredPatients.includes(this.patients[0])){
+        this.filteredPatients.push(this.patients[0])
+      }
       if(this.filteredPatients.length >0){
-         this.symptomsList.clear()
-          this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, this.filteredPatients);
           this.stackPlot.clear();
           this.stackPlot.update(this.filteredPatients, this.symptoms);
-                setTimeout(()=> {
-        this.drawTendrilPlot(this.filteredPatients, []);
-
-      }, 500);
-         
-          $('#defaultPatientText').hide();
+         if(!redrawTendrils){
+        setTimeout(()=> {
+          this.drawTendrilPlot(this.filteredPatients, []);
+           
+          window.freshTendril = 0;
+          
+            for(var i = 0; i < this.symptoms.length; i++){
+              $(`#${this.symptoms[i]}`).addClass("active");
+            } 
+          
+        }, 500);
+        }
           return;
       }
       else{
-        if(this.patients.length <1)
-                setTimeout(()=> {
-      $('#defaultPatientText').show();
+        
+          for(var i = 0; i < this.symptoms.length; i++){
+            $(`#${this.symptoms[i]}`).removeClass("active");
+          } 
+        this.stackPlot.clear();
+        this.stackPlot.update([], []);
 
-      }, 600);
-       
-        this.symptomsList.clear()
-          this.symptomsList.drawSymptomsList(this.allSymptoms, this.symptoms, []);
-          this.stackPlot.clear();
-          this.stackPlot.update([], []);
-      }
-      setTimeout(()=> {
-       this.drawTendrilPlot();
+        if(!redrawTendrils){
+         
+          setTimeout(()=> {
+         this.drawTendrilPlot();
+         window.freshTendril = 0;
 
       }, 500);
-      
+        }
+
+      }
 
   }
 
 
-  async loadDataset(period, symptoms) {
+  async loadDataset(period, symptoms, patientId) {
     const patients = await d3.csv('/data/datasets/patients_complete_with_survival.csv');
     const clusters = await d3.csv(`/data/output/raw_result-time-${period}.csv`);
-
     if(!symptoms || symptoms.length == 0){
-    // const data = clusters
-    //   .filter(cluster => patients.find(patient => patient.patientId === cluster.patientId))
-    //   .map(cluster => ({ ...cluster, ...patients.find(patient => patient.patientId === cluster.patientId) }))
-    //   .sort((a, b) => a.patientId - b.patientId)
-    //   .map(({ cluster,sum, gender, patientId, t_category,therapeutic_combination }) => ({
-    //     cluster: parseInt(cluster),
-    //     sum,
-    //     patientId,
-    //     gender,
-    //     t_category,
-    //     therapeutic_combination
-    //   }));
-
-     const filename = `D:/sem1/VDS/symptom_project/cs529-project/data/output/raw_result-time-${period}.csv`;
-     const symptoms = this.allSymptoms;
-      const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms}) });
+      const filename = `D:/sem1/VDS/symptom_project/cs529-project/data/output/raw_result-time-${period}.csv`;
+      var symptoms = this.allSymptoms;
+      if(!patientId){
+      var patientId = []
+      const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms, patientId}) });
       const filtered_clusters = await response.json();
       const f = []
       for (var i =0; i <clusters.length; i++){
@@ -555,20 +639,31 @@ class App {
       .filter(cluster => patients.find(patient => patient.patientId == cluster['patientId']))
       .map(cluster => ({ ...cluster, ...patients.find(patient => patient.patientId == cluster['patientId']) }))
       .sort((a, b) => a.patientId - b.patientId)
-      .map(({ cluster,sum, gender, patientId, t_category,therapeutic_combination }) => ({
+      .map(({ cluster,sum, gender, patientId, t_category,therapeutic_combination, PC1, PC2, outcome, survival }) => ({
         cluster: parseInt(cluster),
         sum,
         patientId,
         gender,
         t_category,
-        therapeutic_combination
+        therapeutic_combination,
+        PC1,
+        PC2,
+        outcome,
+        survival
       }));
-
     return data;
+      }
+      else{
+        const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms, patientId}) });
+        const filtered_clusters = await response.json();
+        return filtered_clusters;
+      }
     }
     else{
+      if(!patientId){
+      var patientId = []
       const filename = `D:/sem1/VDS/symptom_project/cs529-project/data/output/raw_result-time-${period}.csv`;
-      const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms}) });
+      const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms, patientId}) });
       const filtered_clusters = await response.json();
       const f = []
       for (var i =0; i <clusters.length; i++){
@@ -579,102 +674,111 @@ class App {
       .filter(cluster => patients.find(patient => patient.patientId == cluster['patientId']))
       .map(cluster => ({ ...cluster, ...patients.find(patient => patient.patientId == cluster['patientId']) }))
       .sort((a, b) => a.patientId - b.patientId)
-      .map(({ cluster,sum, gender, patientId, t_category,therapeutic_combination }) => ({
+      .map(({ cluster,sum, gender, patientId, t_category,therapeutic_combination, PC1, PC2, outcome, survival }) => ({
         cluster: parseInt(cluster),
         sum,
         patientId,
         gender,
         t_category,
-        therapeutic_combination
+        therapeutic_combination,
+        PC1,
+        PC2,
+        outcome,
+        survival
       }));
     return data;
-    }
+      }
+      else{
+        const filename = `D:/sem1/VDS/symptom_project/cs529-project/data/output/raw_result-time-${period}.csv`;
+        const response = await fetch("http://localhost:5000/", {method:'POST', mode: 'cors', headers:{'Content-Type': 'application/json'}, body: JSON.stringify({filename,symptoms, patientId}) });
+        const filtered_clusters = await response.json();
+        return filtered_clusters
+        }
+  }
   }
 
-  async updatePatientIds(ids) {
+  async updatePatientIds(ids, selectedId) {
+
     $('.ui.dropdown:has(#patient-list) .default.text')
-      .text(`Select Patient ID(s) - Total Count: ${ids.size}`);
+      .text(`Total: ${ids.size}`);
+
     const selectEl = $('#patient-list');
     selectEl.empty();
+    var index = 0;
+    var stop_index=0;
     ids.forEach((id) => {
       const optionEl = $('<option></option>', { value: id });
       optionEl.text(id);
       selectEl.append(optionEl);
+      if (id == parseInt(selectedId))
+        stop_index= index
+      else
+      index = index +1;
     })
-  }
+    if(selectedId){
+      $('#patient-list').dropdown('clear');
+       selectEl[0][stop_index].selected='selected';
+   
+    }
 
-  async updateSymptoms() {
-    $('.ui.dropdown:has(#symptoms-list) .default.text').text(`Select Clustering Symptoms`)
-    const selectEl = $('#symptoms-list');
-    selectEl.empty();
-    this.allSymptoms.forEach((i) => {
-      const optionEl = $('<option></option>', { value: i });
-      optionEl.text(i);
-      selectEl.append(optionEl);
-    })
-  }
-
-  async updateFilters() {
-    const filters = ['Rating Severity', 'Gender', 'Tumor Category', 'Therapeutic Combination'];
-    $('.ui.dropdown:has(#filters-list) .default.text').text(`Rating Severity`);
-  }
-
-
-  async clearDropDown(){
-      $('#scatterplot').css('visibility','hidden')
-      setTimeout(()=> {
-        this.drawClusters(this.period).then($('#scatterplot').css('visibility','visible'));
-
-      }, 2000);
       
-      $('#symptoms-list').dropdown('clear');
-      this.clusteringSymptoms = [];
-
   }
+
+
 
   async sliderUpdate(period) {
+    const correlatedIndex = 0;
     this.period = period;
-    await this.clearDropDown().then(this.drawClusters(period));
+    this.drawClusters(period,this.clusteringSymptoms)
     $('#patient-list').dropdown('clear'); 
-    await this.clearDropDown();
+    this.patients =[]
     await this.onPatientFilter(); 
-    this.patientHistory.clear();
-    await this.drawTendrilPlot();
-    this.clearDropDown();
+    window.freshTendril = 1;
+    // await this.drawTendrilPlot();
+   this.drawMatrix(this.lastSelectedSymptom)
+  }
+
+  async drawMatrix(symptom){
+    var result = []
+  const matrixData = await d3.csv(`/data/output/correlation//corr-nou-${window.currentPeriod}.csv`);
+   for(var i = 0; i < 28; i++){
+      result.push(matrixData[i][symptom])
+   }
+    result = result.reverse();
+    if (!this.correlationMatrix && matrixData.length > 0) {
+      this.correlationMatrix = new CorrelationMatrix('#matrix', 350,  window.innerHeight/3,result);
+      this.correlationMatrix.init();
+    } else {
+      this.correlationMatrix.clear();
+      this.correlationMatrix.update( result);
+    }
   }
 
   async drawClusters(period, symptoms) {
-    const data = await this.loadDataset(period, symptoms);
-    // if(!symptoms || symptoms.length == 0){
-    //    data = await this.loadDataset(period);
-    //    console.log("papa")
-    // }
-    // else{
-    //    data = await this.loadDataset(period, symptoms);
-    // }
-    const patientIds = data.map(({ patientId }) => parseInt(patientId));
 
+    const data = await this.loadDataset(period, symptoms);
+    const patientIds = data.map(({ patientId }) => parseInt(patientId));
     if (!this.scatterPlot && data.length > 0) {
-      this.scatterPlot = new ScatterPlot('#scatterplot', 512, 512, data, this.selectPatient);
+      this.scatterPlot = new ScatterPlot('#scatterplot', 512, 480, data, this.selectPatient);
       await this.scatterPlot.init();
-    } else if (this.scatterPlot) {
+    } 
+    else if (this.scatterPlot) {
       await this.scatterPlot.clear();
       await this.scatterPlot.update(data);
     }
+    window.totalPatientsIds = patientIds;
     this.updatePatientIds(new Set(patientIds));
-    if(this.patients.length > 0){
-      this.highlightPatients(this.patients)
-    }
-    else{
-      if(this.filteredPatients.length > 0){
-        this.highlightPatients(this.filteredPatients)
-      }
-    }
+
+    this.highlightPatients(this.filteredPatients)
+
   }
 
- 
 
   async drawTendrilPlot(patientIds, symptoms) {
+    
+    $(".tendrilsPath").css('stroke','#83aad4')
+    $(".tendrilCircle").css('stroke','83aad4')
+
     if (this.tendrilPlots.length >0){
 
       this.tendrilPlots.forEach(plot => plot.svg.remove());
@@ -686,13 +790,12 @@ class App {
       }
     }
 
-    const data = await d3.csv('/data/datasets/symptoms_period.csv');
+    const data = await d3.csv('/data/datasets/symptoms.csv');
     const data_patient = await d3.csv('/data/datasets/patients_complete_with_survival.csv');
-    const patients = patientIds.map(patientId => data.filter(d => d.patientId === patientId));
+        
+    const patients = patientIds.map(patientId => data.filter(d => d.patientId === patientId.toString()));
     const p = patients;
-
-   
-    if (this.filteredPatients.length> 0 && this.patients.length ==0){
+    if (this.filteredPatients.length> 1 && ! $("#show-patient").is(":checked") && ! $("#show-patient-nearest_neighbors").is(":checked")){
       const colors = ['#66a61e', '#9854cc', '#058f96', '#DA8A00', '#803e3b' ];
       const patientDataSelected =[];
       patients.forEach(patient => {
@@ -704,51 +807,48 @@ class App {
 
       });
       for (var i = 0; i < this.symptoms.length; i++){
-
-        const tendrilPlot = new TendrilPlot('#tendril', 120, 150, patientDataSelected,this.symptoms[this.symptoms.length -i -1],colors[i] );
+        const tendrilPlot = new TendrilPlot('#tendril', 140, 270, patientDataSelected,this.symptoms[this.symptoms.length -i -1],colors[i] );
         tendrilPlot.init();
         this.tendrilPlots.push(tendrilPlot);
+      }
+      if(this.patients.length>0){
+         var patient_id = ""+this.patients[0]
+         $(`.${patient_id}`).filter(".tendrilsPath").css('stroke','#de2d26')
+         $(`.${patient_id}`).filter(".tendrilCircle").css('stroke','#de2d26')
+         $(`.${patient_id}`).filter(".tendrilCircle").css("fill","#de2d26")
+
 
       }
-
-      // this.symptoms.forEach(s => {
-      //   const tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientDataSelected, s, );
-      //   tendrilPlot.init();
-      //   this.tendrilPlots.push(tendrilPlot);
-
-      // })
-      // const tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientDataSelected);
-      // tendrilPlot.init();
-      // this.tendrilPlots.push(tendrilPlot);
-     
       return;
     }
-
       patients.forEach(patient => {
-
         const id = patient[0].patientId;
         const patientData = { patient, symptoms };
         const patientDataSelected=data_patient.filter(d => d.patientId == id)
         patientData['survival'] = patientDataSelected[0].survival
-        const tendrilPlot = new TendrilPlot('#tendril', 150, 150, patientData);
+        const tendrilPlot = new TendrilPlot('#tendril', 140, 270, patientData);
         tendrilPlot.init();
         this.tendrilPlots.push(tendrilPlot);
       });
-    
 
-  
+      if(this.patients.length>0){
+         var patient_id = ""+this.patients[0]
+         // $(`.${patient_id}`).filter(".tendrilsPath").css('stroke','red')
+
+
+      }
 }
 
   async showStackPlot(patientId) {
-    const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
+    const patientInfo = await d3.csv('/data/datasets/symptoms.csv');
     this.stackPlot = new StackedLinePlot(patientInfo, patientId);
     this.stackPlot.init();
   }
 
   async showPatientHistory(patientId) {
-    const patientInfo = await d3.csv('/data/datasets/symptoms_period.csv');
-    this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length - 1], this.allSymptoms,this.symptoms);
-    this.patientHistory.init();
+    // const patientInfo = await d3.csv('/data/datasets/symptoms.csv');
+    // this.patientHistory = new PatientHistory(patientInfo, this.patients[this.patients.length - 1], this.allSymptoms,this.symptoms);
+    // this.patientHistory.init();
   }
 
   async highlightPatients(patientIds) {

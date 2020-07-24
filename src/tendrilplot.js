@@ -32,8 +32,8 @@ class TendrilPlot {
     this.patientIdEl = this.svg
       .append('text')
       .classed('patientTitle', true)
-      .attr('font-size', '0.7rem')
-      .attr('transform', `translate(${width / 2},20)`);
+      .attr('font-size', '1rem')
+      .attr('transform', `translate(${width / 2},${height-5})`);
     this.drawTendrils(data, symptom, color);
   }
 
@@ -73,6 +73,9 @@ class TendrilPlot {
 
     if(!data.length){
       const { patient, symptoms, survival } = data;
+            var Symptoms = ['nausea', 'vomit','mucus', 'breath', 'choking',  'swallow','dryMouth','teeth','speech','taste','appetite','constipation', 
+    'sores','skin', 'pain','sleep', 'drowsiness', 'numbness','fatigue', 'distress','memory', 'sadness',
+    'mood','enjoyment','activities', 'work', 'relations', 'walking'];
       const s = survival;
       const timestamps = patient.map(p => parseInt(p.period));
       const radiusScale = d3.scaleLinear()
@@ -92,15 +95,16 @@ class TendrilPlot {
 
       const g = svg.append('g')
         .classed('tendrils', true)
-        .attr('transform', `translate(${width / 2},${height -10}) scale(1.15, 1.15)`);
+        .attr('transform', `translate(${width / 2},${height-20}) scale(2, 2)`);
 
-      symptoms.forEach((symptom, i) => {
+
+      Symptoms.forEach((symptom, i) => {
         var time = 1;
         const radialData = patient
           .map(p => ({
             [symptom]: parseInt(p[symptom])
           }))
-          const angleRange = Math.PI;
+          const angleRange = Math.PI/2;
           var prevX=0;
           var prevY=0;
           const surv = this.survival;
@@ -108,11 +112,12 @@ class TendrilPlot {
           for(var k = 1; k< radialData.length; k++){
               var dif =radialData[k][symptom] - radialData[k-1][symptom]; 
               var angle = ((10+dif)/20) *  angleRange -  angleRange/2;
-              const vala = rotate(0,0,0,20,angle/(2*Math.PI)*360);
+              const vala = rotate(0,0,0,20,-angle/(2*Math.PI)*360);
               prevX = vala[0] + prevX;
               prevY = vala[1] + prevY;
               points.push({x: prevX, y: prevY})
               if(k == radialData.length-1 ){
+
               	if( parseInt(s) ==0 ){
               	g.append('circle')
                   .attr('cx', -prevX)
@@ -120,6 +125,9 @@ class TendrilPlot {
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
                   .attr('fill', 'black')
+                  .attr("class","singlePatientCircle")
+                  .attr("id", symptom + "circle")
+               
                   
 
               }
@@ -129,7 +137,10 @@ class TendrilPlot {
                   .attr('cy', -prevY)
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
-                  .attr('fill', colorScale(i))
+                  .attr('fill','#83aad4')
+                  .attr("class","singlePatientCircle")
+                  .attr("id", symptom+"circle")
+               
                 
               }
           }
@@ -139,7 +150,9 @@ class TendrilPlot {
                   .attr('cy', -prevY)
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
-                  .attr('fill', colorScale(i))
+                  .attr('fill', '#83aad4')
+                  .attr("class","singlePatientCircle")
+                  .attr("id", symptom+"circle")
                
               }
 
@@ -148,36 +161,74 @@ class TendrilPlot {
             .x((d) => (-d.x))
             .y((d) => (-d.y))
             .curve(d3.curveCardinal.tension(0.5));
+
+
+
+
           g.append('path')
             .attr('fill', 'none')
-            .attr('class',patient[0].patientId )
-            .attr('id',patient[0].patientId)
-            .attr('stroke', colorScale(i))
+            .attr('class',patient[0].patientId + " tendrilsPath")
+            .attr('id',symptom+"tendril")
+            .attr('stroke','#83aad4')
             .attr('stroke-width', '0.5px')
+            .attr("opacity",'0.65')
             .attr('d', line(points))
             .on('mouseover', function () {
-                 window.selectedPatient = this['id']
+                 window.selectedsymp = this['id']
+                 $('.tendrilsPath').css('opacity','0.2')
+                  $('.singlePatientCircle').css('opacity','0.2')
                 d3.select(this)
-                  .attr('stroke-width', 2)
                   .append("title")
                   .text("Symptom: " + symptom)
+               $(`#${symptom}tendril`).css('stroke-width','2.5')
+                                              .css('opacity','0.65');
+              $(`#${symptom}circle`).css('opacity','0.65')
               })
             .on('mouseout', function () {
+
                 d3.select(this)
-                  .attr('stroke-width', '0.5px')
+                  .attr('stroke-width', '0.5px');
+                   $('.singlePatientCircle').css('opacity','0.65')
+                  $('.tendrilsPath').css('opacity','0.65')
+                                    .css('stroke-width','0.5')
                   window.selectedPatient = []
               });
             
       });
 
+
   }
   else{
+    
     this.patientIdEl.text(symptom);
     const g = svg.append('g')
-        .classed('tendrils', true)
-        .attr('transform', `translate(${width / 2},${height -10}) scale(1.15, 1.15)`);
-    const patients = data;
+        .attr("class",'tendrils ' + symptom)
+        //.classed('tendrils', true)
+        .attr('transform', `translate(${width / 2},${height-20}) scale(2, 2)`)
+          .on('mouseover', ()=>{
+              var id =symptom;
+              $(`#${id}-highlight`).css('opacity','1')
+              $(`.symptoms-list`).css("color","black")
+              $(`#${id}`).css("color","#fd8d3c")
+              $(`#${window.lastSelectedSymptom}`).css("color","red")
+            })
+            .on('mouseout', ()=> {
+              $(`.symptoms-list`).css("color","black")
+                $('.selectedSympBar').css('opacity','0');
+                 $(`.symptoms-list`).css("color","black")
+                $(`#${window.lastSelectedSymptom}`).css("color","red")
+                      
+                })
 
+    const patients = data;
+    
+   var index = 0;
+   patients.forEach((p,i) =>{
+    if (parseInt(p[0][0].patientId) == window.selectedpatient)
+      index = i})
+   
+    patients.sort((a,b)=> b.survival -a.survival )
+    patients.push(patients.splice(index, 1)[0]);
     patients.forEach( (p,i) => {
       const timestamps = p.map(p => parseInt(p.length));
       const radiusScale = d3.scaleLinear()
@@ -185,8 +236,11 @@ class TendrilPlot {
         .range([10, 50]);
       const angleScale = d3.scaleLinear()
         .domain([0, 10])
-        .range([-Math.PI/8, Math.PI / 4]);
-
+        .range([-Math.PI/8, Math.PI / 8]);
+      const line = d3.line()
+                .x((d) => (-d.x))
+                .y((d) => (-d.y))
+                .curve(d3.curveCardinal.tension(0.5));
 
       const currentPatient = p[0]
       var sum=[]
@@ -195,22 +249,21 @@ class TendrilPlot {
         
       })
       var time = 1;
-         
-        const angleRange = Math.PI/2;
+        const angleRange =Math.PI;
         var prevX=0;
         var prevY=0;
         const points = [{x: 0, y: 0}];
-
         for(var k = 1; k< sum.length; k++){
             var dif =sum[k] - sum[k-1]; 
             var angle = ((10+dif)/20) *  angleRange -  angleRange/2;
-            const vala = rotate(0,0,0,20,angle/(2*Math.PI)*360);
+            const vala = rotate(0,0,0,20,-angle/(2*Math.PI)*360);
             prevX = vala[0] + prevX;
             prevY = vala[1] + prevY;
             points.push({x: prevX, y: prevY})
-
+            const id = p[0][0].patientId;
             if(k == radialData.length-1 ){
-       
+
+             
               if( p.survival ==0 ){
               g.append('circle')
                 .attr('cx', -prevX)
@@ -218,7 +271,7 @@ class TendrilPlot {
                 .attr('r',2)
                 .attr('fill-opacity', 0.65)
                 .attr('fill', 'black')
-                .attr('class',currentPatient[currentPatient.length-1].period + " " + currentPatient[currentPatient.length-1].patientId);
+                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle");
 
             }
             else {
@@ -227,9 +280,10 @@ class TendrilPlot {
                 .attr('cy', -prevY)
                 .attr('r',2)
                 .attr('fill-opacity', 0.65)
-                .attr('fill', color)
-                .attr('class',currentPatient[currentPatient.length-1].period + " " + currentPatient[currentPatient.length-1].patientId);
+                .attr('fill', '#83aad4')
+                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle");
             }
+
         }
             else{
               g.append('circle')
@@ -237,49 +291,55 @@ class TendrilPlot {
                 .attr('cy', -prevY)
                 .attr('r',2)
                 .attr('fill-opacity', 0.65)
-                .attr('fill', color)
-                .attr('class',currentPatient[currentPatient.length-1].period + " " + currentPatient[currentPatient.length-1].patientId);
+                .attr('fill', '#83aad4')
+                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle" );
             }
 
         }
-        const line = d3.line()
-          .x((d) => (-d.x))
-          .y((d) => (-d.y))
-          .curve(d3.curveCardinal.tension(0.5));
+
+
         g.append('path')
           .attr('fill', 'none')
-          .attr('stroke', color)
-          .attr('class',currentPatient[0].patientId + " stackPath tendrilsPath " + currentPatient[currentPatient.length-1].period )
+          .attr('stroke', '#83aad4')
+          .attr('class',currentPatient[0].patientId + " stackPath tendrilsPath " )
           .attr('id',currentPatient[0].patientId)
           .attr('stroke-width', '0.5px')
+          .attr("opacity", ()=> {return window.freshTendril == 1? '0.2' : '0.6'} )
           .attr('d', line(points))
           .on('mouseover', function () {
             d3.select(this)
-              
               .append("title")
               .text("Patient ID: " + p[0][0]['patientId'])
                window.selectedPatient = this['id'];
-               $('.stackPath').css('opacity','0.1');
-                $('.tendrils circle').css('opacity','0');
+               $('.stackPath').css('opacity','0.2');
+                $('.circle').css('opacity','0');
                $(`.${window.selectedPatient}`).css('stroke-width','2.8')
                                               .css('opacity','0.8');
+              $(`#leaf-rect-${this['id']}`).css("opacity",'0.3')
 
+              $('.sympBar').css('opacity','0.2');
+              
           })
           .on('mouseout', function () {
              d3.select(this)
-               .attr('stroke', color)
-              $(`.${window.selectedPatient}`).css('stroke-width','1')
-             $('.plot path').css('opacity','0.8')
+               .attr('stroke', '#83aad4')
+              $(`.${window.selectedPatient}`).css('stroke-width','0.5px')
+             $('.plot path').css('opacity','0.6')
              $('.tendrilsPath').css('opacity','0.65')
              $('circle').css('opacity','1')
-              
+             $(".leaf-rect").css("opacity","0")
+             $(`#leaf-rect-${window.selectedpatient}`).css("opacity",'0.3')
+
           })
         window.selectedPatient = [];
           
       });
 
+
   }
+
 }
+ 
 }
 
 export default TendrilPlot;

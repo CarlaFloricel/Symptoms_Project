@@ -5,11 +5,11 @@ class TimeSlider {
     this.selector = selector;
     this.timePeriods = timePeriods;
     this.labels = labels || [...timePeriods];
-    this.labels[0] = 'Baseline';
+    this.labels[0] = '0M';
     for (let i = 1; i < this.labels.length - 1; i++) {
       this.labels[i] = this.labels[i] + 'M';
     }
-    this.labels[this.labels.length - 1] = '> 2 years';
+    this.labels[this.labels.length - 1] = '>24M';
     this.afterChange = afterChange;
   }
 
