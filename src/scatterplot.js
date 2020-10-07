@@ -116,6 +116,7 @@ class ScatterPlot {
             .text(d => "Patient ID: " +d.patientId);
               var aux_id = this['id'];
               aux_id = aux_id.replace("leaf-container-","");
+              if(window.selectedpatient.length ==0){}
                window.selectedPatient = aux_id;
                $('.stackPath').css('opacity','0.1');
                 $('.circle').css('opacity','0');

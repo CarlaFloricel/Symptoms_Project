@@ -160,14 +160,14 @@ margin:5px;
   }
 
   #tendril {
-    flex: 1 0;
+/*    flex: 1 0;
     width: 100%;
     display: flex;
     justify-content: center;
     align-items: flex-end;
     height:fit-content;
     margin-bottom:10px;
-
+*/
 
     svg {
       /* flex: 1 0 auto; */
@@ -426,4 +426,13 @@ button{
   font-size:0.7rem !important;
   font-weight:bold !important;
   text-transform: none !important;
+}
+
+#tendril{
+  margin:0 !important;
+  height:28%;
+  display:grid;
+  grid-template-columns: 50% 50%;
+  grid-template-rows: 50% 50%;
+
 }

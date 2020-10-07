@@ -33,7 +33,7 @@ class TendrilPlot {
       .append('text')
       .classed('patientTitle', true)
       .attr('font-size', '1rem')
-      .attr('transform', `translate(${width / 2},${height-5})`);
+      .attr('transform', `translate(${width / 1.9},${height-42}), rotate(-90)`);
     this.drawTendrils(data, symptom, color);
   }
 
@@ -72,6 +72,7 @@ class TendrilPlot {
       }
 
     if(!data.length){
+      svg.attr("transform","translate(100, -90), rotate(90)")
       const { patient, symptoms, survival } = data;
             var Symptoms = ['nausea', 'vomit','mucus', 'breath', 'choking',  'swallow','dryMouth','teeth','speech','taste','appetite','constipation', 
     'sores','skin', 'pain','sleep', 'drowsiness', 'numbness','fatigue', 'distress','memory', 'sadness',
@@ -95,7 +96,7 @@ class TendrilPlot {
 
       const g = svg.append('g')
         .classed('tendrils', true)
-        .attr('transform', `translate(${width / 2},${height-20}) scale(2, 2)`);
+        .attr('transform', `translate(${width / 2},${height-90}) scale(2, 2)`)
 
 
       Symptoms.forEach((symptom, i) => {
@@ -125,7 +126,7 @@ class TendrilPlot {
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
                   .attr('fill', 'black')
-                  .attr("class","singlePatientCircle")
+                  .attr("class","singlePatientCircle " + symptom+"circle")
                   .attr("id", symptom + "circle")
                
                   
@@ -138,7 +139,7 @@ class TendrilPlot {
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
                   .attr('fill','#83aad4')
-                  .attr("class","singlePatientCircle")
+                  .attr("class","singlePatientCircle "+symptom+"circle")
                   .attr("id", symptom+"circle")
                
                 
@@ -151,7 +152,7 @@ class TendrilPlot {
                   .attr('r',2)
                   .attr('fill-opacity', 0.65)
                   .attr('fill', '#83aad4')
-                  .attr("class","singlePatientCircle")
+                  .attr("class","singlePatientCircle " +symptom+"circle")
                   .attr("id", symptom+"circle")
                
               }
@@ -167,7 +168,7 @@ class TendrilPlot {
 
           g.append('path')
             .attr('fill', 'none')
-            .attr('class',patient[0].patientId + " tendrilsPath")
+            .attr('class',patient[0].patientId + " tendrilsPath " +symptom+"Tendril" )
             .attr('id',symptom+"tendril")
             .attr('stroke','#83aad4')
             .attr('stroke-width', '0.5px')
@@ -180,9 +181,11 @@ class TendrilPlot {
                 d3.select(this)
                   .append("title")
                   .text("Symptom: " + symptom)
-               $(`#${symptom}tendril`).css('stroke-width','2.5')
+               $(`.${symptom}Tendril`).css('stroke-width','2.5')
                                               .css('opacity','0.65');
-              $(`#${symptom}circle`).css('opacity','0.65')
+              $(`.${symptom}circle`).css('opacity','0.65')
+               
+            $(`.${symptom}`).css("opacity","1")
               })
             .on('mouseout', function () {
 
@@ -191,6 +194,7 @@ class TendrilPlot {
                    $('.singlePatientCircle').css('opacity','0.65')
                   $('.tendrilsPath').css('opacity','0.65')
                                     .css('stroke-width','0.5')
+                  $(`.${symptom}`).css("opacity","0")
                   window.selectedPatient = []
               });
             
@@ -199,12 +203,12 @@ class TendrilPlot {
 
   }
   else{
-    
+    svg.attr("transform","translate(100, -90), rotate(90)")
     this.patientIdEl.text(symptom);
     const g = svg.append('g')
         .attr("class",'tendrils ' + symptom)
         //.classed('tendrils', true)
-        .attr('transform', `translate(${width / 2},${height-20}) scale(2, 2)`)
+        .attr('transform', `translate(${width / 2},${height-90}) scale(2, 2)`)
           .on('mouseover', ()=>{
               var id =symptom;
               $(`#${id}-highlight`).css('opacity','1')
@@ -226,9 +230,11 @@ class TendrilPlot {
    patients.forEach((p,i) =>{
     if (parseInt(p[0][0].patientId) == window.selectedpatient)
       index = i})
-   
+   var e = patients[index]
+   patients.splice(index,1)
+ 
     patients.sort((a,b)=> b.survival -a.survival )
-    patients.push(patients.splice(index, 1)[0]);
+      patients.push(e)
     patients.forEach( (p,i) => {
       const timestamps = p.map(p => parseInt(p.length));
       const radiusScale = d3.scaleLinear()
@@ -281,7 +287,7 @@ class TendrilPlot {
                 .attr('r',2)
                 .attr('fill-opacity', 0.65)
                 .attr('fill', '#83aad4')
-                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle");
+                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle "+currentPatient[currentPatient.length-1].patientId+"circle");
             }
 
         }
@@ -292,7 +298,7 @@ class TendrilPlot {
                 .attr('r',2)
                 .attr('fill-opacity', 0.65)
                 .attr('fill', '#83aad4')
-                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle" );
+                .attr('class', currentPatient[currentPatient.length-1].patientId +" circle tendrilCircle " +currentPatient[currentPatient.length-1].patientId+"circle");
             }
 
         }
@@ -301,7 +307,7 @@ class TendrilPlot {
         g.append('path')
           .attr('fill', 'none')
           .attr('stroke', '#83aad4')
-          .attr('class',currentPatient[0].patientId + " stackPath tendrilsPath " )
+          .attr('class',currentPatient[0].patientId + " stackPath tendrilsPath " +currentPatient[0].patientId+"path" )
           .attr('id',currentPatient[0].patientId)
           .attr('stroke-width', '0.5px')
           .attr("opacity", ()=> {return window.freshTendril == 1? '0.2' : '0.6'} )
